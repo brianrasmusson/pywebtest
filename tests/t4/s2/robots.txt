@@ -1,0 +1,2 @@
+User-agent: Mozilla/5.0 (compatible; GigablastOpenSource/1.0;)
+Disallow: /
