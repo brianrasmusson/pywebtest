@@ -78,9 +78,9 @@ class Handler(BaseHTTPServer.BaseHTTPRequestHandler):
 		if not os.path.exists(root_dir+"/"+testset+"/"+server):
 			return self.respond_unknown_server(server)
 		#ok, directory exist so testet and server is known
-		base_path = root_dir+"/"+testset+"/"+server+"/"+path
+		base_path = root_dir+"/"+testset+"/"+server+path
 		if os.path.isdir(base_path):
-			return self.maybe_serve_index_page(base_path)
+			return self.maybe_serve_index_page(base_path, path)
 		if not os.path.exists(base_path):
 			return self.respond_not_found(base_path)
 		
@@ -166,7 +166,7 @@ class Handler(BaseHTTPServer.BaseHTTPRequestHandler):
 				self.wfile.write(b)
 	
 	
-	def maybe_serve_index_page(self, dir):
+	def maybe_serve_index_page(self, dir, path):
 		if os.path.exists(dir+"/_noindex"):
 			self.send_response(404)
 			self.end_headers()
@@ -184,8 +184,10 @@ class Handler(BaseHTTPServer.BaseHTTPRequestHandler):
 		
 		l = os.listdir(dir)
 		l.sort()
+
+		filedir = "" if (path == "/") else path
 		for f in l:
-			print >>self.wfile, '<p><a href="%s">%s</a></p>'%(f,f)
+			print >>self.wfile, '<p><a href="%s/%s">%s</a></p>'%(filedir,f,f)
 
 		print >>self.wfile, "</body>"
 		print >>self.wfile, "</html>"
