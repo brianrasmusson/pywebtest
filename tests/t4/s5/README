@@ -1,0 +1,9 @@
+Test robots.txt path matches (wildcard)
+
+[path]       [match]                             [no match]                  [comments]
+*.php        /filename.php                       /                           (even if it maps to /index.php)
+             /folder/filename.php                /windows.PHP
+             /folder/filename.php?parameters
+             /folder/any.php.file.html
+             /filename.php/
+

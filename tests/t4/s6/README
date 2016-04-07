@@ -1,0 +1,8 @@
+Test robots.txt path matches (wildcard & line anchor)
+
+[path]       [match]                             [no match]                  [comments]
+/*.php$      /filename.php                       /filename.php?parameters
+             /folder/filename.php                /filename.php/
+                                                 /filename.php5
+                                                 /windows.PHP
+

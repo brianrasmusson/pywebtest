@@ -1,0 +1,10 @@
+Test robots.txt path matches (prefix matching)
+
+[path]       [match]                             [no match]                  [comments]
+/fish        /fish                               /Fish.asp                   Note the case-sensitive matching.
+             /fish.html                          /catfish
+             /fish/salmon.html                   /?id=fish
+             /fishheads
+             /fishheads/yummy.html
+             /fish.php?id=anything
+

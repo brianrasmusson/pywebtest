@@ -1,0 +1,7 @@
+Test robots.txt path matches (directory prefix matching)
+
+[path]       [match]                             [no match]                  [comments]
+/fish/       /fish/                              /fish                       The trailing slash means this matches anything in this folder.
+             /fish/?id=anything                  /fish.html
+             /fish/salmon.htm                    /Fish/Salmon.php
+
