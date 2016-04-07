@@ -11,6 +11,7 @@ import urllib
 import urlparse
 import cgi
 from time import mktime, strptime
+import argparse
 
 
 root_dir = "tests"
@@ -206,6 +207,10 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 	pass
 
 
+parser = argparse.ArgumentParser()
+parser.add_argument("-p", "--port", type=int, help="HTTP server port number", default=8080)
 
-httpd = ThreadedHTTPServer(("", 8080), Handler)
+args = parser.parse_args()
+
+httpd = ThreadedHTTPServer(("", args.port), Handler)
 httpd.serve_forever()
