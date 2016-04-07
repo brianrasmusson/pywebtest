@@ -172,17 +172,22 @@ class Handler(BaseHTTPServer.BaseHTTPRequestHandler):
 			self.send_response(404)
 			self.end_headers()
 			return
-		
+
 		self.send_response(200)
 		self.send_header("Content-type", "text/html")
 		self.end_headers()
-		
+
+		if os.path.exists(dir + "/index.html"):
+			with open(dir + "/index.html", "rb") as f:
+				self.wfile.write(f.read())
+			return
+
 		print >>self.wfile, "<html>"
 		print >>self.wfile, "<head>"
 		print >>self.wfile, "    <title>Contents of %s</title>"%(dir)
 		print >>self.wfile, "</head>"
 		print >>self.wfile, "<body>"
-		
+
 		l = os.listdir(dir)
 		l.sort()
 
