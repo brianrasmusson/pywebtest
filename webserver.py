@@ -25,7 +25,7 @@ def file_content(path):
 	try:
 		f=open(path,"rb",1000)
 		while True:
-			b=f.read(1000);
+			b=f.read(1000)
 			if b==None or len(b)==0: break;
 			r+= b
 		f.close()
@@ -150,8 +150,8 @@ class Handler(BaseHTTPServer.BaseHTTPRequestHandler):
 		
 		#ok, got it all
 		self.send_response(status_code)
-		if content_type!=None:
-			if charset==None:
+		if content_type is not None:
+			if charset is None:
 				self.send_header("Content-type", content_type)
 			else:
 				self.send_header("Content-type", content_type + "; charset=" + charset)
@@ -162,7 +162,7 @@ class Handler(BaseHTTPServer.BaseHTTPRequestHandler):
 		with open(base_path,"rb",1000000) as f:
 			while True:
 				b = f.read(1000000)
-				if b==None or len(b)==0:
+				if b is None or len(b)==0:
 					break
 				self.wfile.write(b)
 	
@@ -191,9 +191,11 @@ class Handler(BaseHTTPServer.BaseHTTPRequestHandler):
 		l = os.listdir(dir)
 		l.sort()
 
+		special_file = ('.status-code', '.content-type', '.charset', '.content-transfer-encoding', '.extra-headers')
 		filedir = "" if (path == "/") else path
 		for f in l:
-			print >>self.wfile, '<p><a href="%s/%s">%s</a></p>'%(filedir,f,f)
+			if not f.endswith(special_file):
+			    print >>self.wfile, '<p><a href="%s/%s">%s</a></p>'%(filedir,f,f)
 
 		print >>self.wfile, "</body>"
 		print >>self.wfile, "</html>"
