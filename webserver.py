@@ -29,7 +29,7 @@ def file_content(path):
 			if b==None or len(b)==0: break;
 			r+= b
 		f.close()
-	except IOError, ex:
+	except IOError as ex:
 		pass
 	if r!="" and r[-1]=='\n' and r.count('\n')==1:
 		return r.partition('\n')[0]
@@ -191,11 +191,12 @@ class Handler(BaseHTTPServer.BaseHTTPRequestHandler):
 		l = os.listdir(dir)
 		l.sort()
 
-		special_file = ('.status-code', '.content-type', '.charset', '.content-transfer-encoding', '.extra-headers')
+		special_ending = ('.status-code', '.content-type', '.charset', '.content-transfer-encoding', '.extra-headers')
+		special_file = ('README')
 		filedir = "" if (path == "/") else path
 		for f in l:
-			if not f.endswith(special_file):
-			    print >>self.wfile, '<p><a href="%s/%s">%s</a></p>'%(filedir,f,f)
+			if not f.endswith(special_ending) and f not in special_file:
+				print >>self.wfile, '<p><a href="%s/%s">%s</a></p>'%(filedir,f,f)
 
 		print >>self.wfile, "</body>"
 		print >>self.wfile, "</html>"
