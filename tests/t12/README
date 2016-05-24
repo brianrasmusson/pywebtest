@@ -4,4 +4,18 @@ s1: simple occurence test
 
 s2: simple multioccurence test (suitable for order-ignorant algorithms like bm25)
 
-s3: simple proximyty and word-order test
+s3: simple proximity and word-order test
+
+
+Suggested tests:
+	s1:
+		"tomato" should yield exactly f1, f3, f5
+		"cucumber" should yield exactly f4, f5
+		orange+cucumber should yield f5 as top result
+	
+
+	s2:
+		"wheat" should yield f1, f2, f3. Order is interesting.
+	
+	s3:
+		Giraffe+skateboard should yield 7 results, roughly in 1..7 order. although f1 might be detected as spam or trivial
