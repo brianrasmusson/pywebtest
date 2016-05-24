@@ -1,0 +1,7 @@
+Document relevancy tests
+
+s1: simple occurence test
+
+s2: simple multioccurence test (suitable for order-ignorant algorithms like bm25)
+
+s3: simple proximyty and word-order test
