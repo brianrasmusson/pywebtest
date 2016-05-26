@@ -1,0 +1,15 @@
+Documents with various inlink text
+
+f1: cucumber
+
+f2: 	"banana" -> f1
+
+f3:	"cucumber" -> f1
+	"strawberry" -> f4
+
+f4: carrot
+
+Suggested test:
+search for "banana". f1 should be among the results
+search for "cucumber". f1 should be result #1
+
