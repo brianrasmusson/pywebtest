@@ -3,19 +3,11 @@ from __future__ import with_statement
 import BaseHTTPServer
 from BaseHTTPServer import  HTTPServer
 from SocketServer import ThreadingMixIn
-import cgi, sys
 import os
-import time
-import socket
-import urllib
 import urlparse
-import cgi
-from time import mktime, strptime
 import argparse
 
-
 root_dir = "tests"
-
 
 def file_content(path):
 	"""Return content of file. Empty string for non-existing files"""
@@ -26,7 +18,7 @@ def file_content(path):
 		f=open(path,"rb",1000)
 		while True:
 			b=f.read(1000)
-			if b==None or len(b)==0: break;
+			if b is None or len(b)==0: break;
 			r+= b
 		f.close()
 	except IOError as ex:
@@ -148,22 +140,25 @@ class Handler(BaseHTTPServer.BaseHTTPRequestHandler):
 		if os.path.exists(base_path+".extra-headers"):
 			extra_headers = file_content(base_path+".extra-headers").split('\n')
 		
-		if content_type=="":
-			content_type=None
-		if charset=="":
-			charset=None
-		if content_transfer_encoding=="":
-			content_transfer_encoding=None
+		if content_type == "":
+			content_type = None
+		if charset == "":
+			charset = None
+		if content_transfer_encoding == "":
+			content_transfer_encoding = None
 		
 		#ok, got it all
 		self.send_response(status_code)
+
 		if content_type is not None:
 			if charset is None:
 				self.send_header("Content-type", content_type)
 			else:
 				self.send_header("Content-type", content_type + "; charset=" + charset)
+
 		for h in extra_headers:
 			self.send_header(h.split(":")[0],h.partition(":")[2])
+
 		self.end_headers()
 
 		with open(base_path,"rb") as f:
@@ -222,7 +217,6 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-p", "--port", type=int, help="HTTP server port number", default=8080)
-
 args = parser.parse_args()
 
 httpd = ThreadedHTTPServer(("", args.port), Handler)
