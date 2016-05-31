@@ -47,8 +47,12 @@ class Handler(BaseHTTPServer.BaseHTTPRequestHandler):
 		#Host is expected to be in the form of <server>.<testcase>.something.....
 		if len(host.split('.'))<2:
 			return self.respond_unknown_host(host)
-		server =host.split('.')[0]
-		testset = host.split('.')[1]
+
+		host_parts = host.split('.')
+		server = host_parts[0]
+		testset = host_parts[1]
+		args.domain = ".".join(host_parts[2:len(host_parts)])
+
 		path = parsed_url.path
 		
 		print "testset=%s, server=%s, path=%s"%(testset,server,path)
@@ -74,10 +78,13 @@ class Handler(BaseHTTPServer.BaseHTTPRequestHandler):
 
 	def serve_page(self, testset, server, path):
 		fp = root_dir+"/"+testset
+
 		if not os.path.exists(root_dir+"/"+testset):
 			return self.respond_unknown_testset(testset)
+
 		if not os.path.exists(root_dir+"/"+testset+"/"+server):
 			return self.respond_unknown_server(server)
+
 		#ok, directory exist so testet and server is known
 		base_path = root_dir+"/"+testset+"/"+server+path
 		if os.path.isdir(base_path):
@@ -158,14 +165,12 @@ class Handler(BaseHTTPServer.BaseHTTPRequestHandler):
 		for h in extra_headers:
 			self.send_header(h.split(":")[0],h.partition(":")[2])
 		self.end_headers()
-		
-		with open(base_path,"rb",1000000) as f:
-			while True:
-				b = f.read(1000000)
-				if b is None or len(b)==0:
-					break
-				self.wfile.write(b)
-	
+
+		with open(base_path,"rb") as f:
+			content = f.read()
+			content = content.replace("${DOMAIN}", args.domain )
+			content = content.replace("${PORT}", str(args.port) )
+			self.wfile.write(content)
 	
 	def maybe_serve_index_page(self, dir, path):
 		if os.path.exists(dir+"/_noindex"):
