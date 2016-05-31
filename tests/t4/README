@@ -4,3 +4,7 @@ s3: robots.txt prefix path matches
 s4: robots.txt directory prefix path matches
 s5: robots.txt wildcard path matches
 s6: robots.txt wildcard & line anchor path matches
+
+s7 & s8
+s7/robots.txt redirects to s8/f1.html
+s8/robots.txt disallow s8/f1.html
