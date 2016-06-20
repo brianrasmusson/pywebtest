@@ -214,33 +214,42 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 
 
 class ServerThread(threading.Thread):
-	def __init__(self,server):
-		threading.Thread.__init__(self,name="ServerThread")
-		self.server = server
-	def run(self):
-		self.server.serve_forever()
+    def __init__(self, server):
+        threading.Thread.__init__(self, name="ServerThread")
+        self.server = server
 
-	
+    def run(self):
+        self.server.serve_forever()
+
+
 parser = argparse.ArgumentParser()
 parser.add_argument("-p", "--port", type=int, help="HTTP server port number", default=8080)
-parser.add_argument("--sslport", type=int, help="HTTP server port number", default=4443)
+parser.add_argument("--sslport", type=int, help="HTTPS server port number", default=4443)
 parser.add_argument("--keyfile", type=str, help="SSL key file (.key)")
 parser.add_argument("--certfile", type=str, help="SSL certificate file (.cert)")
 args = parser.parse_args()
 
-if args.keyfile!=None and args.certfile!=None:
-	httpsd = ThreadedHTTPServer(("", args.sslport), Handler)
-	httpsd.socket = ssl.wrap_socket (httpsd.socket, keyfile=args.keyfile, certfile=args.certfile, server_side=True)
-	https_server_thread = ServerThread(httpsd)
-	https_server_thread.daemon = True
-	https_server_thread.start()
+if args.keyfile is not None and args.certfile is not None:
+    def servername_callback(ssl_sock, server_name, initial_context):
+        if server_name is None:
+            return ssl.ALERT_DESCRIPTION_HANDSHAKE_FAILURE
+
+    httpsd = ThreadedHTTPServer(("", args.sslport), Handler)
+    ctx = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
+    ctx.load_cert_chain(args.certfile, args.keyfile)
+    ctx.set_servername_callback(servername_callback)
+
+    httpsd.socket = ctx.wrap_socket(httpsd.socket, server_side=True)
+    https_server_thread = ServerThread(httpsd)
+    https_server_thread.daemon = True
+    https_server_thread.start()
 
 httpd = ThreadedHTTPServer(("", args.port), Handler)
 http_server_thread = ServerThread(httpd)
 http_server_thread.daemon = True
 http_server_thread.start()
 
-time.sleep(10*356*84100)
+time.sleep(10 * 356 * 84100)
 
-#openssl genrsa -out localhost.key 2048
-#openssl req -new -x509 -key localhost.key -out localhost.cert -days 3650 -subj "/CN=localhost"
+# openssl genrsa -out localhost.key 2048
+# openssl req -new -x509 -key localhost.key -out localhost.cert -days 3650 -subj "/CN=localhost"
