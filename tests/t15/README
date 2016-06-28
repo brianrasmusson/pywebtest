@@ -1,0 +1,18 @@
+Test of html entities.
+
+f1:
+	Uses &aelig; so search for "æbleflæsk" should verify that html entities have been processed correctly and that the search intpu is correctly treated as utf8/unicode/whatever
+
+
+f2:
+	long entities
+
+f3:
+	An invalid/unknown entity
+	
+
+f4:
+	entities resulting in multiple codepoints
+
+f5:
+	numeric entities
