@@ -1,0 +1,6 @@
+
+Suggested tests:
+Test 1:
+site list: http://s1.t14.privacore.test:8008/sub/f1.html
+search: f1 s1 sub t14 giraffes penguins evil are beavers too maybe html do not like elephants mice
+expected result: no seg fault
