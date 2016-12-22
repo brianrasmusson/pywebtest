@@ -1,0 +1,51 @@
+./t1/README
+Test for simple page crawl
+
+./t2/README
+Tests for charset/encoding
+
+./t3/README
+Test for all stopwords queries
+
+./t4/README
+Tests for robots.txt
+
+./t5/README
+Test with uppercase hostname
+
+./t6/README
+Test for spammy links, summaries, and filtering
+
+./t7/README
+Test for url subpaths
+
+./t8/README
+Synonym and bigram tests
+
+./t9/README
+Tests for url normalization
+
+./t10/README
+Tests for spiderdb
+
+./t11/README
+Test of title/summary generation with words are ridiculously long
+
+./t12/README
+Document relevancy tests
+
+./t13/README
+Documents with various inlink text
+
+./t14/README
+Test for matches segfault
+
+./t15/README
+Test of html entities.
+
+./t16/README
+Test for unusual link
+
+./t17/README
+Test for summary vs synonyms
+
