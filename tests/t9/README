@@ -1,1 +1,11 @@
 Tests for url normalization
+
+Suggested tests:
+s1:
+	- Only f1.html is spidered
+
+s2:
+	- Only f1.html is spidered
+
+s3:
+	- Only ~sub/f1.html is spidered
