@@ -9,6 +9,8 @@ import urlparse
 import argparse
 import ssl
 import time
+import cgi
+import urllib
 
 root_dir = "tests"
 
@@ -31,6 +33,10 @@ def file_content(path):
         return content.partition('\n')[0]
 
     return content
+
+
+def unescape_path(s):
+    return urllib.unquote(s)
 
 
 class Handler(BaseHTTPServer.BaseHTTPRequestHandler):
@@ -74,6 +80,7 @@ class Handler(BaseHTTPServer.BaseHTTPRequestHandler):
 
     def serve_page(self, testset, server, path):
         fp = root_dir + "/" + testset
+        path = unescape_path(path)
 
         if not os.path.exists(root_dir + "/" + testset):
             return self.respond_unknown_testset(testset)
@@ -196,7 +203,7 @@ class Handler(BaseHTTPServer.BaseHTTPRequestHandler):
         filedir = "" if (path == "/") else path
         for f in l:
             if not f.endswith(special_ending) and f not in special_file:
-                print >> self.wfile, '<p><a href="%s/%s">%s</a></p>' % (filedir, f, f)
+                print >> self.wfile, '<p><a href="%s/%s">%s</a></p>' % (filedir, cgi.escape(f), cgi.escape(f))
 
         print >> self.wfile, "</body>"
         print >> self.wfile, "</html>"
