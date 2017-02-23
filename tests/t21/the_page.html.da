@@ -1,0 +1,9 @@
+<html lang="da">
+<head>
+<title>slartibartfast</title>
+</head>
+<body>
+1234
+<p>En dansk brødtekst som bør detektes som dansk. Hvis ikke, så har sprogopdagelsen et problem.</p>
+</body>
+</html>

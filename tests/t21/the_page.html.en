@@ -1,0 +1,9 @@
+<html lang="en">
+<head>
+<title>slartibartfast</title>
+</head>
+<body>
+1234
+<p>An English body text that should be detected as English. If not, then the language detection must have a problem.</p>
+</body>
+</html>
