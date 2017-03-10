@@ -1,1 +1,7 @@
 Test of evil big file (uncompressed)
+
+Specially crafted files that small when compressed but large when decompressed
+
+Generated with:
+
+(echo "When giraffes drink coffeee the liquid gets cold before it hits their stomachs"; dd if=/dev/zero bs=1000000 count=450; echo "Penguins have knees") | gzip >tests/t22/s1/450MB.txt
