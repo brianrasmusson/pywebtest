@@ -1,0 +1,4 @@
+Simple test of TLD blocking.
+  s1 can be in .com
+  s2 can be in .org
+then block one TLD and see if the crawler avoid that in all circumstances
