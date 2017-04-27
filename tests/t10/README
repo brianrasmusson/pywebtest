@@ -2,3 +2,5 @@ Tests for spiderdb
 
 s1: Same domain permanent redirection
 s2: Missing page
+s3: Simplified redirection
+s4: SpiderReq dedup with hopcount
