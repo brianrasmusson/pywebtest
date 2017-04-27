@@ -49,3 +49,24 @@ Test for unusual link
 ./t17/README
 Test for summary vs synonyms
 
+./t18/README
+Test for nofollow links
+
+./t19/README
+Provides apostrophes in title, H1 and other paragraphs.
+
+./t20/README
+Files (paths) with unusual charaters in them
+
+./t21/README
+Test changing document
+
+./t22/README
+Test of evil big file (uncompressed)
+
+./t23/README
+Simple test of TLD blocking.
+
+./t24/README
+Test of simple redirects.
+
