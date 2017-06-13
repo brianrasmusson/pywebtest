@@ -1,0 +1,2 @@
+Test for massive number of hits on "potato" in a single document.
+Alternatively search for "ru" because that document apparently doesn't get detected as sapm or similar.
