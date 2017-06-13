@@ -1,0 +1,23 @@
+Description of testcase automation files
+
+t1/testcase/seeds: List of seed.
+	Example
+		s1.t1/file1
+		s1.t1/file2
+		s2.t1/file3
+		...
+	If non-existing defaults to;
+		s1.t1/
+		s2.t1/
+		...
+
+<finish crawling>
+	
+t1/testcase/verify_indexed
+	list terms that must return more than 0 results
+t1/testcase/verify_not_indexed
+	list terms that must return 0 results
+t1/testcase/just_search
+	list of terms that should be search but the result doesn't matter.
+
+If neither verify_indexed nor verify_not_indexed nor just_search exist then the default is to do a single search on 5th-last word in an aritrary document
