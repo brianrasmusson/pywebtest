@@ -7,6 +7,8 @@ import threading
 import os
 import urlparse
 import argparse
+import logging
+import logging.config
 import ssl
 import time
 import cgi
@@ -40,6 +42,9 @@ def unescape_path(s):
 
 
 class Handler(BaseHTTPServer.BaseHTTPRequestHandler):
+        def log_message(self,format,*args):
+                logger.info("%s" % (format%args))
+	
 	def do_GET(self):
 		parsed_url = urlparse.urlparse(self.path)
 		host = self.headers["Host"]
@@ -57,7 +62,7 @@ class Handler(BaseHTTPServer.BaseHTTPRequestHandler):
 		
 		path = parsed_url.path
 		
-		print "testset=%s, server=%s, path=%s" % (testset, server, path)
+		logger.debug("testset=%s, server=%s, path=%s", testset, server, path)
 		return self.serve_page(testset, server, path)
 	
 	def respond_unknown_host(self, host):
@@ -237,7 +242,13 @@ parser.add_argument("-p", "--port", type=int, help="HTTP server port number", de
 parser.add_argument("--sslport", type=int, help="HTTPS server port number", default=4443)
 parser.add_argument("--keyfile", type=str, help="SSL key file (.key)")
 parser.add_argument("--certfile", type=str, help="SSL certificate file (.cert)")
+parser.add_argument("--loggingconf",type=str,default="logging.conf")
 args = parser.parse_args()
+
+logging.config.fileConfig(args.loggingconf)
+
+logger = logging.getLogger(__name__)
+logger.info("webserver initializing")
 
 if args.keyfile is not None and args.certfile is not None:
 	def servername_callback(ssl_sock, server_name, initial_context):
@@ -258,6 +269,8 @@ httpd = ThreadedHTTPServer(("", args.port), Handler)
 http_server_thread = ServerThread(httpd)
 http_server_thread.daemon = True
 http_server_thread.start()
+
+logger.info("webserver initialized")
 
 time.sleep(10 * 356 * 84100)
 
