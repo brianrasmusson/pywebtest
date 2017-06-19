@@ -207,7 +207,7 @@ class Handler(BaseHTTPServer.BaseHTTPRequestHandler):
 		l.sort()
 		
 		special_ending = ('.status-code', '.content-type', '.charset', '.content-encoding', '.extra-headers')
-		special_file = ('README')
+		special_file = ('README', 'robots.txt')
 		filedir = "" if (path == "/") else path
 		for f in l:
 			if not f.endswith(special_ending) and f not in special_file:
