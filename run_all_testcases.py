@@ -24,7 +24,7 @@ def gb_create_hostfile(gb_path, port_offset=0):
 
 def main(testdir, gb_path, gb_host, gb_port, ws_scheme, ws_domain, ws_port):
     # prepare gigablast
-    gb_create_hostfile()
+    gb_create_hostfile(gb_path)
 
     # start webserver
     test_webserver = TestWebServer(ws_port)
