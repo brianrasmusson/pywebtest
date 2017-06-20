@@ -1,0 +1,5 @@
+# Setup environment:
+#   pip3 install -r requirements.txt
+
+requests>=2.7.0
+junit-xml>=1.7.0
