@@ -81,7 +81,7 @@ class TestRunner:
                 time.sleep(0.5)
 
         # set some default config
-        config_gb()
+        self.config_gb()
 
         self.add_testcase('gb_start', start_time, not result)
         return result
