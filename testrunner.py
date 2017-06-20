@@ -236,8 +236,8 @@ if __name__ == '__main__':
                         help='Directory containing gigablast binary (default: {})'.format(default_gbpath))
     parser.add_argument('--host', dest='gb_host', default='127.0.0.1', action='store',
                         help='Gigablast host (default: 127.0.0.1)')
-    parser.add_argument('--port', dest='gb_port', default='8000', action='store',
-                        help='Gigablast port (default: 8000')
+    parser.add_argument('--port', dest='gb_port', default='28000', action='store',
+                        help='Gigablast port (default: 28000')
 
     parser.add_argument('--dest-scheme', dest='ws_scheme', default='http', action='store',
                         help='Destination host scheme (default: 127.0.0.1)')

@@ -14,7 +14,7 @@ def natural_sort(l):
 
 
 # @todo ALC cater for multiple instance
-def gb_create_hostfile(gb_path, port_offset):
+def gb_create_hostfile(gb_path, port_offset=0):
     with open(os.path.join(gb_path, 'hosts.conf'), 'w') as f:
         f.write(('num-mirrors: 0\n'
                  '0 %d %d %d %d 127.0.0.1 127.0.0.1 %s\n' %
@@ -58,8 +58,8 @@ if __name__ == '__main__':
                         help='Directory containing gigablast binary (default: {})'.format(default_gbpath))
     parser.add_argument('--host', dest='gb_host', default='127.0.0.1', action='store',
                         help='Gigablast host (default: 127.0.0.1)')
-    parser.add_argument('--port', dest='gb_port', default='8000', action='store',
-                        help='Gigablast port (default: 8000')
+    parser.add_argument('--port', dest='gb_port', default='28000', action='store',
+                        help='Gigablast port (default: 28000')
 
     parser.add_argument('--dest-scheme', dest='ws_scheme', default='http', action='store',
                         help='Destination host scheme (default: 127.0.0.1)')
