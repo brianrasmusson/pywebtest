@@ -15,10 +15,12 @@ def natural_sort(l):
 
 # @todo ALC cater for multiple instance
 def gb_create_hostfile(gb_path, port_offset=0):
+    gb_mergepath = os.path.normpath(os.path.join(gb_path, '../merge'))
     with open(os.path.join(gb_path, 'hosts.conf'), 'w') as f:
         f.write(('num-mirrors: 0\n'
-                 '0 %d %d %d %d 127.0.0.1 127.0.0.1 %s\n' %
-                 (25998 + port_offset, 27000 + port_offset, 28000 + port_offset, 29000 + port_offset, gb_path)))
+                 '0 %d %d %d %d 127.0.0.1 127.0.0.1 %s %s\n' %
+                 (25998 + port_offset, 27000 + port_offset, 28000 + port_offset, 29000 + port_offset,
+                  gb_path, gb_mergepath)))
     pass
 
 
