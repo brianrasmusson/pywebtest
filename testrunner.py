@@ -72,6 +72,9 @@ class TestRunner:
         while result:
             try:
                 self.update_processuptime()
+
+                # set some default config
+                self.config_gb()
                 break
             except requests.exceptions.ConnectionError as e:
                 # wait for a max of 300 seconds
@@ -79,9 +82,6 @@ class TestRunner:
                     result = False
                     break
                 time.sleep(0.5)
-
-        # set some default config
-        self.config_gb()
 
         self.add_testcase('gb_start', start_time, not result)
         return result
