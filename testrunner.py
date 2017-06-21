@@ -165,7 +165,7 @@ class TestRunner:
     def add_testcase(self, test_type, test_item, start_time, failed=False):
         test_name = test_type + ' - ' + test_item
         testcase = TestCase(test_name,
-                            classname='systemtest.' + self.testcase,
+                            classname='systemtest.' + self.testcasedesc,
                             elapsed_sec=(time.perf_counter() - start_time))
         if failed:
             testcase.add_failure_info(test_name + ' - failed')
@@ -177,7 +177,7 @@ class TestRunner:
         self.testcases.append(testcase)
 
     def get_testsuite(self):
-        return TestSuite(self.testcasedesc, test_cases=self.testcases, package='systemtest')
+        return TestSuite(self.testcase, test_cases=self.testcases, package='systemtest')
 
     def validate_processuptime(self):
         return self.api.status_processstarttime() == self.gb_starttime
