@@ -16,7 +16,7 @@ class TestRunner:
         self.testcaseconfigdir = os.path.join(self.testcasedir, 'testcase')
         testcasedescpath = os.path.join(self.testcasedir, 'README')
         if os.path.exists(testcasedescpath):
-            self.testcasedesc = self.read_file(testcasedescpath)[0]
+            self.testcasedesc = self.read_file(testcasedescpath)[0].strip('.')
         else:
             self.testcasedesc = self.testcase
 
