@@ -14,6 +14,11 @@ class TestRunner:
         self.testcase = testcase
         self.testcasedir = os.path.join(testdir, testcase)
         self.testcaseconfigdir = os.path.join(self.testcasedir, 'testcase')
+        testcasedescpath = os.path.join(self.testcasedir, 'README')
+        if os.path.exists(testcasedescpath):
+            self.testcasedesc = self.read_file(testcasedescpath)[0]
+        else:
+            self.testcasedesc = self.testcase
 
         self.gb_path = gb_path
         self.gb_starttime = 0
@@ -83,7 +88,7 @@ class TestRunner:
                     break
                 time.sleep(0.5)
 
-        self.add_testcase('gb_start', start_time, not result)
+        self.add_testcase('pre', 'start', start_time, not result)
         return result
 
     def save_gb(self):
@@ -154,10 +159,11 @@ class TestRunner:
 
             time.sleep(0.5)
 
-        self.add_testcase('gb_spider', start_time, not result)
+        self.add_testcase('pre', 'spider', start_time, not result)
         return result
 
-    def add_testcase(self, test_name, start_time, failed=False):
+    def add_testcase(self, test_type, test_item, start_time, failed=False):
+        test_name = test_type + ' - ' + test_item
         testcase = TestCase(test_name, elapsed_sec=(time.perf_counter() - start_time))
         if failed:
             testcase.add_failure_info(test_name + ' - failed')
@@ -169,7 +175,7 @@ class TestRunner:
         self.testcases.append(testcase)
 
     def get_testsuite(self):
-        return TestSuite(self.testcase, self.testcases)
+        return TestSuite(self.testcasedesc, test_cases=self.testcases, package='systemtest.' + self.testcase)
 
     def validate_processuptime(self):
         return self.api.status_processstarttime() == self.gb_starttime
@@ -186,9 +192,9 @@ class TestRunner:
             start_time = time.perf_counter()
             try:
                 response = self.api.search(item)
-                self.add_testcase(test_type + ' - ' + item, start_time)
+                self.add_testcase(test_type, item, start_time)
             except:
-                self.add_testcase(test_type + ' - ' + item, start_time, True)
+                self.add_testcase(test_type, item, start_time, True)
 
     def verify_indexed(self):
         test_type = 'verify_indexed'
@@ -199,9 +205,9 @@ class TestRunner:
             start_time = time.perf_counter()
             try:
                 response = self.api.search(item)
-                self.add_testcase(test_type + ' - ' + item, start_time, (not len(response['results']) != 0))
+                self.add_testcase(test_type, item, start_time, (not len(response['results']) != 0))
             except:
-                self.add_testcase(test_type + ' - ' + item, start_time, True)
+                self.add_testcase(test_type, item, start_time, True)
 
     def verify_not_indexed(self):
         test_type = 'verify_not_indexed'
@@ -212,9 +218,9 @@ class TestRunner:
             start_time = time.perf_counter()
             try:
                 response = self.api.search(item)
-                self.add_testcase(test_type + ' - ' + item, start_time, (not len(response['results']) == 0))
+                self.add_testcase(test_type, item, start_time, (not len(response['results']) == 0))
             except:
-                self.add_testcase(test_type + ' - ' + item, start_time, True)
+                self.add_testcase(test_type, item, start_time, True)
 
 
 def main(testdir, testcase, gb_path, gb_host, gb_port, ws_scheme, ws_domain, ws_port):
