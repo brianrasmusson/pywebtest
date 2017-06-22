@@ -154,6 +154,7 @@ class TestRunner:
 
             # wait for a max of 300 seconds
             if time.perf_counter() - start_time > 300:
+                print(response)
                 result = False
                 break
 
@@ -207,7 +208,12 @@ class TestRunner:
             start_time = time.perf_counter()
             try:
                 response = self.api.search(item)
-                self.add_testcase(test_type, item, start_time, (not len(response['results']) != 0))
+
+                failed = (not len(response['results']) != 0)
+                if failed:
+                    print(response)
+
+                self.add_testcase(test_type, item, start_time, failed)
             except:
                 self.add_testcase(test_type, item, start_time, True)
 
@@ -220,14 +226,20 @@ class TestRunner:
             start_time = time.perf_counter()
             try:
                 response = self.api.search(item)
-                self.add_testcase(test_type, item, start_time, (not len(response['results']) == 0))
+
+                failed = (not len(response['results']) == 0)
+                if failed:
+                    print(response)
+
+                self.add_testcase(test_type, item, start_time, failed)
             except:
                 self.add_testcase(test_type, item, start_time, True)
 
 
 def main(testdir, testcase, gb_path, gb_host, gb_port, ws_scheme, ws_domain, ws_port):
     test_runner = TestRunner(testdir, testcase, gb_path, gb_host, gb_port, ws_scheme, ws_domain, ws_port)
-    test_runner.run_test()
+    result = test_runner.run_test()
+    print(TestSuite.to_xml_string([result]))
 
 
 if __name__ == '__main__':
