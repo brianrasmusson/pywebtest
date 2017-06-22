@@ -70,3 +70,9 @@ Simple test of TLD blocking.
 ./t24/README
 Test of simple redirects.
 
+./t25/README
+Test single-word and bigram matching
+
+./t26/README
+Test for massive number of hits on "potato" in a single document.
+
