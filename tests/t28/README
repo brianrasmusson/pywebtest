@@ -1,0 +1,7 @@
+s1: contains 101 documents with a single word in them: banana
+s2: contains 1 document with a single word in it: banana
+
+Used for testing a particular bug in open-source-searh-engine:
+  - seed with s1, wait for crawling to finished, dump-to-disk, seed with s2, wait for crawling to finish, search for "banana" ===> coredump
+  - seed in reverse order: also coredump (but different strack backtrace)
+ 
