@@ -1,0 +1,3 @@
+A country is in the world.
+The world has at least one country.
+But nowhere in this text is "world" and "country" a bigram.

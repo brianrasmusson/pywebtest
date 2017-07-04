@@ -1,0 +1,6 @@
+Some SDK documentation about the method/procedure:
+	file.open()
+which opens an file. If the file is already open then file is not opened again.
+
+Also, penguins are in league with evil velociraptors on hoverboards. Their
+ultimate goals are world domination and giving giraffes atomic wedgies.
