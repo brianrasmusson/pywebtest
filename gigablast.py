@@ -113,6 +113,11 @@ class GigablastAPI:
 
         self._config_master(payload)
 
+    def config_log(self, payload):
+        self._apply_default_payload(payload)
+
+        requests.get(self._get_url('admin/log'), params=payload)
+
     def delete_url(self, url, finalizer=False):
         if not finalizer:
             self._add_urls.discard(url)

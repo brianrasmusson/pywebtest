@@ -106,6 +106,9 @@ class TestRunner:
         self.api.config_crawldelay(0, 0)
         self.api.config_dns('127.0.0.1')
 
+        # log debug query
+        self.api.config_log({'ldq': '1'})
+
     def seed(self):
         print('Adding seed for spidering')
         filename = os.path.join(self.testcaseconfigdir, 'seeds')
