@@ -108,6 +108,7 @@ class TestRunner:
 
         # log debug query
         self.api.config_log({'ldq': '1'})
+        self.api.config_log({'ltrc_sp': '1'})
 
     def seed(self):
         print('Adding seed for spidering')
