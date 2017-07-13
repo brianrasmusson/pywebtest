@@ -1,3 +1,16 @@
 Various tests for bigrams and ranking
 
-s2 and the goes together for domain matching test "the.t27"
+s1:
+	Test 1:
+		search for "world country"
+		You want s1/f1.txt to be top rank.
+	
+	Test 2:
+		Search on API-like stuff like file.open or file::open
+		You want s1/f3.txt to be top rank.
+	
+
+s2 and the:
+	goes together for domain matching test "the.t27"
+	the/index.html should be top rank
+
