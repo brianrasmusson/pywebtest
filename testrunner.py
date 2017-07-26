@@ -141,7 +141,7 @@ class TestRunner:
 
     def seed(self, *args):
         print('Adding seed for spidering')
-
+	print('len(args)', len(args))
         if len(args):
             if len(args[0]):
                 seedstr = args[0].format(SCHEME=self.ws_scheme, DOMAIN=self.ws_domain, PORT=self.ws_port) + '\n'
@@ -233,6 +233,7 @@ class TestRunner:
     def just_search(self, *args):
         test_type = 'just_search'
         print('Running test -', test_type)
+	print('len(args)', len(args))
 
         items = []
         if len(args):
@@ -252,6 +253,7 @@ class TestRunner:
     def verify_indexed(self, *args):
         test_type = 'verify_indexed'
         print('Running test -', test_type)
+	print('len(args)', len(args))
 
         items = []
         if len(args):
@@ -276,6 +278,7 @@ class TestRunner:
     def verify_not_indexed(self, *args):
         test_type = 'verify_not_indexed'
         print('Running test -', test_type)
+	print('len(args)', len(args))
 
         items = []
         if len(args):
