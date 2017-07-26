@@ -132,6 +132,11 @@ class GigablastAPI:
 
         return False
 
+    def dump(self):
+        payload = {'dump': '1'}
+
+        self._config_master(payload)
+
     def get(self, doc_id, payload=None):
         if not payload:
             payload = {}
