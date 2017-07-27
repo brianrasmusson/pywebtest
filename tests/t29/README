@@ -1,0 +1,4 @@
+Test of negation
+	banana -cucumber
+	expect to see one result: f1.txt
+	f2 must not be in the result list
