@@ -62,6 +62,22 @@ class Handler(BaseHTTPRequestHandler):
         # strip of port from host (eg. www.example.com:80
         host = host.split(':')[0]
 
+        isHttp = (self.server == self.server.webserver.http_server_thread.server)
+
+        if isHttp:
+            url = "http://"
+        else:
+            url = "https://"
+
+        url += host
+
+        if (isHttp and self.server.server_port != 80) or (not isHttp and self.server.server_port != 443):
+            url += ':' + str(self.server.server_port)
+
+        url += self.path
+
+        self.server.webserver.add_served_url(url)
+
         # Host is expected to be in the form of <server>.<testcase>.something.....
         if len(host.split('.')) < 2:
             return self.respond_unknown_host(host)
@@ -239,9 +255,10 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 
 
 class ServerThread(threading.Thread):
-    def __init__(self, server):
+    def __init__(self, server, webserver):
         threading.Thread.__init__(self, name="ServerThread")
         self.server = server
+        self.server.webserver = webserver
 
     def run(self):
         self.server.serve_forever()
@@ -257,6 +274,7 @@ class TestWebServer:
 
         self.http_server_thread = None
         self.https_server_thread = None
+        self.served_urls = []
 
         if keyfile is not None and certfile is not None:
             def servername_callback(ssl_sock, server_name, initial_context):
@@ -269,12 +287,12 @@ class TestWebServer:
             ctx.set_servername_callback(servername_callback)
 
             httpsd.socket = ctx.wrap_socket(httpsd.socket, server_side=True)
-            self.https_server_thread = ServerThread(httpsd)
+            self.https_server_thread = ServerThread(httpsd, self)
             self.https_server_thread.daemon = True
             self.https_server_thread.start()
 
         httpd = ThreadedHTTPServer(("", port), Handler)
-        self.http_server_thread = ServerThread(httpd)
+        self.http_server_thread = ServerThread(httpd, self)
         self.http_server_thread.daemon = True
         self.http_server_thread.start()
 
@@ -290,6 +308,15 @@ class TestWebServer:
             self.https_server_thread.server.shutdown()
 
         logger.info("webserver stopped")
+
+    def add_served_url(self, url):
+        self.served_urls.append(url)
+
+    def get_served_urls(self):
+        return self.served_urls
+
+    def clear_served_urls(self):
+        self.served_urls = []
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

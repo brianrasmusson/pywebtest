@@ -1,0 +1,3 @@
+{SCHEME}://s1.t9.{DOMAIN}:{PORT}/f1.html
+{SCHEME}://s2.t9.{DOMAIN}:{PORT}/f1.html
+{SCHEME}://s3.t9.{DOMAIN}:{PORT}/~f1.html

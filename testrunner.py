@@ -11,7 +11,7 @@ from junit_xml import TestSuite, TestCase
 
 
 class TestRunner:
-    def __init__(self, testdir, testcase, gb_path, gb_host, gb_port, ws_scheme, ws_domain, ws_port):
+    def __init__(self, testdir, testcase, gb_path, gb_host, gb_port, webserver, ws_scheme, ws_domain, ws_port):
         self.testcase = testcase
         self.testcasedir = os.path.join(testdir, testcase)
         self.testcaseconfigdir = os.path.join(self.testcasedir, 'testcase')
@@ -26,6 +26,7 @@ class TestRunner:
 
         self.api = GigablastAPI(gb_host, gb_port)
 
+        self.webserver = webserver
         self.ws_scheme = ws_scheme
         self.ws_domain = ws_domain
         self.ws_port = ws_port
@@ -198,6 +199,11 @@ class TestRunner:
             time.sleep(0.5)
 
         self.add_testcase('pre', 'spider', start_time, not result)
+
+        served_urls = self.webserver.get_served_urls()
+        for served_url in served_urls:
+            print('Spidered ', served_url)
+
         return result
 
     def add_testcase(self, test_type, test_item, start_time, failed=False):
@@ -290,6 +296,50 @@ class TestRunner:
                 failed = (not len(response['results']) == 0)
                 if failed:
                     print(response)
+
+                self.add_testcase(test_type, item, start_time, failed)
+            except:
+                self.add_testcase(test_type, item, start_time, True)
+
+    def verify_spidered(self, *args):
+        test_type = 'verify_spidered'
+        print('Running test -', test_type)
+
+        items = []
+        if len(args):
+            items.append(args[0])
+        else:
+            filename = os.path.join(self.testcaseconfigdir, test_type)
+            items = self.read_file(filename)
+
+        served_urls = self.webserver.get_served_urls()
+        for index, item in enumerate(items):
+            start_time = time.perf_counter()
+            try:
+                url = item.format(SCHEME=self.ws_scheme, DOMAIN=self.ws_domain, PORT=self.ws_port)
+                failed = (url not in served_urls)
+
+                self.add_testcase(test_type, item, start_time, failed)
+            except:
+                self.add_testcase(test_type, item, start_time, True)
+
+    def verify_not_spidered(self, *args):
+        test_type = 'verify_not_spidered'
+        print('Running test -', test_type)
+
+        items = []
+        if len(args):
+            items.append(args[0])
+        else:
+            filename = os.path.join(self.testcaseconfigdir, test_type)
+            items = self.read_file(filename)
+
+        served_urls = self.webserver.get_served_urls()
+        for index, item in enumerate(items):
+            start_time = time.perf_counter()
+            try:
+                url = item.format(SCHEME=self.ws_scheme, DOMAIN=self.ws_domain, PORT=self.ws_port)
+                failed = (url in served_urls)
 
                 self.add_testcase(test_type, item, start_time, failed)
             except:

@@ -1,0 +1,5 @@
+{SCHEME}://s1.t9.{DOMAIN}:{PORT}/f1.html;jsessionid=618b77a498ef846f02a511bd35a917bf
+{SCHEME}://s1.t9.{DOMAIN}:{PORT}/f1.html;jsessionid=eb1fbbc713fd31337e646c07564022e0
+{SCHEME}://s2.t9.{DOMAIN}:{PORT}/f1.html#anchor1
+{SCHEME}://s2.t9.{DOMAIN}:{PORT}/f1.html#anchor2
+{SCHEME}://s3.t9.{DOMAIN}:{PORT}/%7Ef1.html

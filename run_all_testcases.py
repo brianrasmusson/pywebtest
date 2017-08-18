@@ -36,7 +36,8 @@ def main(testdir, gb_path, gb_host, gb_port, ws_scheme, ws_domain, ws_port):
     results = []
     for testcase in testcases:
         print('Running testcase -', testcase)
-        test_runner = TestRunner(testdir, testcase, gb_path, gb_host, gb_port, ws_scheme, ws_domain, ws_port)
+        test_webserver.clear_served_urls()
+        test_runner = TestRunner(testdir, testcase, gb_path, gb_host, gb_port, test_webserver, ws_scheme, ws_domain, ws_port)
         results.append(test_runner.run_test())
 
     # stop webserver
@@ -64,7 +65,7 @@ if __name__ == '__main__':
                         help='Gigablast port (default: 28000')
 
     parser.add_argument('--dest-scheme', dest='ws_scheme', default='http', action='store',
-                        help='Destination host scheme (default: 127.0.0.1)')
+                        help='Destination host scheme (default: http)')
     parser.add_argument('--dest-domain', dest='ws_domain', default='privacore.test', action='store',
                         help='Destination host domain (default: privacore.test)')
     parser.add_argument('--dest-port', dest='ws_port', type=int, default=28080, action='store',
