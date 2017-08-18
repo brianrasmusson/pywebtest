@@ -21,3 +21,13 @@ t1/testcase/just_search
 	list of terms that should be search but the result doesn't matter.
 
 If neither verify_indexed nor verify_not_indexed nor just_search exist then the default is to do a single search on 5th-last word in an aritrary document
+
+t1/testcase/instructions00
+	list of instructions to run
+	keyword:
+		seed ${url}
+		wait_spider_done
+		dump
+		just_search ${term}
+		verify_indexed ${term}
+		verify_not_indexed ${term}
