@@ -1,0 +1,7 @@
+Test of infitire redirects of robots.txt
+
+Test:
+	seed
+	wait until it should have given up
+	verify that f1.html has not been cralwed (search for "moose")
+	
