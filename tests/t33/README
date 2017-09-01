@@ -1,0 +1,6 @@
+Test of crawling when robots.txt reuslt s in connection-reset
+
+Test:
+	seed
+	wait
+	verify that f1.html hasn't been crawled
