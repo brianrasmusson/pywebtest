@@ -23,6 +23,8 @@ import logging.config
 import ssl
 import time
 import cgi
+import socket
+import struct
 
 global logger
 
@@ -110,6 +112,12 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(('<html><body>server %s is unknown</body></html>' % server).encode())
 
+    def respond_connection_reset(self):
+        self.request.setsockopt(socket.SOL_SOCKET, socket.SO_LINGER,
+                                struct.pack('ii', 1, 0))
+        self.request.close()
+        return False
+
     def serve_page(self, testset, server, path):
         path = unescape_path(path)
 
@@ -125,6 +133,9 @@ class Handler(BaseHTTPRequestHandler):
             return self.maybe_serve_index_page(base_path, path)
         if not os.path.exists(base_path):
             return self.respond_not_found(base_path)
+
+        if os.path.exists(base_path + ".connection-reset"):
+            return self.respond_connection_reset()
 
         # Setup defaults
         status_code = 200
@@ -232,7 +243,7 @@ class Handler(BaseHTTPRequestHandler):
         l = os.listdir(dir)
         l.sort()
 
-        special_ending = ('.status-code', '.content-type', '.charset', '.content-encoding', '.extra-headers')
+        special_ending = ('.status-code', '.content-type', '.charset', '.content-encoding', '.extra-headers', '.connection-reset')
         special_file = ('README', 'robots.txt')
         filedir = "" if (path == "/") else path
         for f in l:
