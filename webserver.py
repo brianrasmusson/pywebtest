@@ -213,7 +213,8 @@ class Handler(BaseHTTPRequestHandler):
             self.send_header("Content-Encoding", content_encoding)
 
         for h in extra_headers:
-            self.send_header(h.split(":")[0], h.partition(":")[2])
+            if ':' in h:
+                self.send_header(h.split(":")[0], h.partition(":")[2])
 
         self.end_headers()
 
