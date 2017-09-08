@@ -22,6 +22,11 @@ t1/testcase/just_search
 
 If neither verify_indexed nor verify_not_indexed nor just_search exist then the default is to do a single search on 5th-last word in an aritrary document
 
+t1/testcase/verify_spidered
+	list of urls that must be spidered
+t1/testcase/verify_not_spidered
+	list of urls that must not be spidered
+
 t1/testcase/instructions00
 	list of instructions to run
 	keyword:
@@ -31,3 +36,5 @@ t1/testcase/instructions00
 		just_search ${term}
 		verify_indexed ${term}
 		verify_not_indexed ${term}
+		verify_spidered ${url}
+		verify_not_spidered ${url}
