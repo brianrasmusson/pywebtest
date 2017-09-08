@@ -1,3 +1,6 @@
+./a1/README
+Sample chinese pages
+
 ./t1/README
 Test for simple page crawl
 
@@ -75,4 +78,22 @@ Test single-word and bigram matching
 
 ./t26/README
 Test for massive number of hits on "potato" in a single document.
+
+./t27/README
+Various tests for bigrams and ranking
+
+./t28/README
+s1: contains 101 documents with a single word in them: banana
+
+./t29/README
+Test of negation
+
+./t30/README
+Test of inter-site links. No automated test.
+
+./t32/README
+Test of infitire redirects of robots.txt
+
+./t33/README
+Test of crawling when robots.txt reuslt s in connection-reset
 
