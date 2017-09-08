@@ -1,1 +1,5 @@
 Test of what happens when spider gets responses with "403 forbidden" and it looks like a temporary IP-ban or captcha.
+
+Requires manually renaming associated f1.html.* files.
+
+Also test or wordfence captcha
