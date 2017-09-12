@@ -1,0 +1,9 @@
+Test of content checks / bans.
+
+Test: depends on wanted_check.so. Assumptions is example library.
+
+1:	crawl both sites
+
+2:	verify that s1/f1.html has not been indexed.
+
+3:	verify that exterminate-all-cellery/f2.html has been indexed.
