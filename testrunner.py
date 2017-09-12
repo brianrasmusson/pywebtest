@@ -138,6 +138,12 @@ class TestRunner:
             # verify not indexed
             self.verify_not_indexed()
 
+            # verify spidered
+            self.verify_spidered()
+
+            # verify not spidered
+            self.verify_not_spidered()
+
     def seed(self, *args):
         print('Adding seed for spidering')
 
