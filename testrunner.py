@@ -355,8 +355,8 @@ class TestRunner:
                 self.add_testcase(test_type, item, start_time, True)
 
 
-def main(testdir, testcase, gb_path, gb_host, gb_port, ws_scheme, ws_domain, ws_port):
-    test_runner = TestRunner(testdir, testcase, gb_path, gb_host, gb_port, ws_scheme, ws_domain, ws_port)
+def main(testdir, testcase, gb_path, gb_host, gb_port, webserver, ws_scheme, ws_domain, ws_port):
+    test_runner = TestRunner(testdir, testcase, gb_path, gb_host, gb_port, webserver, ws_scheme, ws_domain, ws_port)
     result = test_runner.run_test()
     print(TestSuite.to_xml_string([result]))
 
@@ -387,5 +387,13 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
+    from webserver import TestWebServer
+
+    # start webserver
+    test_webserver = TestWebServer(args.ws_port)
+
     main(args.testdir, args.testcase, args.gb_path, args.gb_host, args.gb_port,
-         args.ws_scheme, args.ws_domain, args.ws_port)
+         test_webserver, args.ws_scheme, args.ws_domain, args.ws_port)
+
+    # stop webserver
+    test_webserver.stop()
