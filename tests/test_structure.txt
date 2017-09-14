@@ -20,7 +20,7 @@ t1/testcase/verify_not_indexed
 t1/testcase/just_search
 	list of terms that should be search but the result doesn't matter.
 
-If neither verify_indexed nor verify_not_indexed nor just_search exist then the default is to do a single search on 5th-last word in an aritrary document
+If neither verify_indexed nor verify_not_indexed nor just_search exist then the default is to do a single search on 5th-last word in an aritrary document (NOT IMPLEMENTED!)
 
 t1/testcase/verify_spidered
 	list of urls that must be spidered
@@ -38,3 +38,6 @@ t1/testcase/instructions00
 		verify_not_indexed ${term}
 		verify_spidered ${url}
 		verify_not_spidered ${url}
+
+t1/testcase/*.txt
+	config files that will be copied to gb path

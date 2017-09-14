@@ -6,6 +6,7 @@ import subprocess
 import requests
 import sys
 import glob
+import shutil
 from gigablast import GigablastAPI
 from junit_xml import TestSuite, TestCase
 
@@ -57,6 +58,10 @@ class TestRunner:
     def start_gb(self):
         print('Cleaning old data')
         subprocess.call(['make', 'cleantest'], cwd=self.gb_path, stdout=subprocess.DEVNULL)
+
+        print('Copy config files')
+        for filename in glob.glob(os.path.join(self.testcaseconfigdir, '*.txt')):
+            shutil.copy(filename, self.gb_path)
 
         print('Starting gigablast')
         start_time = time.perf_counter()
