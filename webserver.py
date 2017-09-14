@@ -231,8 +231,7 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
 
         if os.path.exists(dir + "/index.html"):
-            with open(dir + "/index.html", "rb") as f:
-                self.wfile.write(f.read())
+            self.wfile.write(self.file_content(dir + "/index.html"))
             return
 
         self.wfile.write('<html>'.encode())
