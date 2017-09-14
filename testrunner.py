@@ -100,8 +100,9 @@ class TestRunner:
         self.api.config_crawldelay(0, 0)
         self.api.config_dns('127.0.0.1')
 
-        # log debug query
+        # enable debug/trace logs
         self.api.config_log({'ldq': '1'})
+        self.api.config_log({'ldspid': '1'})
         self.api.config_log({'ltrc_sp': '1'})
         self.api.config_log({'ltrc_msgfour': '1'})
         self.api.config_log({'ltrc_xmldoc': '1'})
