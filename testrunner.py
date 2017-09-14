@@ -104,6 +104,7 @@ class TestRunner:
         self.api.config_log({'ldq': '1'})
         self.api.config_log({'ltrc_sp': '1'})
         self.api.config_log({'ltrc_msgfour': '1'})
+        self.api.config_log({'ltrc_xmldoc': '1'})
 
     def run_instructions(self):
         # check instruction file
