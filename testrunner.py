@@ -182,12 +182,10 @@ class TestRunner:
         while result:
             try:
                 response = self.api.get_spiderqueue()['response']
+                print(response)
             except:
                 result = False
                 break
-
-            print('Got spiderqueue response')
-            print(response)
 
             if response['statusCode'] == 7 and response['doleIPCount'] == 0 and response['spiderCount'] == 0:
                 if response['waitingTreeCount'] > 0:
