@@ -148,6 +148,9 @@ class TestRunner:
             # verify spidered
             self.verify_spidered()
 
+            # verify only spidered
+            self.verify_only_spidered()
+
             # verify not spidered
             self.verify_not_spidered()
 
@@ -336,6 +339,22 @@ class TestRunner:
                 self.add_testcase(test_type, item, start_time, failed)
             except:
                 self.add_testcase(test_type, item, start_time, True)
+
+    def verify_only_spidered(self, *args):
+        test_type = 'verify_only_spidered'
+        print('Running test -', test_type)
+
+        items = []
+        if len(args):
+            items.append(args[0])
+        else:
+            filename = os.path.join(self.testcaseconfigdir, test_type)
+            items = self.read_file(filename)
+
+        served_urls = self.webserver.get_served_urls()
+
+        start_time = time.perf_counter()
+        self.add_testcase(test_type, '', start_time, (sorted(served_urls) != sorted(items)))
 
     def verify_not_spidered(self, *args):
         test_type = 'verify_not_spidered'

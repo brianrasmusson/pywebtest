@@ -3,4 +3,3 @@ Test expansion of iframe
 s1: normal iframe expansion
 s2: iframe with blocked url
 s3: self closing iframe (invalid)
-s4: iframe src url starting with javascript

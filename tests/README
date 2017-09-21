@@ -103,3 +103,15 @@ Test of what happens when spider gets responses with "403 forbidden" and it look
 ./t35/README
 Test what happens if /robots.txt has a captcha.
 
+./t36/README
+Test of content checks / bans.
+
+./t37/README
+Test canonical urls
+
+./t38/README
+Test expansion of iframe
+
+./t39/README
+Test expansion of iframe (src url)
+
