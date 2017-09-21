@@ -1,3 +1,4 @@
 Test expansion of iframe (src url)
 
-s1: iframe src url starting with javascript
+s1: iframe src url starting with javascript:
+s2: iframe src url starting with about:

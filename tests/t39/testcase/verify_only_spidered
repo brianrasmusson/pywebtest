@@ -1,2 +1,4 @@
 {SCHEME}://s1.t39.{DOMAIN}:{PORT}/robots.txt
 {SCHEME}://s1.t39.{DOMAIN}:{PORT}/
+{SCHEME}://s2.t39.{DOMAIN}:{PORT}/robots.txt
+{SCHEME}://s2.t39.{DOMAIN}:{PORT}/
