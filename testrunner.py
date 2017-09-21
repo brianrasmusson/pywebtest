@@ -351,10 +351,11 @@ class TestRunner:
             filename = os.path.join(self.testcaseconfigdir, test_type)
             items = self.read_file(filename)
 
-        served_urls = self.webserver.get_served_urls()
+        if len(items):
+            served_urls = self.webserver.get_served_urls()
 
-        start_time = time.perf_counter()
-        self.add_testcase(test_type, '', start_time, (sorted(served_urls) != sorted(items)))
+            start_time = time.perf_counter()
+            self.add_testcase(test_type, '', start_time, (sorted(served_urls) != sorted(items)))
 
     def verify_not_spidered(self, *args):
         test_type = 'verify_not_spidered'
