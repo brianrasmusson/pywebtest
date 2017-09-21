@@ -354,18 +354,14 @@ class TestRunner:
         if len(items):
             served_urls = self.webserver.get_served_urls()
 
+            start_time = time.perf_counter()
+
             formated_items = []
             for item in items:
                 formated_items.append(item.format(SCHEME=self.ws_scheme, DOMAIN=self.ws_domain, PORT=self.ws_port))
 
-            start_time = time.perf_counter()
-
-            if sorted(served_urls) == sorted(formated_items):
-                for item in items:
-                    self.add_testcase(test_type, item, start_time, False)
-            else:
-                for index, item in enumerate(items):
-                    self.add_testcase(test_type, item, start_time, (formated_items[index] not in served_urls))
+            for url in served_urls:
+                self.add_testcase(test_type, url, start_time, (url not in formated_items))
 
     def verify_not_spidered(self, *args):
         test_type = 'verify_not_spidered'
