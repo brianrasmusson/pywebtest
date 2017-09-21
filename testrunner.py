@@ -262,7 +262,7 @@ class TestRunner:
             filename = os.path.join(self.testcaseconfigdir, test_type)
             items = self.read_file(filename)
 
-        for index, item in enumerate(items):
+        for item in items:
             start_time = time.perf_counter()
             try:
                 response = self.api.search(item)
@@ -281,7 +281,7 @@ class TestRunner:
             filename = os.path.join(self.testcaseconfigdir, test_type)
             items = self.read_file(filename)
 
-        for index, item in enumerate(items):
+        for item in items:
             start_time = time.perf_counter()
             try:
                 response = self.api.search(item)
@@ -305,7 +305,7 @@ class TestRunner:
             filename = os.path.join(self.testcaseconfigdir, test_type)
             items = self.read_file(filename)
 
-        for index, item in enumerate(items):
+        for item in items:
             start_time = time.perf_counter()
             try:
                 response = self.api.search(item)
@@ -330,7 +330,7 @@ class TestRunner:
             items = self.read_file(filename)
 
         served_urls = self.webserver.get_served_urls()
-        for index, item in enumerate(items):
+        for item in items:
             start_time = time.perf_counter()
             try:
                 url = item.format(SCHEME=self.ws_scheme, DOMAIN=self.ws_domain, PORT=self.ws_port)
@@ -354,8 +354,18 @@ class TestRunner:
         if len(items):
             served_urls = self.webserver.get_served_urls()
 
+            formated_items = []
+            for item in items:
+                formated_items.append(item.format(SCHEME=self.ws_scheme, DOMAIN=self.ws_domain, PORT=self.ws_port))
+
             start_time = time.perf_counter()
-            self.add_testcase(test_type, '', start_time, (sorted(served_urls) != sorted(items)))
+
+            if sorted(served_urls) == sorted(formated_items):
+                for item in items:
+                    self.add_testcase(test_type, item, start_time, False)
+            else:
+                for index, item in enumerate(items):
+                    self.add_testcase(test_type, item, start_time, (formated_items[index] not in served_urls))
 
     def verify_not_spidered(self, *args):
         test_type = 'verify_not_spidered'
