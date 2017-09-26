@@ -200,6 +200,9 @@ class Handler(BaseHTTPRequestHandler):
         if content_encoding == "":
             content_encoding = None
 
+        if os.path.exists(base_path + ".connection-delay"):
+            time.sleep(int(self.file_content(base_path + ".connection-delay")))
+
         # ok, got it all
         self.send_response(status_code)
 
@@ -243,7 +246,7 @@ class Handler(BaseHTTPRequestHandler):
         l = os.listdir(dir)
         l.sort()
 
-        special_ending = ('.status-code', '.content-type', '.charset', '.content-encoding', '.extra-headers', '.connection-reset')
+        special_ending = ('.status-code', '.content-type', '.charset', '.content-encoding', '.extra-headers', '.connection-reset', '.connection-delay')
         special_file = ('README', 'robots.txt')
         filedir = "" if (path == "/") else path
         for f in l:
