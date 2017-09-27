@@ -1,1 +1,3 @@
 {SCHEME}://s1.t33.{DOMAIN}:{PORT}/f1.html
+{SCHEME}://s2.t33.{DOMAIN}:{PORT}/f1.html
+{SCHEME}://s2.t33.{DOMAIN}:{PORT}/f2.html

@@ -1,4 +1,7 @@
-Test of crawling when robots.txt reuslt s in connection-reset
+Test of crawling when robots.txt results in error.
+
+s1: robots.txt results in connection reset
+s2: robots.txt results in connection timeout
 
 Test:
 	seed
