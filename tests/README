@@ -1,117 +1,117 @@
-./a1/README
+./a1 (manual test)
 Sample chinese pages
 
-./t1/README
+./t1
 Test for simple page crawl
 
-./t2/README
+./t2
 Tests for charset/encoding
 
-./t3/README
+./t3 (manual test)
 Test for all stopwords queries
 
-./t4/README
+./t4
 Tests for robots.txt
 
-./t5/README
+./t5 (manual test)
 Test with uppercase hostname
 
-./t6/README
+./t6 (manual test)
 Test for spammy links, summaries, and filtering
 
-./t7/README
+./t7 (manual test)
 Test for url subpaths
 
-./t8/README
+./t8 (manual test)
 Synonym and bigram tests
 
-./t9/README
+./t9
 Tests for url normalization
 
-./t10/README
+./t10 (manual test)
 Tests for spiderdb
 
-./t11/README
+./t11 (manual test)
 Test of title/summary generation with words are ridiculously long
 
-./t12/README
+./t12 (manual test)
 Document relevancy tests
 
-./t13/README
+./t13 (manual test)
 Documents with various inlink text
 
-./t14/README
+./t14
 Test for matches segfault
 
-./t15/README
+./t15 (manual test)
 Test of html entities.
 
-./t16/README
+./t16 (manual test)
 Test for unusual link
 
-./t17/README
+./t17 (manual test)
 Test for summary vs synonyms
 
-./t18/README
+./t18
 Test for nofollow links
 
-./t19/README
+./t19
 Provides apostrophes in title, H1 and other paragraphs.
 
-./t20/README
+./t20 (manual test)
 Files (paths) with unusual charaters in them
 
-./t21/README
+./t21 (manual test)
 Test changing document
 
-./t22/README
+./t22 (manual test)
 Test of evil big file (uncompressed)
 
-./t23/README
+./t23 (manual test)
 Simple test of TLD blocking.
 
-./t24/README
+./t24 (manual test)
 Test of simple redirects.
 
-./t25/README
+./t25 (manual test)
 Test single-word and bigram matching
 
-./t26/README
+./t26 (manual test)
 Test for massive number of hits on "potato" in a single document.
 
-./t27/README
+./t27 (manual test)
 Various tests for bigrams and ranking
 
-./t28/README
+./t28
 s1: contains 101 documents with a single word in them: banana
 
-./t29/README
+./t29 (manual test)
 Test of negation
 
-./t30/README
+./t30 (manual test)
 Test of inter-site links. No automated test.
 
-./t32/README
+./t32 (manual test)
 Test of infitire redirects of robots.txt
 
-./t33/README
-Test of crawling when robots.txt reuslt s in connection-reset
+./t33
+Test of crawling when robots.txt results in error.
 
-./t34/README
+./t34 (manual test)
 Test of what happens when spider gets responses with "403 forbidden" and it looks like a temporary IP-ban or captcha.
 
-./t35/README
+./t35
 Test what happens if /robots.txt has a captcha.
 
-./t36/README
+./t36 (manual test)
 Test of content checks / bans.
 
-./t37/README
+./t37
 Test canonical urls
 
-./t38/README
+./t38
 Test expansion of iframe
 
-./t39/README
+./t39
 Test expansion of iframe (src url)
 

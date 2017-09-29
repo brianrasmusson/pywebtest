@@ -17,4 +17,4 @@ for subdir in $subdirs; do
 		head -1q ${subdir}/README
 	fi
 	echo ''
-done
+done > README
