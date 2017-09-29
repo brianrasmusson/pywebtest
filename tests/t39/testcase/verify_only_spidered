@@ -2,3 +2,9 @@
 {SCHEME}://s1.t39.{DOMAIN}:{PORT}/
 {SCHEME}://s2.t39.{DOMAIN}:{PORT}/robots.txt
 {SCHEME}://s2.t39.{DOMAIN}:{PORT}/
+{SCHEME}://s3.t39.{DOMAIN}:{PORT}/robots.txt
+{SCHEME}://s3.t39.{DOMAIN}:{PORT}/
+{SCHEME}://s3.t39.{DOMAIN}:{PORT}/sub/f1.html
+{SCHEME}://s4.t39.{DOMAIN}:{PORT}/robots.txt
+{SCHEME}://s4.t39.{DOMAIN}:{PORT}/
+{SCHEME}://s4.t39.{DOMAIN}:{PORT}/sub/f1.html

@@ -2,3 +2,5 @@ Test expansion of iframe (src url)
 
 s1: iframe src url starting with javascript:
 s2: iframe src url starting with about:
+s3: iframe src url with multiline
+s4: iframe src url with spaces before & after
