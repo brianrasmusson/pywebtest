@@ -17,6 +17,8 @@ t1/testcase/verify_indexed
 	list terms that must return more than 0 results
 t1/testcase/verify_not_indexed
 	list terms that must return 0 results
+t1/testcase/verify_search_result
+	list of terms with number of expected result & urls of expected result (pipe separated)
 t1/testcase/just_search
 	list of terms that should be search but the result doesn't matter.
 
@@ -26,6 +28,8 @@ t1/testcase/verify_spidered
 	list of urls that must be spidered
 t1/testcase/verify_not_spidered
 	list of urls that must not be spidered
+t1/testcase/verify_only_spidered
+	list of urls that are spidered (exact match)
 
 t1/testcase/instructions00
 	list of instructions to run
@@ -36,6 +40,7 @@ t1/testcase/instructions00
 		just_search ${term}
 		verify_indexed ${term}
 		verify_not_indexed ${term}
+		verify_search_result ${term}|${num_results}|${url_result}|${url_result}|...
 		verify_spidered ${url}
 		verify_not_spidered ${url}
 

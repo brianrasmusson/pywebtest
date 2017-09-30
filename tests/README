@@ -85,7 +85,7 @@ Various tests for bigrams and ranking
 ./t28
 s1: contains 101 documents with a single word in them: banana
 
-./t29 (manual test)
+./t29
 Test of negation
 
 ./t30 (manual test)

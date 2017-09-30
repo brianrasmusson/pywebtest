@@ -55,6 +55,9 @@ class TestRunner:
 
         return []
 
+    def format_url(self, url):
+        return url.format(SCHEME=self.ws_scheme, DOMAIN=self.ws_domain, PORT=self.ws_port)
+
     def start_gb(self):
         print('Cleaning old data')
         subprocess.call(['make', 'cleantest'], cwd=self.gb_path, stdout=subprocess.DEVNULL)
@@ -145,6 +148,9 @@ class TestRunner:
             # verify not indexed
             self.verify_not_indexed()
 
+            # verify search result
+            self.verify_search_result()
+
             # verify spidered
             self.verify_spidered()
 
@@ -159,14 +165,14 @@ class TestRunner:
 
         if len(args):
             if len(args[0]):
-                seedstr = args[0].format(SCHEME=self.ws_scheme, DOMAIN=self.ws_domain, PORT=self.ws_port) + '\n'
+                seedstr = self.format_url(args[0]) + '\n'
         else:
             filename = os.path.join(self.testcaseconfigdir, 'seeds')
             items = self.read_file(filename)
             seedstr = ""
             if len(items):
                 for item in items:
-                    seedstr += item.format(SCHEME=self.ws_scheme, DOMAIN=self.ws_domain, PORT=self.ws_port) + '\n'
+                    seedstr += self.format_url(item) + '\n'
 
         if len(seedstr) == 0:
             # default seed
@@ -318,6 +324,61 @@ class TestRunner:
             except:
                 self.add_testcase(test_type, item, start_time, True)
 
+    def verify_search_result(self, *args):
+        test_type = 'verify_search_result'
+        print('Running test -', test_type)
+
+        items = []
+        if len(args):
+            items.append(' '.join(args))
+        else:
+            filename = os.path.join(self.testcaseconfigdir, test_type)
+            items = self.read_file(filename)
+
+        for item in items:
+            start_time = time.perf_counter()
+
+            tokens = item.split('|')
+
+            query = tokens.pop(0)
+            if len(tokens) == 0:
+                print('Invalid format ', item)
+                self.add_testcase(test_type, query, start_time, True)
+                return
+
+            num_results = int(tokens.pop(0))
+            if len(tokens) != num_results:
+                print('Invalid format ', item)
+                self.add_testcase(test_type, query, start_time, True)
+                return
+
+            results = []
+            for token in tokens:
+                results.append(self.format_url(token))
+
+            try:
+                response = self.api.search(query)
+
+                failed = (not len(response['results']) == num_results)
+                if not failed:
+                    for index, result in enumerate(results):
+                        url = response['results'][index]['url']
+
+                        # gb doesn't return url with scheme when it's http
+                        if self.ws_scheme == 'http':
+                            url = 'http://' + url
+
+                        if result != url:
+                            failed = True
+                            break
+
+                if failed:
+                    print(response)
+
+                self.add_testcase(test_type, query, start_time, failed)
+            except:
+                self.add_testcase(test_type, query, start_time, True)
+
     def verify_spidered(self, *args):
         test_type = 'verify_spidered'
         print('Running test -', test_type)
@@ -333,7 +394,7 @@ class TestRunner:
         for item in items:
             start_time = time.perf_counter()
             try:
-                url = item.format(SCHEME=self.ws_scheme, DOMAIN=self.ws_domain, PORT=self.ws_port)
+                url = self.format_url(item)
                 failed = (url not in served_urls)
 
                 self.add_testcase(test_type, item, start_time, failed)
@@ -358,7 +419,7 @@ class TestRunner:
 
             formated_items = []
             for item in items:
-                formated_items.append(item.format(SCHEME=self.ws_scheme, DOMAIN=self.ws_domain, PORT=self.ws_port))
+                formated_items.append(self.format_url(item))
 
             for url in served_urls:
                 self.add_testcase(test_type, url, start_time, (url not in formated_items))
@@ -378,7 +439,7 @@ class TestRunner:
         for index, item in enumerate(items):
             start_time = time.perf_counter()
             try:
-                url = item.format(SCHEME=self.ws_scheme, DOMAIN=self.ws_domain, PORT=self.ws_port)
+                url = self.format_url(item)
                 failed = (url in served_urls)
 
                 self.add_testcase(test_type, item, start_time, failed)
