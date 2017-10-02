@@ -1,3 +1,4 @@
 {SCHEME}://s1.t40.{DOMAIN}:{PORT}/robots.txt
 {SCHEME}://s1.t40.{DOMAIN}:{PORT}/
 {SCHEME}://s1.t40.{DOMAIN}:{PORT}/f1.html
+{SCHEME}://s1.t40.{DOMAIN}:{PORT}/f2.html
