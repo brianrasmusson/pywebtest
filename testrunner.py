@@ -421,8 +421,12 @@ class TestRunner:
             for item in items:
                 formated_items.append(self.format_url(item))
 
+            for url in formated_items:
+                self.add_testcase(test_type, url, start_time, (url not in served_urls))
+
             for url in served_urls:
-                self.add_testcase(test_type, url, start_time, (url not in formated_items))
+                if url not in formated_items:
+                    self.add_testcase(test_type, url, start_time, True)
 
     def verify_not_spidered(self, *args):
         test_type = 'verify_not_spidered'
