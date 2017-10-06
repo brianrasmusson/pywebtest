@@ -239,6 +239,7 @@ class Handler(BaseHTTPRequestHandler):
 
         self.wfile.write('<html>'.encode())
         self.wfile.write('<head>'.encode())
+        self.wfile.write('<meta charset="UTF-8"/>'.encode())
         self.wfile.write(('	<title>Contents of %s</title>' % dir).encode())
         self.wfile.write('</head>'.encode())
         self.wfile.write('<body>'.encode())
