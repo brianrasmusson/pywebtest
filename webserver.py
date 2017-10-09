@@ -130,7 +130,11 @@ class Handler(BaseHTTPRequestHandler):
         # ok, directory exist so testet and server is known
         base_path = root_dir + "/" + testset + "/" + server + path
         if os.path.isdir(base_path):
-            return self.maybe_serve_index_page(base_path, path)
+            if os.path.exists(base_path + '/index.html'):
+                base_path += 'index.html'
+                path = 'index.html'
+            else:
+                return self.maybe_serve_index_page(base_path, path)
         if not os.path.exists(base_path):
             return self.respond_not_found(base_path)
 
@@ -232,10 +236,6 @@ class Handler(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header("Content-type", "text/html")
         self.end_headers()
-
-        if os.path.exists(dir + "/index.html"):
-            self.wfile.write(self.file_content(dir + "/index.html"))
-            return
 
         self.wfile.write('<html>'.encode())
         self.wfile.write('<head>'.encode())
