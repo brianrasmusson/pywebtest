@@ -4,6 +4,7 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 from socketserver import ThreadingMixIn
 import urllib.parse as urlparse
 import urllib.parse as urllib
+import mimetypes
 
 import threading
 import os
@@ -23,6 +24,15 @@ root_dir = "tests"
 
 def unescape_path(s):
     return urllib.unquote(s)
+
+
+def init_mimetypes():
+    mimetypes.init()
+    mimetypes.add_type('text/x-csrc', '.c')
+    mimetypes.add_type('text/x-csrc', '.h')
+    mimetypes.add_type('text/x-c++src', '.cc')
+    mimetypes.add_type('text/x-c++src', '.cpp')
+    mimetypes.add_type('text/x-c++src', '.hpp')
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -138,42 +148,11 @@ class Handler(BaseHTTPRequestHandler):
         charset = None
         extra_headers = []
 
-        extension = path.split('.')[-1]
-        if extension == "html":
-            content_type = "text/html"
-            charset = "UTF-8"
-        elif extension == "txt":
-            content_type = "text/plain"
-            charset = "UTF-8"
-        elif extension == "txt":
-            content_type = "text/plain"
-            charset = "UTF-8"
-        elif extension == "png":
-            content_type = "image/png"
-        elif extension == "gif":
-            content_type = "image/gif"
-        elif extension == "jpg" or extension == "jpeg":
-            content_type = "image/jpeg"
-        elif extension == "c" or extension == "h":
-            content_type = "text/x-csrc"
-            charset = "UTF-8"
-        elif extension == "cc" or extension == "cpp" or extension == "hpp":
-            content_type = "text/x-c++src"
-            charset = "UTF-8"
-        elif extension == "pdf":
-            content_type = "application/pdf"
-        elif extension == "docx":
-            content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        elif extension == "pptx":
-            content_type = "application/vnd.openxmlformats-officedocument.presentationml.presentation"
-        elif extension == ".xlsx":
-            content_type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        elif extension == ".odt":
-            content_type = "application/vnd.oasis.opendocument.text"
-        elif extension == ".odp":
-            content_type = "application/vnd.oasis.opendocument.presentation"
-        elif extension == ".ods":
-            content_type = "application/vnd.oasis.opendocument.spreadsheet"
+        mime = mimetypes.guess_type(path, False)
+        if mime[0] is not None:
+            content_type = mime[0]
+        if content_type.startswith('text/'):
+            content_encoding = 'UTF-8'
 
         # then look for overrides
         if os.path.exists(base_path + ".status-code"):
@@ -276,6 +255,8 @@ class TestWebServer:
         global logger
         logger = logging.getLogger(__name__)
         logger.info("webserver initializing")
+
+        init_mimetypes()
 
         self.http_server_thread = None
         self.https_server_thread = None
