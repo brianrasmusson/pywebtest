@@ -1,19 +1,9 @@
 #!/usr/bin/env python3
 
-from __future__ import with_statement
-from __future__ import print_function
-
-try:
-    # Python 3
-    from http.server import HTTPServer, BaseHTTPRequestHandler
-    from socketserver import ThreadingMixIn
-    import urllib.parse as urlparse
-    import urllib.parse as urllib
-except ImportError:
-    from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
-    from SocketServer import ThreadingMixIn
-    import urlparse
-    import urllib
+from http.server import HTTPServer, BaseHTTPRequestHandler
+from socketserver import ThreadingMixIn
+import urllib.parse as urlparse
+import urllib.parse as urllib
 
 import threading
 import os
