@@ -152,7 +152,7 @@ class Handler(BaseHTTPRequestHandler):
         if mime[0] is not None:
             content_type = mime[0]
         if content_type.startswith('text/'):
-            content_encoding = 'UTF-8'
+            charset = 'UTF-8'
 
         # then look for overrides
         if os.path.exists(base_path + ".status-code"):
