@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 import os
 import re
+import subprocess
 from webserver import TestWebServer
 from testrunner import TestRunner
 from junit_xml import TestSuite
@@ -13,22 +15,49 @@ def natural_sort(l):
     return sorted(l, key=alphanum_key)
 
 
-# @todo ALC cater for multiple instance
-def gb_create_hostfile(gb_path, port_offset=0):
-    gb_mergepath = os.path.normpath(os.path.join(gb_path, '../merge'))
+def gb_get_instance_path(gb_path, gb_instances, host_id):
+    return '%s/instances%02d/%s' % (gb_path, gb_instances, str(host_id).zfill(3))
+
+
+def gb_create_hostfile(gb_path, gb_instances, gb_shards, gb_port, port_offset=0):
     with open(os.path.join(gb_path, 'hosts.conf'), 'w') as f:
-        f.write(('num-mirrors: 0\n'
-                 '0 %d %d %d %d 127.0.0.1 127.0.0.1 %s %s\n' %
-                 (25998 + port_offset, 27000 + port_offset, 28000 + port_offset, 29000 + port_offset,
-                  gb_path, gb_mergepath)))
-    pass
+        num_mirrors = (gb_instances / gb_shards) - 1
+        f.write('num-mirrors: %d\n' % num_mirrors)
+
+        gb_mergepath = os.path.normpath(os.path.join(gb_path, 'instances%02d/merge' % gb_instances))
+
+        dnsclient_port = gb_port - 2000 + port_offset
+        https_port = gb_port - 1000 + port_offset
+        http_port = gb_port + port_offset
+        udp_port = gb_port + 1000 + port_offset
+
+        for host_id in range(gb_instances):
+            instance_path = gb_get_instance_path(gb_path, gb_instances, host_id)
+            f.write('%d %d %d %d %d 127.0.0.1 127.0.0.1 %s %s\n' %
+                    (host_id, dnsclient_port + host_id, https_port + host_id, http_port + host_id, udp_port + host_id,
+                     instance_path, gb_mergepath))
 
 
-def main(testdir, gb_path, gb_host, gb_port, ws_scheme, ws_domain, ws_port):
+def main(testdir, gb_path, gb_instances, gb_shards, gb_host, gb_port, ws_scheme, ws_domain, ws_port):
+    executor_number = os.getenv('EXECUTOR_NUMBER')
+    port_offset = 0 if executor_number is None else int(executor_number)
+
     # prepare gigablast
-    gb_create_hostfile(gb_path)
+    gb_create_hostfile(gb_path, gb_instances, gb_shards, gb_port, port_offset)
+
+    if gb_instances == gb_shards:
+        host_id = 0
+    else:
+        host_id = gb_shards
+
+    subprocess.call(['./gb', 'install'], cwd=gb_path, stdout=subprocess.DEVNULL)
+    subprocess.call(['./gb', 'installfile', 'Makefile'], cwd=gb_path, stdout=subprocess.DEVNULL)
+
+    spider_instance_path = gb_get_instance_path(gb_path, gb_instances, host_id)
+    spider_instance_port = gb_port + port_offset + host_id
 
     # start webserver
+    ws_port += port_offset
     test_webserver = TestWebServer(ws_port)
 
     # run testcases
@@ -37,7 +66,7 @@ def main(testdir, gb_path, gb_host, gb_port, ws_scheme, ws_domain, ws_port):
     for testcase in testcases:
         print('Running testcase -', testcase)
         test_webserver.clear_served_urls()
-        test_runner = TestRunner(testdir, testcase, gb_path, gb_host, gb_port, test_webserver, ws_scheme, ws_domain, ws_port)
+        test_runner = TestRunner(testdir, testcase, spider_instance_path, gb_host, spider_instance_port, test_webserver, ws_scheme, ws_domain, ws_port)
         results.append(test_runner.run_test())
 
     # stop webserver
@@ -59,9 +88,13 @@ if __name__ == '__main__':
                                                    '../open-source-search-engine'))
     parser.add_argument('--path', dest='gb_path', default=default_gbpath, action='store',
                         help='Directory containing gigablast binary (default: {})'.format(default_gbpath))
+    parser.add_argument('--num-instances', dest="gb_instances", type=int, default=1, action='store',
+                        help='Number of gigablast instances (default: 1)')
+    parser.add_argument('--num-shards', dest="gb_shards", type=int, default=1, action='store',
+                        help='Number of gigablast shards (default: 1)')
     parser.add_argument('--host', dest='gb_host', default='127.0.0.1', action='store',
                         help='Gigablast host (default: 127.0.0.1)')
-    parser.add_argument('--port', dest='gb_port', default='28000', action='store',
+    parser.add_argument('--port', dest='gb_port', type=int, default=28000, action='store',
                         help='Gigablast port (default: 28000')
 
     parser.add_argument('--dest-scheme', dest='ws_scheme', default='http', action='store',
@@ -72,4 +105,4 @@ if __name__ == '__main__':
                         help='Destination host port (default: 28080')
 
     args = parser.parse_args()
-    main(args.testdir, args.gb_path, args.gb_host, args.gb_port, args.ws_scheme, args.ws_domain, args.ws_port)
+    main(args.testdir, args.gb_path, args.gb_instances, args.gb_shards, args.gb_host, args.gb_port, args.ws_scheme, args.ws_domain, args.ws_port)

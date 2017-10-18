@@ -1,1 +1,1 @@
-Location://s2.t24.example.com:8080/sub_path
+Location://s2.t24.{DOMAIN}:{PORT}/sub_path

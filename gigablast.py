@@ -26,7 +26,7 @@ class GigablastAPI:
             self.delete_url(url, True)
 
     def _get_url(self, path):
-        return 'http://' + self._host + ':' + self._port + '/' + path
+        return 'http://' + self._host + ':' + str(self._port) + '/' + path
 
     @staticmethod
     def _apply_default_payload(payload):

@@ -39,17 +39,29 @@ class Handler(BaseHTTPRequestHandler):
     def log_message(self, format, *args):
         logger.info("%s" % (format % args))
 
-    def file_content(self, path):
+    def file_content(self, path, content_type=None, charset=None):
         """Return content of file. Empty string for non-existing files"""
         if not os.path.exists(path):
             return ""
 
+        if charset is None:
+            charset = 'utf-8'
+
+        if content_type is None:
+            content_type = 'text/plain'
+
         content = ""
         try:
             with open(path, "rb") as f:
+                if self.server == self.server.webserver.http_server_thread.server:
+                    scheme = "http"
+                else:
+                    scheme = "https"
+
                 content = f.read()
-                content = content.replace('${DOMAIN}'.encode(), self.domain.encode())
-                content = content.replace('${PORT}'.encode(), str(self.server.server_port).encode())
+                if content_type.startswith('text/'):
+                    content = content.decode(charset).format(SCHEME=scheme, DOMAIN=self.domain, PORT=self.server.server_port).encode(charset)
+
         except IOError:
             pass
 
@@ -71,7 +83,7 @@ class Handler(BaseHTTPRequestHandler):
         else:
             url = "https://"
 
-        url += host
+        url += host.encode('ascii').decode('idna')
 
         if (isHttp and self.server.server_port != 80) or (not isHttp and self.server.server_port != 443):
             url += ':' + str(self.server.server_port)
@@ -194,7 +206,7 @@ class Handler(BaseHTTPRequestHandler):
 
         self.end_headers()
 
-        self.wfile.write(self.file_content(base_path))
+        self.wfile.write(self.file_content(base_path, content_type, charset))
 
     def maybe_serve_index_page(self, dir, path):
         if os.path.exists(dir + "/_noindex"):
@@ -303,6 +315,7 @@ class TestWebServer:
 
     def clear_served_urls(self):
         self.served_urls = []
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

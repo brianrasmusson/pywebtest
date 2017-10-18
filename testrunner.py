@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 
 import os
 import time
@@ -60,11 +61,12 @@ class TestRunner:
 
     def start_gb(self):
         print('Cleaning old data')
-        subprocess.call(['make', 'cleantest'], cwd=self.gb_path, stdout=subprocess.DEVNULL)
+        subprocess.call(['./gb', 'dsh', 'make cleantest'], cwd=self.gb_path, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
         print('Copy config files')
         for filename in glob.glob(os.path.join(self.testcaseconfigdir, '*.txt')):
             shutil.copy(filename, self.gb_path)
+            subprocess.call(['./gb', 'installfile', os.path.basename(filename)], cwd=self.gb_path, stdout=subprocess.DEVNULL)
 
         print('Starting gigablast')
         start_time = time.perf_counter()

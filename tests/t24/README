@@ -1,4 +1,4 @@
-Test of simple redirects.
+Test of redirects (multiple)
   http://s1/ (root) contains linke to file1.html
   http://s1/file1.html redirects to http://s2/sub_path
   http://s2/sub_path redirects to http://s2/
