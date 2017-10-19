@@ -38,10 +38,13 @@ def gb_create_hostfile(gb_path, gb_instances, gb_shards, gb_port, port_offset=0)
                      instance_path, gb_mergepath))
 
 
-def main(testdir, gb_path, gb_instances, gb_shards, gb_host, gb_port, ws_scheme, ws_domain, ws_port):
-    print(os.environ)
+def main(testdir, gb_offset, gb_path, gb_instances, gb_shards, gb_host, gb_port, ws_scheme, ws_domain, ws_port):
+    gb_offset *= 10
+
     executor_number = os.getenv('EXECUTOR_NUMBER')
-    port_offset = 0 if executor_number is None else int(executor_number)
+    port_offset = gb_offset if executor_number is None else int(executor_number) * 100 + gb_offset
+
+    print('port_offset', port_offset)
 
     # prepare gigablast
     gb_create_hostfile(gb_path, gb_instances, gb_shards, gb_port, port_offset)
@@ -85,6 +88,8 @@ if __name__ == '__main__':
     parser.add_argument('--testdir', dest='testdir', default='tests', action='store',
                         help='Directory containing test cases')
 
+    parser.add_argument('--offset', dest='gb_offset', type=int, default=0, action='store',
+                        help='Gigablast offset for running multiple gb at the same time (default: 0)')
     default_gbpath = os.path.normpath(os.path.join(os.path.dirname(os.path.realpath(__file__)),
                                                    '../open-source-search-engine'))
     parser.add_argument('--path', dest='gb_path', default=default_gbpath, action='store',
@@ -97,7 +102,6 @@ if __name__ == '__main__':
                         help='Gigablast host (default: 127.0.0.1)')
     parser.add_argument('--port', dest='gb_port', type=int, default=28000, action='store',
                         help='Gigablast port (default: 28000')
-
     parser.add_argument('--dest-scheme', dest='ws_scheme', default='http', action='store',
                         help='Destination host scheme (default: http)')
     parser.add_argument('--dest-domain', dest='ws_domain', default='privacore.test', action='store',
@@ -106,4 +110,4 @@ if __name__ == '__main__':
                         help='Destination host port (default: 28080')
 
     args = parser.parse_args()
-    main(args.testdir, args.gb_path, args.gb_instances, args.gb_shards, args.gb_host, args.gb_port, args.ws_scheme, args.ws_domain, args.ws_port)
+    main(args.testdir, args.gb_offset, args.gb_path, args.gb_instances, args.gb_shards, args.gb_host, args.gb_port, args.ws_scheme, args.ws_domain, args.ws_port)
