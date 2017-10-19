@@ -254,8 +254,8 @@ class TestRunner:
     def wait_processup(self):
         while True:
             status = self.api.status()
-            if status['response']['statusCode'] == 7:
-                # SP_INPROGRESS
+            if status['response']['statusCode'] == 0 or status['response']['statusCode'] == 7:
+                # SP_INITIALIZING / SP_INPROGRESS
                 break
             time.sleep(0.5)
 
