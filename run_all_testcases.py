@@ -45,7 +45,7 @@ def main(testdir, gb_offset, gb_path, gb_num_instances, gb_num_shards, gb_host, 
     test_webserver.stop()
 
     # write output
-    with open('output.xml', 'w') as f:
+    with open('output%02d.xml' % gb_offset, 'w') as f:
         TestSuite.to_file(f, results)
 
 
