@@ -41,8 +41,8 @@ class Handler(BaseHTTPRequestHandler):
 
     def file_content(self, path, content_type=None, charset=None):
         """Return content of file. Empty string for non-existing files"""
-        if not os.path.exists(path):
-            return ""
+        if not os.path.isfile(path):
+            return bytes()
 
         if charset is None:
             charset = 'utf-8'
@@ -50,7 +50,7 @@ class Handler(BaseHTTPRequestHandler):
         if content_type is None:
             content_type = 'text/plain'
 
-        content = ""
+        content = bytes()
         try:
             with open(path, "rb") as f:
                 if self.server == self.server.webserver.http_server_thread.server:
@@ -143,7 +143,7 @@ class Handler(BaseHTTPRequestHandler):
         base_path = root_dir + "/" + testset + "/" + server + path
         if os.path.isdir(base_path):
             if os.path.exists(base_path + '/index.html'):
-                base_path += 'index.html'
+                base_path = os.path.join(base_path, 'index.html')
                 path = 'index.html'
             else:
                 return self.maybe_serve_index_page(base_path, path)
