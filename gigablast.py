@@ -1,5 +1,6 @@
 import requests
-
+import os
+import subprocess
 
 class GigablastAPI:
     class _HTTPStatus:
@@ -193,3 +194,45 @@ class GigablastAPI:
 
     def status_processstarttime(self):
         return self.status()['response']['processStartTime']
+
+
+class GigablastInstances:
+    def __init__(self, offset, path, num_instances, num_shards, port):
+        self._path = path
+        self._num_instances = num_instances
+        self._num_shards = num_shards
+        self._num_mirrors = (num_instances / num_shards) - 1
+        self._mergepath = os.path.normpath(os.path.join(path, 'instances%02d/merge' % num_instances))
+        port_offset = offset * 10
+        executor_number = os.getenv('EXECUTOR_NUMBER')
+        if executor_number is not None:
+            port_offset = (int(executor_number) * 100) + offset
+
+        self._port = port + port_offset
+
+    def get_instance_path(self, host_id):
+        return '%s/instances%02d/%s' % (self._path, self._num_instances, str(host_id).zfill(3))
+
+    def get_instance_port(self, host_id):
+        return self._port + host_id
+
+    def create_hostfile(self):
+        with open(os.path.join(self._path, 'hosts.conf'), 'w') as f:
+            f.write('num-mirrors: %d\n' % self._num_mirrors)
+
+            dnsclient_port = self._port - 2000
+            https_port = self._port - 1000
+            http_port = self._port
+            udp_port = self._port + 1000
+
+            for host_id in range(self._num_instances):
+                instance_path = self.get_instance_path(host_id)
+                f.write('%d %d %d %d %d 127.0.0.1 127.0.0.1 %s %s\n' %
+                        (host_id, dnsclient_port + host_id, https_port + host_id, http_port + host_id,
+                         udp_port + host_id, instance_path, self._mergepath))
+
+    def create_instances(self):
+        self.create_hostfile()
+
+        subprocess.call(['./gb', 'install'], cwd=self._path, stdout=subprocess.DEVNULL)
+        subprocess.call(['./gb', 'installfile', 'Makefile'], cwd=self._path, stdout=subprocess.DEVNULL)
