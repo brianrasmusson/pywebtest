@@ -77,6 +77,9 @@ class TestRunner:
         result = True
         while result:
             try:
+                # wait until gb is initialized
+                self.wait_processup()
+
                 self.update_processuptime()
 
                 # set some default config
@@ -247,6 +250,14 @@ class TestRunner:
 
     def get_testsuite(self):
         return TestSuite(self.testcase, test_cases=self.testcases, package='systemtest')
+
+    def wait_processup(self):
+        while True:
+            status = self.api.status()
+            if status['response']['statusCode'] == 7:
+                # SP_INPROGRESS
+                break
+            time.sleep(0.5)
 
     def validate_processuptime(self):
         return self.api.status_processstarttime() == self.gb_starttime
