@@ -39,6 +39,7 @@ def gb_create_hostfile(gb_path, gb_instances, gb_shards, gb_port, port_offset=0)
 
 
 def main(testdir, gb_path, gb_instances, gb_shards, gb_host, gb_port, ws_scheme, ws_domain, ws_port):
+    print(os.environ)
     executor_number = os.getenv('EXECUTOR_NUMBER')
     port_offset = 0 if executor_number is None else int(executor_number)
 
