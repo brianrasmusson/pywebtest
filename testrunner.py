@@ -238,7 +238,7 @@ class TestRunner:
     def add_testcase(self, test_type, test_item, start_time, failed=False):
         test_name = test_type + ' - ' + test_item
         testcase = TestCase(test_name,
-                            classname='systemtest.' + self.gb_offset + '.' + self.testcasedesc,
+                            classname='systemtest.' + str(self.gb_offset) + '.' + self.testcasedesc,
                             elapsed_sec=(time.perf_counter() - start_time))
         if failed:
             testcase.add_failure_info(test_name + ' - failed')
