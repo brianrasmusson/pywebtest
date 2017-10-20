@@ -13,7 +13,7 @@ from junit_xml import TestSuite, TestCase
 
 
 class TestRunner:
-    def __init__(self, testdir, testcase, gb_path, gb_host, gb_port, webserver, ws_scheme, ws_domain, ws_port):
+    def __init__(self, testdir, testcase, gb_offset, gb_path, gb_host, gb_port, webserver, ws_scheme, ws_domain, ws_port):
         self.testcase = testcase
         self.testcasedir = os.path.join(testdir, testcase)
         self.testcaseconfigdir = os.path.join(self.testcasedir, 'testcase')
@@ -23,6 +23,7 @@ class TestRunner:
         else:
             self.testcasedesc = self.testcase
 
+        self.gb_offset = gb_offset
         self.gb_path = gb_path
         self.gb_starttime = 0
 
@@ -237,7 +238,7 @@ class TestRunner:
     def add_testcase(self, test_type, test_item, start_time, failed=False):
         test_name = test_type + ' - ' + test_item
         testcase = TestCase(test_name,
-                            classname='systemtest.' + self.testcasedesc,
+                            classname='systemtest.' + gb_offset + '.' + self.testcasedesc,
                             elapsed_sec=(time.perf_counter() - start_time))
         if failed:
             testcase.add_failure_info(test_name + ' - failed')
@@ -464,8 +465,8 @@ class TestRunner:
                 self.add_testcase(test_type, item, start_time, True)
 
 
-def main(testdir, testcase, gb_path, gb_host, gb_port, webserver, ws_scheme, ws_domain, ws_port):
-    test_runner = TestRunner(testdir, testcase, gb_path, gb_host, gb_port, webserver, ws_scheme, ws_domain, ws_port)
+def main(testdir, testcase, gb_offset, gb_path, gb_host, gb_port, webserver, ws_scheme, ws_domain, ws_port):
+    test_runner = TestRunner(testdir, testcase, gb_offset, gb_path, gb_host, gb_port, webserver, ws_scheme, ws_domain, ws_port)
     result = test_runner.run_test()
     print(TestSuite.to_xml_string([result]))
 
@@ -478,6 +479,8 @@ if __name__ == '__main__':
     parser.add_argument('--testdir', dest='testdir', default='tests', action='store',
                         help='Directory containing test cases')
 
+    parser.add_argument('--offset', dest='gb_offset', type=int, default=0, action='store',
+                        help='Gigablast offset for running multiple gb at the same time (default: 0)')
     default_gbpath = os.path.normpath(os.path.join(os.path.dirname(os.path.realpath(__file__)),
                                                    '../open-source-search-engine'))
     parser.add_argument('--path', dest='gb_path', default=default_gbpath, action='store',
@@ -501,7 +504,7 @@ if __name__ == '__main__':
     # start webserver
     test_webserver = TestWebServer(args.ws_port)
 
-    main(args.testdir, args.testcase, args.gb_path, args.gb_host, args.gb_port,
+    main(args.testdir, args.testcase, args.gb_offset, args.gb_path, args.gb_host, args.gb_port,
          test_webserver, args.ws_scheme, args.ws_domain, args.ws_port)
 
     # stop webserver

@@ -38,7 +38,7 @@ def main(testdir, gb_offset, gb_path, gb_num_instances, gb_num_shards, gb_host, 
     for testcase in testcases:
         print('Running testcase -', testcase)
         test_webserver.clear_served_urls()
-        test_runner = TestRunner(testdir, testcase, spider_instance_path, gb_host, spider_instance_port, test_webserver, ws_scheme, ws_domain, ws_port)
+        test_runner = TestRunner(testdir, testcase, gb_offset, spider_instance_path, gb_host, spider_instance_port, test_webserver, ws_scheme, ws_domain, ws_port)
         results.append(test_runner.run_test())
 
     # stop webserver
