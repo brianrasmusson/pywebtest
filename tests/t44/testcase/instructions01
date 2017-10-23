@@ -1,0 +1,47 @@
+### øl ###
+# wrong
+verify_query_language øl|fx_qlang=&fx_blang=&fx_fetld=&fx_country=|en
+
+# correct
+verify_query_language øl|fx_qlang=da&fx_blang=&fx_fetld=&fx_country=|da
+verify_query_language øl|fx_qlang=da&fx_blang=en-US&fx_fetld=&fx_country=|da
+
+# make sure only fx_qlang is used when set
+verify_query_language øl|fx_qlang=en&fx_blang=da-DK&fx_fetld=dk&fx_country=dk|en
+
+# wrong
+verify_query_language øl|fx_qlang=&fx_blang=en-US&fx_fetld=dk&fx_country=|en
+verify_query_language øl|fx_qlang=&fx_blang=en-US&fx_fetld=&fx_country=dk|en
+
+### Smølferne ###
+verify_query_language Smølferne|fx_qlang=&fx_blang=&fx_fetld=&fx_country=|da
+verify_query_language Smølferne|fx_qlang=&fx_blang=en-US&fx_fetld=&fx_country=|da
+verify_query_language Smølferne|fx_qlang=&fx_blang=&fx_fetld=&fx_country=uk|da
+verify_query_language Smølferne|fx_qlang=&fx_blang=en-US&fx_fetld=&fx_country=uk|da
+
+### The Smurfs ###
+verify_query_language The Smurfs|fx_qlang=en&fx_blang=&fx_fetld=&fx_country=|en
+verify_query_language The Smurfs|fx_qlang=en&fx_blang=da-DK&fx_fetld=&fx_country=|en
+verify_query_language The Smurfs|fx_qlang=&fx_blang=da-DK&fx_fetld=&fx_country=|en
+verify_query_language The Smurfs|fx_qlang=&fx_blang=&fx_fetld=&fx_country=dk|en
+
+# wrong
+verify_query_language The Smurfs|fx_qlang=&fx_blang=da-DK&fx_fetld=&fx_country=dk|da
+
+### Smurfene ###
+# wrong
+verify_query_language Smurfene|fx_qlang=&fx_blang=&fx_fetld=&fx_country=|is
+verify_query_language Smurfene|fx_qlang=&fx_blang=en-US&fx_fetld=&fx_country=|en
+
+verify_query_language Smurfene|fx_qlang=&fx_blang=no-NO&fx_fetld=&fx_country=|no
+verify_query_language Smurfene|fx_qlang=&fx_blang=&fx_fetld=&fx_country=no|no
+
+### kanin ###
+# wrong
+verify_query_language kanin|fx_qlang=&fx_blang=&fx_fetld=&fx_country=|tl
+
+verify_query_language kanin|fx_qlang=&fx_blang=da-DK&fx_fetld=&fx_country=|da
+verify_query_language kanin|fx_qlang=da&fx_blang=&fx_fetld=&fx_country=|da
+
+# wrong
+verify_query_language kanin|fx_qlang=&fx_blang=&fx_fetld=&fx_country=dk|tl

@@ -10,6 +10,7 @@ import glob
 import shutil
 from gigablast import GigablastAPI
 from junit_xml import TestSuite, TestCase
+from urllib.parse import parse_qs
 
 
 class TestRunner:
@@ -129,6 +130,10 @@ class TestRunner:
             instructions = self.read_file(filename)
 
             for instruction in instructions:
+                # skip comment
+                if len(instruction) == 0 or instruction.startswith('#'):
+                    continue
+
                 tokens = instruction.split()
                 token = tokens.pop(0)
                 func = getattr(self, token, None)
@@ -145,6 +150,12 @@ class TestRunner:
 
         # verify gb has done spidering (only run other test if spidering is successful)
         if self.wait_spider_done():
+            # verify query language
+            self.verify_query_language()
+
+            # verify query terms
+            self.verify_query_terms()
+
             # search
             self.just_search()
 
@@ -338,6 +349,94 @@ class TestRunner:
             except:
                 self.add_testcase(test_type, item, start_time, True)
 
+    def verify_query_language(self, *args):
+        test_type = 'verify_query_language'
+        print('Running test -', test_type)
+
+        items = []
+        if len(args):
+            items.append(' '.join(args))
+        else:
+            filename = os.path.join(self.testcaseconfigdir, test_type)
+            items = self.read_file(filename)
+
+        for item in items:
+            start_time = time.perf_counter()
+
+            tokens = item.split('|')
+            if len(tokens) != 3:
+                print('Invalid format ', item)
+                self.add_testcase(test_type, query, start_time, True)
+                return
+
+            query = tokens[0]
+            query_param = tokens[1]
+            language = tokens[2]
+
+            try:
+                response = self.api.search(query, parse_qs(query_param))
+                failed = (not response['queryInfo']['queryLanguageAbbr'] == language)
+
+                if failed:
+                    print(response)
+
+                self.add_testcase(test_type, query + ' - ' + query_param, start_time, failed)
+            except:
+                self.add_testcase(test_type, query + ' - ' + query_param, start_time, True)
+
+    def verify_query_terms(self, *args):
+        test_type = 'verify_query_terms'
+        print('Running test -', test_type)
+
+        items = []
+        if len(args):
+            items.append(' '.join(args))
+        else:
+            filename = os.path.join(self.testcaseconfigdir, test_type)
+            items = self.read_file(filename)
+
+        for item in items:
+            start_time = time.perf_counter()
+
+            tokens = item.split('|')
+
+            query = tokens.pop(0)
+            if len(tokens) == 0:
+                print('Invalid format ', item)
+                self.add_testcase(test_type, query, start_time, True)
+                return
+
+            query_param = tokens.pop(0)
+            if len(tokens) == 0:
+                print('Invalid format ', item)
+                self.add_testcase(test_type, query, start_time, True)
+                return
+
+            num_terms = int(tokens.pop(0))
+            if len(tokens) != num_terms:
+                print('Invalid format ', item)
+                self.add_testcase(test_type, query, start_time, True)
+                return
+
+            try:
+                response = self.api.search(query, parse_qs(query_param))
+
+                failed = (not response['queryInfo']['queryNumTermsTotal'] == num_terms)
+                if not failed:
+                    for index, token in enumerate(tokens):
+                        term = response['queryInfo']['terms'][index]['termStr']
+
+                        if token != term:
+                            failed = True
+                            break
+
+                if failed:
+                    print(response)
+
+                self.add_testcase(test_type, query, start_time, failed)
+            except:
+                self.add_testcase(test_type, query, start_time, True)
+
     def verify_search_result(self, *args):
         test_type = 'verify_search_result'
         print('Running test -', test_type)
@@ -360,6 +459,12 @@ class TestRunner:
                 self.add_testcase(test_type, query, start_time, True)
                 return
 
+            query_param = tokens.pop(0)
+            if len(tokens) == 0:
+                print('Invalid format ', item)
+                self.add_testcase(test_type, query, start_time, True)
+                return
+
             num_results = int(tokens.pop(0))
             if len(tokens) != num_results:
                 print('Invalid format ', item)
@@ -371,7 +476,7 @@ class TestRunner:
                 results.append(self.format_url(token))
 
             try:
-                response = self.api.search(query)
+                response = self.api.search(query, parse_qs(query_param))
 
                 failed = (not len(response['results']) == num_results)
                 if not failed:
@@ -497,15 +602,15 @@ if __name__ == '__main__':
     parser.add_argument('--dest-port', dest='ws_port', type=int, default=28080, action='store',
                         help='Destination host port (default: 28080')
 
-    args = parser.parse_args()
+    pargs = parser.parse_args()
 
     from webserver import TestWebServer
 
     # start webserver
-    test_webserver = TestWebServer(args.ws_port)
+    test_webserver = TestWebServer(pargs.ws_port)
 
-    main(args.testdir, args.testcase, args.gb_offset, args.gb_path, args.gb_host, args.gb_port,
-         test_webserver, args.ws_scheme, args.ws_domain, args.ws_port)
+    main(pargs.testdir, pargs.testcase, pargs.gb_offset, pargs.gb_path, pargs.gb_host, pargs.gb_port,
+         test_webserver, pargs.ws_scheme, pargs.ws_domain, pargs.ws_port)
 
     # stop webserver
     test_webserver.stop()

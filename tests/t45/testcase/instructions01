@@ -1,0 +1,5 @@
+verify_query_terms the one||4|the one|the|one|1
+verify_query_terms html||2|html|Hypertext Markup Language
+
+# Commented out until we figure out what's right
+#verify_query_terms to be or not to be|qe=0|7|to be|be or|or not|not to|to|be|or
