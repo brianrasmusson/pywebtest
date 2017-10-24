@@ -319,6 +319,7 @@ class TestRunner:
 
                 failed = (not len(response['results']) != 0)
                 if failed:
+                    print(test_type + ' - ' + item)
                     print(response)
 
                 self.add_testcase(test_type, item, start_time, failed)
@@ -343,6 +344,7 @@ class TestRunner:
 
                 failed = (not len(response['results']) == 0)
                 if failed:
+                    print(test_type + ' - ' + item)
                     print(response)
 
                 self.add_testcase(test_type, item, start_time, failed)
@@ -378,6 +380,7 @@ class TestRunner:
                 failed = (not response['queryInfo']['queryLanguageAbbr'] == language)
 
                 if failed:
+                    print(test_type + ' - ' + query + ' - ' + query_param)
                     print(response)
 
                 self.add_testcase(test_type, query + ' - ' + query_param, start_time, failed)
@@ -431,6 +434,7 @@ class TestRunner:
                             break
 
                 if failed:
+                    print(test_type + ' - ' + item)
                     print(response)
 
                 self.add_testcase(test_type, query, start_time, failed)
@@ -492,6 +496,7 @@ class TestRunner:
                             break
 
                 if failed:
+                    print(test_type + ' - ' + query + ' - ' + query_param)
                     print(response)
 
                 self.add_testcase(test_type, query, start_time, failed)
@@ -515,6 +520,9 @@ class TestRunner:
             try:
                 url = self.format_url(item)
                 failed = (url not in served_urls)
+
+                if failed:
+                    print(test_type + ' - ' + url)
 
                 self.add_testcase(test_type, item, start_time, failed)
             except:
@@ -564,6 +572,9 @@ class TestRunner:
             try:
                 url = self.format_url(item)
                 failed = (url in served_urls)
+
+                if failed:
+                    print(test_type + ' - ' + url)
 
                 self.add_testcase(test_type, item, start_time, failed)
             except:
