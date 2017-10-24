@@ -457,7 +457,7 @@ class TestRunner:
 
             tokens = item.split('|')
 
-            query = tokens.pop(0)
+            query = self.format_url(tokens.pop(0))
             if len(tokens) == 0:
                 print('Invalid format ', item)
                 self.add_testcase(test_type, query, start_time, True)
