@@ -168,6 +168,9 @@ class TestRunner:
             # verify search result url
             self.verify_search_result_url()
 
+            # verify search result title & summary
+            self.verify_search_result_titlesummary()
+
             # verify spidered
             self.verify_spidered()
 
@@ -501,6 +504,65 @@ class TestRunner:
 
                 self.add_testcase(test_type, query, start_time, failed)
             except:
+                self.add_testcase(test_type, query, start_time, True)
+
+    def verify_search_result_titlesummary(self, *args):
+        test_type = 'verify_search_result_titlesummary'
+        print('Running test -', test_type)
+
+        items = []
+        if len(args):
+            items.append(' '.join(args))
+        else:
+            filename = os.path.join(self.testcaseconfigdir, test_type)
+            items = self.read_file(filename)
+
+        for item in items:
+            start_time = time.perf_counter()
+
+            tokens = item.split('|')
+
+            query = self.format_url(tokens.pop(0))
+            if len(tokens) == 0:
+                print('Invalid format ', item)
+                self.add_testcase(test_type, query, start_time, True)
+                return
+
+            query_param = tokens.pop(0)
+            if len(tokens) == 0:
+                print('Invalid format ', item)
+                self.add_testcase(test_type, query, start_time, True)
+                return
+
+            num_results = int(tokens.pop(0))
+            if len(tokens) != num_results * 2:
+                print('Invalid format ', item)
+                self.add_testcase(test_type, query, start_time, True)
+                return
+
+            it = iter(tokens)
+            results = zip(it, it)
+
+            try:
+                response = self.api.search(query, parse_qs(query_param))
+
+                failed = (not len(response['results']) == num_results)
+                if not failed:
+                    for index, (title, summary) in enumerate(results):
+                        r_title = response['results'][index]['title']
+                        r_summary = response['results'][index]['sum']
+
+                        if title != r_title or summary != r_summary:
+                            failed = True
+                            break
+
+                if failed:
+                    print(test_type + ' - ' + query + ' - ' + query_param)
+                    print(response)
+
+                self.add_testcase(test_type, query, start_time, failed)
+            except e:
+                print(e)
                 self.add_testcase(test_type, query, start_time, True)
 
     def verify_spidered(self, *args):
