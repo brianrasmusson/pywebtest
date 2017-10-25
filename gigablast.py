@@ -202,7 +202,8 @@ class GigablastInstances:
         self._num_instances = num_instances
         self._num_shards = num_shards
         self._num_mirrors = (num_instances / num_shards) - 1
-        self._mergepath = os.path.normpath(os.path.join(path, 'instances%02d/merge' % num_instances))
+        self._merge_space_path = os.path.normpath(os.path.join(path, 'instances%02d/merge_space' % num_instances))
+        self._merge_lock_path = os.path.normpath(os.path.join(path, 'instances%02d/merge_lock' % num_instances))
         port_offset = offset * 10
         executor_number = os.getenv('EXECUTOR_NUMBER')
         if executor_number is not None:
@@ -216,6 +217,15 @@ class GigablastInstances:
     def get_instance_port(self, host_id):
         return self._port + host_id
 
+    def get_instance_type(self, host_id):
+        if self._num_mirrors == 0:
+            return ""
+        else:
+            if host_id < self._num_shards:
+                return "nospider"
+            else:
+                return "noquery"
+
     def create_hostfile(self):
         with open(os.path.join(self._path, 'hosts.conf'), 'w') as f:
             f.write('num-mirrors: %d\n' % self._num_mirrors)
@@ -227,9 +237,10 @@ class GigablastInstances:
 
             for host_id in range(self._num_instances):
                 instance_path = self.get_instance_path(host_id)
-                f.write('%d %d %d %d %d 127.0.0.1 127.0.0.1 %s %s\n' %
+                instance_type = self.get_instance_type(host_id)
+                f.write('%d %d %d %d %d 127.0.0.1 127.0.0.1 %s %s %s %s\n' %
                         (host_id, dnsclient_port + host_id, https_port + host_id, http_port + host_id,
-                         udp_port + host_id, instance_path, self._mergepath))
+                         udp_port + host_id, instance_path, self._merge_space_path, self._merge_lock_path, instance_type))
 
     def create_instances(self):
         self.create_hostfile()
