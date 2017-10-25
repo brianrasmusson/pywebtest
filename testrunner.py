@@ -165,8 +165,8 @@ class TestRunner:
             # verify not indexed
             self.verify_not_indexed()
 
-            # verify search result
-            self.verify_search_result()
+            # verify search result url
+            self.verify_search_result_url()
 
             # verify spidered
             self.verify_spidered()
@@ -441,8 +441,8 @@ class TestRunner:
             except:
                 self.add_testcase(test_type, query, start_time, True)
 
-    def verify_search_result(self, *args):
-        test_type = 'verify_search_result'
+    def verify_search_result_url(self, *args):
+        test_type = 'verify_search_result_url'
         print('Running test -', test_type)
 
         items = []
