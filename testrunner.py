@@ -250,6 +250,8 @@ class TestRunner:
                                                             self.ws_domain, self.ws_port)
 
         seedstr = seedstr.rstrip('\n')
+        print(seedstr)
+
         self.api.config_sitelist(seedstr)
 
     def wait_spider_done(self, *args):
