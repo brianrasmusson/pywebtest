@@ -198,9 +198,10 @@ class GigablastAPI:
 
 class GigablastInstances:
     def __init__(self, offset, path, num_instances, num_shards, port):
+        self.offset = offset
         self._path = path
-        self._num_instances = num_instances
-        self._num_shards = num_shards
+        self.num_instances = num_instances
+        self.num_shards = num_shards
         self._num_mirrors = (num_instances / num_shards) - 1
         self._merge_space_path = os.path.normpath(os.path.join(path, 'instances%02d/merge_space' % num_instances))
         self._merge_lock_path = os.path.normpath(os.path.join(path, 'instances%02d/merge_lock' % num_instances))
@@ -212,7 +213,7 @@ class GigablastInstances:
         self._port = port + port_offset
 
     def get_instance_path(self, host_id):
-        return '%s/instances%02d/%s' % (self._path, self._num_instances, str(host_id).zfill(3))
+        return '%s/instances%02d/%s' % (self._path, self.num_instances, str(host_id).zfill(3))
 
     def get_instance_port(self, host_id):
         return self._port + host_id
@@ -221,7 +222,7 @@ class GigablastInstances:
         if self._num_mirrors == 0:
             return ""
         else:
-            if host_id < self._num_shards:
+            if host_id < self.num_shards:
                 return "nospider"
             else:
                 return "noquery"
@@ -235,7 +236,7 @@ class GigablastInstances:
             http_port = self._port
             udp_port = self._port + 1000
 
-            for host_id in range(self._num_instances):
+            for host_id in range(self.num_instances):
                 instance_path = self.get_instance_path(host_id)
                 instance_type = self.get_instance_type(host_id)
                 f.write('%d %d %d %d %d 127.0.0.1 127.0.0.1 %s %s %s %s\n' %

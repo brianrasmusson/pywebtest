@@ -14,7 +14,7 @@ from urllib.parse import parse_qs
 
 
 class TestRunner:
-    def __init__(self, testdir, testcase, gb_offset, gb_path, gb_host, gb_port, webserver, ws_scheme, ws_domain, ws_port):
+    def __init__(self, testdir, testcase, gb_instances, gb_host, webserver, ws_scheme, ws_domain, ws_port):
         self.testcase = testcase
         self.testcasedir = os.path.join(testdir, testcase)
         self.testcaseconfigdir = os.path.join(self.testcasedir, 'testcase')
@@ -24,11 +24,21 @@ class TestRunner:
         else:
             self.testcasedesc = self.testcase
 
-        self.gb_offset = gb_offset
-        self.gb_path = gb_path
+        self.gb_instances = gb_instances
+
+        self.gb_path = gb_instances.get_instance_path(0)
         self.gb_starttime = 0
 
-        self.api = GigablastAPI(gb_host, gb_port)
+        self.spider_apis = []
+        if self.gb_instances.num_instances == self.gb_instances.num_shards:
+            host_offset = 0
+        else:
+            host_offset = self.gb_instances.num_shards
+
+        for i in range(self.gb_instances.num_shards):
+            self.spider_apis.append(GigablastAPI(gb_host, self.gb_instances.get_instance_port(host_offset + i)))
+
+        self.api = self.spider_apis[0]
 
         self.webserver = webserver
         self.ws_scheme = ws_scheme
@@ -244,42 +254,47 @@ class TestRunner:
 
     def wait_spider_done(self, *args):
         print('Waiting for spidering to complete')
-        start_time = time.perf_counter()
 
         # wait until
         #   - spider is in progress
         #   - waitingTree spider time is more than an hour
         #   - no pending doleIP
         #   - nothing is being spidered
-        result = True
-        while result:
-            try:
-                response = self.api.get_spiderqueue()['response']
-                print(response)
-            except:
-                result = False
-                break
+        for spider_api in self.spider_apis:
+            start_time = time.perf_counter()
 
-            if response['statusCode'] == 7 and response['doleIPCount'] == 0 and response['spiderCount'] == 0:
-                if response['waitingTreeCount'] > 0:
-                    has_pending_spider = False
-                    for waiting_tree in response['waitingTrees']:
-                        if waiting_tree['spiderTime'] < ((time.time() + 3600) * 1000):
-                            has_pending_spider = True
+            result = True
+            while result:
+                try:
+                    response = spider_api.get_spiderqueue()['response']
+                    print(response)
+                except:
+                    result = False
+                    break
 
-                    if not has_pending_spider:
+                if response['statusCode'] == 7 and response['doleIPCount'] == 0 and response['spiderCount'] == 0:
+                    if response['waitingTreeCount'] > 0:
+                        has_pending_spider = False
+                        for waiting_tree in response['waitingTrees']:
+                            if waiting_tree['spiderTime'] < ((time.time() + 3600) * 1000):
+                                has_pending_spider = True
+
+                        if not has_pending_spider:
+                            self.save_gb()
+                            break
+                    else:
                         self.save_gb()
                         break
 
-            # wait for a max of 300 seconds
-            if time.perf_counter() - start_time > 300:
-                print(response)
-                result = False
-                break
+                # wait for a max of 180 seconds
+                if time.perf_counter() - start_time > 180:
+                    print(response)
+                    result = False
+                    break
 
-            time.sleep(0.5)
+                time.sleep(0.5)
 
-        self.add_testcase('pre', 'spider', start_time, not result)
+            self.add_testcase('pre', 'spider', start_time, not result)
 
         served_urls = self.webserver.get_served_urls()
         for served_url in served_urls:
@@ -290,7 +305,7 @@ class TestRunner:
     def add_testcase(self, test_type, test_item, start_time, failed=False):
         test_name = test_type + ' - ' + test_item
         testcase = TestCase(test_name,
-                            classname='systemtest.' + str(self.gb_offset) + '.' + self.testcasedesc,
+                            classname='systemtest.' + str(self.gb_instances.offset) + '.' + self.testcasedesc,
                             elapsed_sec=(time.perf_counter() - start_time))
         if failed:
             testcase.add_failure_info(test_name + ' - failed')
@@ -305,12 +320,21 @@ class TestRunner:
         return TestSuite(self.testcase, test_cases=self.testcases, package='systemtest')
 
     def wait_processup(self):
-        while True:
-            status = self.api.status()
-            if status['response']['statusCode'] == 0 or status['response']['statusCode'] == 7:
-                # SP_INITIALIZING / SP_INPROGRESS
-                break
-            time.sleep(0.5)
+        for spider_api in self.spider_apis:
+            start_time = time.perf_counter()
+
+            while True:
+                status = spider_api.status()
+                if status['response']['statusCode'] == 0 or status['response']['statusCode'] == 7:
+                    # SP_INITIALIZING / SP_INPROGRESS
+                    break
+
+                # wait for a max of 60 seconds
+                if time.perf_counter() - start_time > 60:
+                    print(response)
+                    break
+
+                time.sleep(0.5)
 
     def validate_processuptime(self):
         return self.api.status_processstarttime() == self.gb_starttime
@@ -681,8 +705,8 @@ class TestRunner:
                 self.add_testcase(test_type, item, start_time, True)
 
 
-def main(testdir, testcase, gb_offset, gb_path, gb_host, gb_port, webserver, ws_scheme, ws_domain, ws_port):
-    test_runner = TestRunner(testdir, testcase, gb_offset, gb_path, gb_host, gb_port, webserver, ws_scheme, ws_domain, ws_port)
+def main(testdir, testcase, gb_instances, gb_host, webserver, ws_scheme, ws_domain, ws_port):
+    test_runner = TestRunner(testdir, testcase, gb_instances, gb_host, webserver, ws_scheme, ws_domain, ws_port)
     result = test_runner.run_test()
     print(TestSuite.to_xml_string([result]))
 
@@ -701,6 +725,10 @@ if __name__ == '__main__':
                                                    '../open-source-search-engine'))
     parser.add_argument('--path', dest='gb_path', default=default_gbpath, action='store',
                         help='Directory containing gigablast binary (default: {})'.format(default_gbpath))
+    parser.add_argument('--num-instances', dest="gb_num_instances", type=int, default=1, action='store',
+                        help='Number of gigablast instances (default: 1)')
+    parser.add_argument('--num-shards', dest="gb_num_shards", type=int, default=1, action='store',
+                        help='Number of gigablast shards (default: 1)')
     parser.add_argument('--host', dest='gb_host', default='127.0.0.1', action='store',
                         help='Gigablast host (default: 127.0.0.1)')
     parser.add_argument('--port', dest='gb_port', default='28000', action='store',
@@ -720,8 +748,8 @@ if __name__ == '__main__':
     # start webserver
     test_webserver = TestWebServer(pargs.ws_port)
 
-    main(pargs.testdir, pargs.testcase, pargs.gb_offset, pargs.gb_path, pargs.gb_host, pargs.gb_port,
-         test_webserver, pargs.ws_scheme, pargs.ws_domain, pargs.ws_port)
+    gb_instances = GigablastInstances(pargs.gb_offset, pargs.gb_path, pargs.gb_num_instances, pargs.gb_num_shards, pargs.gb_port)
+    main(pargs.testdir, pargs.testcase, gb_instances, pargs.gb_host, test_webserver, pargs.ws_scheme, pargs.ws_domain, pargs.ws_port)
 
     # stop webserver
     test_webserver.stop()

@@ -20,14 +20,6 @@ def main(testdir, gb_offset, gb_path, gb_num_instances, gb_num_shards, gb_host, 
     # prepare gigablast
     gb_instances = GigablastInstances(gb_offset, gb_path, gb_num_instances, gb_num_shards, gb_port)
 
-    if gb_num_instances == gb_num_shards:
-        host_id = 0
-    else:
-        host_id = gb_num_shards
-
-    spider_instance_path = gb_instances.get_instance_path(host_id)
-    spider_instance_port = gb_instances.get_instance_port(host_id)
-
     # start webserver
     ws_port += gb_offset
     test_webserver = TestWebServer(ws_port)
@@ -38,7 +30,7 @@ def main(testdir, gb_offset, gb_path, gb_num_instances, gb_num_shards, gb_host, 
     for testcase in testcases:
         print('Running testcase -', testcase)
         test_webserver.clear_served_urls()
-        test_runner = TestRunner(testdir, testcase, gb_offset, spider_instance_path, gb_host, spider_instance_port, test_webserver, ws_scheme, ws_domain, ws_port)
+        test_runner = TestRunner(testdir, testcase, gb_instances, gb_host, test_webserver, ws_scheme, ws_domain, ws_port)
         results.append(test_runner.run_test())
 
     # stop webserver
