@@ -569,13 +569,13 @@ class TestRunner:
             query_param = tokens.pop(0)
             if len(tokens) == 0:
                 print('Invalid format ', item)
-                self.add_testcase(test_type, query, start_time, True)
+                self.add_testcase(test_type, query + ' - ' + query_param, start_time, True)
                 return
 
             num_results = int(tokens.pop(0))
             if len(tokens) != num_results * 2:
                 print('Invalid format ', item)
-                self.add_testcase(test_type, query, start_time, True)
+                self.add_testcase(test_type, query + ' - ' + query_param, start_time, True)
                 return
 
             it = iter(tokens)
@@ -598,10 +598,10 @@ class TestRunner:
                     print(test_type + ' - ' + query + ' - ' + query_param)
                     print(response)
 
-                self.add_testcase(test_type, query, start_time, failed)
+                self.add_testcase(test_type, query + ' - ' + query_param, start_time, failed)
             except e:
                 print(e)
-                self.add_testcase(test_type, query, start_time, True)
+                self.add_testcase(test_type, query + ' - ' + query_param, start_time, True)
 
     def verify_spidered(self, *args):
         test_type = 'verify_spidered'

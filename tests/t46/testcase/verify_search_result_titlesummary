@@ -4,3 +4,4 @@ url:s1.t46.{DOMAIN}:{PORT}|fx_qlang=da|1|privacore.test|Hjemmesiden forhindrer o
 url:s2.t46.{DOMAIN}:{PORT}||1|My very special page|Something very relevant about the page like unicorns and rainbows
 url:s3.t46.{DOMAIN}:{PORT}|fx_qlang=en|1|Example title|Example summary
 url:s3.t46.{DOMAIN}:{PORT}|fx_qlang=da|1|Eksempel titel|Eksempeloversigt
+url:s3.t46.{DOMAIN}:{PORT}|fx_qlang=de|1|Example title|Example summary
