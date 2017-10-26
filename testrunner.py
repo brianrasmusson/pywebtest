@@ -8,7 +8,7 @@ import requests
 import sys
 import glob
 import shutil
-from gigablast import GigablastAPI
+from gigablast import GigablastAPI, GigablastInstances
 from junit_xml import TestSuite, TestCase
 from urllib.parse import parse_qs
 
@@ -284,6 +284,11 @@ class TestRunner:
                             break
                     else:
                         self.save_gb()
+                        break
+
+                if response['statusCode'] == 0:
+                    # we only wait for 5 seconds if it's initializing
+                    if time.perf_counter() - start_time > 5:
                         break
 
                 # wait for a max of 180 seconds
@@ -731,7 +736,7 @@ if __name__ == '__main__':
                         help='Number of gigablast shards (default: 1)')
     parser.add_argument('--host', dest='gb_host', default='127.0.0.1', action='store',
                         help='Gigablast host (default: 127.0.0.1)')
-    parser.add_argument('--port', dest='gb_port', default='28000', action='store',
+    parser.add_argument('--port', dest='gb_port', type=int, default=28000, action='store',
                         help='Gigablast port (default: 28000')
 
     parser.add_argument('--dest-scheme', dest='ws_scheme', default='http', action='store',
