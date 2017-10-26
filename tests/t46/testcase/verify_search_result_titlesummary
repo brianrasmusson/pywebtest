@@ -1,3 +1,6 @@
 url:s1.t46.{DOMAIN}:{PORT}||1|privacore.test|The site prevents us from accessing their pages. No description available.
 url:s1.t46.{DOMAIN}:{PORT}|fx_qlang=en|1|privacore.test|The site prevents us from accessing their pages. No description available.
 url:s1.t46.{DOMAIN}:{PORT}|fx_qlang=da|1|privacore.test|Hjemmesiden forhindrer os i at tilgå deres sider. Ingen beskrivelse tilgængelig.
+url:s2.t46.{DOMAIN}:{PORT}||1|My very special page|Something very relevant about the page like unicorns and rainbows
+url:s3.t46.{DOMAIN}:{PORT}|fx_qlang=en|1|Example title|Example summary
+url:s3.t46.{DOMAIN}:{PORT}|fx_qlang=da|1|Eksempel titel|Eksempeloversigt

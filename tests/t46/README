@@ -1,3 +1,5 @@
 Test for result title/summary override
 
 s1: root page blocked by robots.txt
+s2: normal page with title & meta description tags
+s3: overriden title/summary

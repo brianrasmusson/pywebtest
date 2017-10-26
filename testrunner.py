@@ -67,7 +67,12 @@ class TestRunner:
 
         print('Copy config files')
         for filename in glob.glob(os.path.join(self.testcaseconfigdir, '*.txt')):
-            shutil.copy(filename, self.gb_path)
+            destfile = shutil.copy(filename, self.gb_path)
+            lines = self.read_file(destfile)
+            with open(destfile, 'w') as file:
+                for line in lines:
+                    file.write(self.format_url(line) + '\n')
+
             subprocess.call(['./gb', 'installfile', os.path.basename(filename)], cwd=self.gb_path)
 
         print('Starting gigablast')
@@ -84,7 +89,7 @@ class TestRunner:
 
                 self.update_processuptime()
 
-                # set some default config
+                # set some default/custom config
                 self.config_gb()
 
                 # put some delay after start
@@ -121,6 +126,9 @@ class TestRunner:
         self.api.config_log({'ltrc_sp': '1'})
         self.api.config_log({'ltrc_msgfour': '1'})
         self.api.config_log({'ltrc_xmldoc': '1'})
+
+        # apply custom config
+        self.custom_config()
 
     def run_instructions(self):
         # check instruction file
@@ -179,6 +187,36 @@ class TestRunner:
 
             # verify not spidered
             self.verify_not_spidered()
+
+    @staticmethod
+    def convert_config_log(tokens):
+        it = iter(tokens)
+        return dict(zip(it, it))
+
+    def custom_config(self, *args):
+        print('Applying custom config')
+        file_name = 'custom_config'
+
+        items = []
+        if len(args):
+            items.append(' '.join(args))
+        else:
+            filename = os.path.join(self.testcaseconfigdir, file_name)
+            items = self.read_file(filename)
+
+        for item in items:
+            tokens = item.split()
+            token = tokens.pop(0)
+
+            convert_func = getattr(self, 'convert_' + token, None)
+            func = getattr(self.api, token, None)
+            if func is not None:
+                if convert_func is not None:
+                    func(convert_func(tokens))
+                else:
+                    func(*tokens)
+            else:
+                print('Unknown instruction -', token)
 
     def seed(self, *args):
         print('Adding seed for spidering')
