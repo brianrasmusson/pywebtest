@@ -39,7 +39,7 @@ class Handler(BaseHTTPRequestHandler):
     def log_message(self, format, *args):
         logger.info("%s" % (format % args))
 
-    def file_content(self, path, content_type=None, charset=None):
+    def file_content(self, path, content_type=None, content_encoding=None, charset=None):
         """Return content of file. Empty string for non-existing files"""
         if not os.path.isfile(path):
             return bytes()
@@ -59,7 +59,7 @@ class Handler(BaseHTTPRequestHandler):
                     scheme = "https"
 
                 content = f.read()
-                if content_type.startswith('text/'):
+                if content_type.startswith('text/') and content_encoding is None:
                     content = content.decode(charset).format(SCHEME=scheme, DOMAIN=self.domain, PORT=self.server.server_port).encode(charset)
 
         except IOError:
