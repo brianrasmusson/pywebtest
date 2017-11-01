@@ -8,6 +8,7 @@ import requests
 import sys
 import glob
 import shutil
+import ast
 from gigablast import GigablastAPI, GigablastInstances
 from junit_xml import TestSuite, TestCase
 from urllib.parse import parse_qs
@@ -197,6 +198,9 @@ class TestRunner:
 
             # verify not spidered
             self.verify_not_spidered()
+
+            # verify spider response
+            self.verify_spider_response()
 
     @staticmethod
     def convert_config_log(tokens):
@@ -633,7 +637,7 @@ class TestRunner:
                     print(response)
 
                 self.add_testcase(test_type, query + ' - ' + query_param, start_time, failed)
-            except e:
+            except Exception as e:
                 print(e)
                 self.add_testcase(test_type, query + ' - ' + query_param, start_time, True)
 
@@ -713,6 +717,53 @@ class TestRunner:
                 self.add_testcase(test_type, item, start_time, failed)
             except:
                 self.add_testcase(test_type, item, start_time, True)
+
+    def verify_spider_response(self, *args):
+        test_type = 'verify_spider_response'
+        print('Running test -', test_type)
+
+        items = []
+        if len(args):
+            items.append(' '.join(args))
+        else:
+            filename = os.path.join(self.testcaseconfigdir, test_type)
+            items = self.read_file(filename)
+
+        for item in items:
+            start_time = time.perf_counter()
+
+            tokens = item.split('|')
+            if len(tokens) != 2:
+                print('Invalid format ', item)
+                self.add_testcase(test_type, item, start_time, True)
+                return
+
+            url = self.format_url(tokens.pop(0))
+
+            result = ast.literal_eval(tokens.pop(0))
+            if type(result) is not dict:
+                print('Invalid format ', item)
+                self.add_testcase(test_type, item, start_time, True)
+                return
+
+            try:
+                response = self.api.lookup_spiderdb(url)
+
+                failed = ('spiderReply' not in response)
+                if not failed:
+                    for key, value in result.items():
+                        if response['spiderReply'][key] != value:
+                            failed = True
+                            break
+
+                if failed:
+                    print(test_type + ' - ' + url + ' - ' + str(result))
+                    print(response)
+
+                self.add_testcase(test_type, url + ' - ' + str(result), start_time, failed)
+            except Exception as e:
+                print(e)
+                self.add_testcase(test_type, url + ' - ' + str(result), start_time, True)
 
 
 def main(testdir, testcase, gb_instances, gb_host, webserver, ws_scheme, ws_domain, ws_port):

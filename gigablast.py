@@ -2,6 +2,7 @@ import requests
 import os
 import subprocess
 
+
 class GigablastAPI:
     class _HTTPStatus:
         @staticmethod
@@ -165,6 +166,13 @@ class GigablastAPI:
         self._add_urls.add(url)
 
         return self._inject(url)['response']['statusCode'] == 0
+
+    def lookup_spiderdb(self, url):
+        payload = {'url': url}
+        self._apply_default_payload(payload)
+
+        response = requests.get(self._get_url('admin/spiderdblookup'), params=payload)
+        return response.json()
 
     def save(self):
         payload = {'js': '1'}
