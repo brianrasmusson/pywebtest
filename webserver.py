@@ -262,8 +262,10 @@ class Handler(BaseHTTPRequestHandler):
         l = os.listdir(dir)
         l.sort()
 
-        special_ending = ('.status-code', '.content-type', '.charset', '.content-encoding', '.extra-headers', '.connection-reset', '.connection-delay')
-        special_file = ('README', 'robots.txt')
+        special_ending = ('.status-code', '.content-type', '.charset', '.content-encoding', '.extra-headers',
+                          '.connection-reset', '.connection-delay')
+        special_file = ('README', 'robots.txt', 'default-status-code', 'default-content-type', 'default-charset',
+                        'default-content-encoding', 'default-extra-headers', 'default-connection-delay')
         filedir = "" if (path == "/") else path
         for f in l:
             if not f.endswith(special_ending) and f not in special_file:
