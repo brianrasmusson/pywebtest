@@ -16,6 +16,7 @@ import time
 import cgi
 import socket
 import struct
+import math
 
 global logger
 
@@ -230,8 +231,6 @@ class Handler(BaseHTTPRequestHandler):
             if ':' in h:
                 self.send_header(h.split(":")[0], h.partition(":")[2])
 
-        self.end_headers()
-
         content = self.file_content(base_path, content_type, content_encoding, charset)
         if content_encoding == 'gzip':
             # check if content is already gzipped
@@ -241,9 +240,10 @@ class Handler(BaseHTTPRequestHandler):
                 content = gzip.compress(content)
 
         if content_mtu == 0:
+            self.end_headers()
             self.wfile.write(content)
         else:
-            import math
+            content = b''.join(self._headers_buffer) + b'\r\n' + content
             for i in range(math.ceil(len(content)/content_mtu)):
                 self.wfile.write(content[(i*content_mtu):((i + 1) * content_mtu)])
                 pass
