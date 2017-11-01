@@ -179,6 +179,7 @@ class Handler(BaseHTTPRequestHandler):
         status_code = 200
         content_type = "application/octet-stream"
         content_encoding = None
+        content_mtu = 0
         charset = None
         extra_headers = []
         connection_delay = 0
@@ -199,6 +200,7 @@ class Handler(BaseHTTPRequestHandler):
         content_type = self.get_default_setting('content-type', base_path, dir_path, content_type)
         charset = self.get_default_setting('charset', base_path, dir_path, charset)
         content_encoding = self.get_default_setting('content-encoding', base_path, dir_path, content_encoding)
+        content_mtu = self.get_default_setting('content-mtu', base_path, dir_path, content_mtu)
         extra_headers = self.get_default_setting('extra-headers', base_path, dir_path, extra_headers)
         connection_delay = self.get_default_setting('connection-delay', base_path, dir_path, connection_delay)
 
@@ -234,13 +236,17 @@ class Handler(BaseHTTPRequestHandler):
         if content_encoding == 'gzip':
             # check if content is already gzipped
             import magic
-            if magic.from_buffer(content, mime=True) == 'application/x-gzip':
-                self.wfile.write(content)
-            else:
+            if magic.from_buffer(content, mime=True) != 'application/x-gzip':
                 import gzip
-                self.wfile.write(gzip.compress(content))
-        else:
+                content = gzip.compress(content)
+
+        if content_mtu == 0:
             self.wfile.write(content)
+        else:
+            import math
+            for i in range(math.ceil(len(content)/content_mtu)):
+                self.wfile.write(content[(i*content_mtu):((i + 1) * content_mtu)])
+                pass
 
     def maybe_serve_index_page(self, dir, path):
         if os.path.exists(dir + "/_noindex"):
@@ -263,9 +269,10 @@ class Handler(BaseHTTPRequestHandler):
         l.sort()
 
         special_ending = ('.status-code', '.content-type', '.charset', '.content-encoding', '.extra-headers',
-                          '.connection-reset', '.connection-delay')
+                          '.connection-reset', '.connection-delay', '.content-mtu')
         special_file = ('README', 'robots.txt', 'default-status-code', 'default-content-type', 'default-charset',
-                        'default-content-encoding', 'default-extra-headers', 'default-connection-delay')
+                        'default-content-encoding', 'default-extra-headers', 'default-connection-delay',
+                        'default-content-mtu')
         filedir = "" if (path == "/") else path
         for f in l:
             if not f.endswith(special_ending) and f not in special_file:
