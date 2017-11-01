@@ -130,6 +130,28 @@ class Handler(BaseHTTPRequestHandler):
         self.request.close()
         return False
 
+    def get_default_setting(self, name, base_path, dir_path, default):
+        file_override_path = base_path + '.' + name
+        default_override_path = os.path.join(dir_path, 'default-' + name)
+
+        override_path = None
+        if os.path.exists(file_override_path):
+            override_path = file_override_path
+        elif os.path.exists(default_override_path):
+            override_path = default_override_path
+
+        value = default
+        if override_path:
+            content = self.file_content(override_path).decode().strip()
+            if type(default) is int:
+                value = int(content)
+            elif type(default) is list:
+                value = content.split('\n')
+            else:
+                value = content
+
+        return value
+
     def serve_page(self, testset, server, path):
         path = unescape_path(path)
 
@@ -159,24 +181,26 @@ class Handler(BaseHTTPRequestHandler):
         content_encoding = None
         charset = None
         extra_headers = []
+        connection_delay = 0
 
+        # try guessing default from mime
         mime = mimetypes.guess_type(path, False)
         if mime[0] is not None:
             content_type = mime[0]
         if content_type.startswith('text/'):
             charset = 'UTF-8'
 
-        # then look for overrides
-        if os.path.exists(base_path + ".status-code"):
-            status_code = int(self.file_content(base_path + ".status-code"))
-        if os.path.exists(base_path + ".content-type"):
-            content_type = self.file_content(base_path + ".content-type").decode().strip()
-        if os.path.exists(base_path + ".charset"):
-            charset = self.file_content(base_path + ".charset").decode().strip()
-        if os.path.exists(base_path + ".content-encoding"):
-            content_encoding = self.file_content(base_path + ".content-encoding").decode().strip()
-        if os.path.exists(base_path + ".extra-headers"):
-            extra_headers = self.file_content(base_path + ".extra-headers").decode().split('\n')
+        # look for overrides
+        dir_path = base_path
+        if not os.path.isdir(dir_path):
+            dir_path = os.path.dirname(dir_path)
+
+        status_code = self.get_default_setting('status-code', base_path, dir_path, status_code)
+        content_type = self.get_default_setting('content-type', base_path, dir_path, content_type)
+        charset = self.get_default_setting('charset', base_path, dir_path, charset)
+        content_encoding = self.get_default_setting('content-encoding', base_path, dir_path, content_encoding)
+        extra_headers = self.get_default_setting('extra-headers', base_path, dir_path, extra_headers)
+        connection_delay = self.get_default_setting('connection-delay', base_path, dir_path, connection_delay)
 
         if content_type == "":
             content_type = None
@@ -185,8 +209,8 @@ class Handler(BaseHTTPRequestHandler):
         if content_encoding == "":
             content_encoding = None
 
-        if os.path.exists(base_path + ".connection-delay"):
-            time.sleep(int(self.file_content(base_path + ".connection-delay")))
+        if connection_delay > 0:
+            time.sleep(connection_delay)
 
         # ok, got it all
         self.send_response(status_code)
@@ -206,7 +230,17 @@ class Handler(BaseHTTPRequestHandler):
 
         self.end_headers()
 
-        self.wfile.write(self.file_content(base_path, content_type, charset))
+        content = self.file_content(base_path, content_type, content_encoding, charset)
+        if content_encoding == 'gzip':
+            # check if content is already gzipped
+            import magic
+            if magic.from_buffer(content, mime=True) == 'application/x-gzip':
+                self.wfile.write(content)
+            else:
+                import gzip
+                self.wfile.write(gzip.compress(content))
+        else:
+            self.wfile.write(content)
 
     def maybe_serve_index_page(self, dir, path):
         if os.path.exists(dir + "/_noindex"):
