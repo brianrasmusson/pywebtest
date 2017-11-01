@@ -282,11 +282,11 @@ class TestRunner:
                                 has_pending_spider = True
 
                         if not has_pending_spider:
-                            self.save_gb()
                             break
                     else:
-                        self.save_gb()
-                        break
+                        # wait for 5 seconds
+                        if time.perf_counter() - start_time > 5:
+                            break
 
                 if response['statusCode'] == 0:
                     # we only wait for 5 seconds if it's initializing
@@ -299,7 +299,10 @@ class TestRunner:
                     result = False
                     break
 
-                time.sleep(0.5)
+                time.sleep(1.0)
+
+            if result:
+                self.save_gb()
 
             self.add_testcase('pre', 'spider', start_time, not result)
 
