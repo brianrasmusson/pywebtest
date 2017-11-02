@@ -3,3 +3,4 @@
 
 requests>=2.7.0
 junit-xml>=1.7.0
+python-magic>=0.4.13
