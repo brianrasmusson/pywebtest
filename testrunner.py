@@ -338,8 +338,8 @@ class TestRunner:
             start_time = time.perf_counter()
 
             while True:
-                status = spider_api.status()
-                if status['response']['statusCode'] == 0 or status['response']['statusCode'] == 7:
+                response = spider_api.status()
+                if response['response']['statusCode'] == 0 or response['response']['statusCode'] == 7:
                     # SP_INITIALIZING / SP_INPROGRESS
                     break
 
