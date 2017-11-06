@@ -323,8 +323,7 @@ class TestRunner:
                             elapsed_sec=(time.perf_counter() - start_time))
         if failed:
             testcase.add_failure_info(test_name + ' - failed')
-
-        if not self.validate_processuptime():
+        elif not self.validate_processuptime():
             testcase.add_failure_info(test_name + ' - gb restarted')
             self.update_processuptime()
 
