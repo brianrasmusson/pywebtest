@@ -286,20 +286,23 @@ class TestRunner:
                                 has_pending_spider = True
 
                         if not has_pending_spider:
+                            print('no pending spider')
                             break
                     else:
                         # wait for 5 seconds
                         if time.perf_counter() - start_time > 5:
+                            print('waitingTreeCount=0 more than 5 seconds')
                             break
 
                 if response['statusCode'] == 0:
                     # we only wait for 5 seconds if it's initializing
                     if time.perf_counter() - start_time > 5:
+                        print('statusCode=0 more than 5 seconds')
                         break
 
                 # wait for a max of 180 seconds
                 if time.perf_counter() - start_time > 180:
-                    print(response)
+                    print('more than 180 seconds')
                     result = False
                     break
 
