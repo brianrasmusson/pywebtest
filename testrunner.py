@@ -133,6 +133,7 @@ class TestRunner:
 
         # enable debug/trace logs
         self.api.config_log({'ldq': '1'})
+        self.api.config_log({'ltd': '1'})
         self.api.config_log({'ldspid': '1'})
         self.api.config_log({'ltrc_sp': '1'})
         self.api.config_log({'ltrc_msgfour': '1'})
