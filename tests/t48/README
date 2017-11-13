@@ -1,0 +1,6 @@
+Test og spidering priorities between two domains.
+
+Use disting domains and ips for test, eg:
+	127.0.0.2       s1.t48.example.com
+	127.127.0.2     s2.t48.example.org
+	127.127.127.2   s3.t48.example.uk
