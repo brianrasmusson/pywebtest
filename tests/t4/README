@@ -1,5 +1,7 @@
 Tests for robots.txt
 
+s1: robots.txt disallow all (botname)
+s2: robots.txt disallow all (full user-agent)
 s3: robots.txt prefix path matches
 s4: robots.txt directory prefix path matches
 s5: robots.txt wildcard path matches
@@ -8,3 +10,6 @@ s6: robots.txt wildcard & line anchor path matches
 s7 & s8
 s7/robots.txt redirects to s8/f1.html
 s8/robots.txt disallow s8/f1.html
+
+s9: meta robots noindex
+s10: meta robots none
