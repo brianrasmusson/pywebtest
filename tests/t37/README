@@ -4,3 +4,4 @@ s1: test canonical url with base url
 s2: test canonical url that redirects
 s3: test canonical url
 s4: test canonical url multiple (first invalid)
+s5: test canonical url different page
