@@ -11,5 +11,3 @@ s7 & s8
 s7/robots.txt redirects to s8/f1.html
 s8/robots.txt disallow s8/f1.html
 
-s9: meta robots noindex
-s10: meta robots none
