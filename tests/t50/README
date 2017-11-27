@@ -1,0 +1,4 @@
+Test for robots meta tag
+
+s1: meta robots noindex
+s2: meta robots none
