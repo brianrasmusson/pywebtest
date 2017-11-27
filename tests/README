@@ -68,7 +68,7 @@ Test of evil big file (uncompressed)
 Simple test of TLD blocking.
 
 ./t24 (manual test)
-Test of simple redirects.
+Test of redirects (multiple)
 
 ./t25 (manual test)
 Test single-word and bigram matching
@@ -111,4 +111,31 @@ Test expansion of iframe
 
 ./t39
 Test expansion of iframe (src url)
+
+./t40
+Test of links
+
+./t41
+Test indexing of pdf
+
+./t42
+Extended unicode test
+
+./t44
+Test for query language
+
+./t45
+Tests for query terms
+
+./t46
+Test for result title/summary override
+
+./t47
+Test for gzipped content
+
+./t48 (manual test)
+Test og spidering priorities between two domains.
+
+./t50
+Test for robots meta tag
 
