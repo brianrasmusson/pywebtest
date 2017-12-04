@@ -1,0 +1,7 @@
+Test for boolean expressions.
+
+32 files with all combinations of aaa/bbb/ccc/ddd/eee
+
+Suitable to testing complex boolean logic such as:
+
+((aaa OR bbb) AND (ccc OR ddd)) OR eee
