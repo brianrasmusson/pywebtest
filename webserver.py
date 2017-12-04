@@ -51,6 +51,16 @@ class Handler(BaseHTTPRequestHandler):
         if content_type is None:
             content_type = 'text/plain'
 
+        ori_path = path
+        count = self.server.webserver.served_paths.count(ori_path)
+        if count > 0:
+            new_path = path + '.revision.' + str(count)
+
+            if os.path.exists(new_path) and os.path.isfile(new_path):
+                path = new_path
+
+        self.server.webserver.served_paths.append(ori_path)
+
         content = bytes()
         try:
             with open(path, "rb") as f:
@@ -269,7 +279,8 @@ class Handler(BaseHTTPRequestHandler):
         l.sort()
 
         special_ending = ('.status-code', '.content-type', '.charset', '.content-encoding', '.extra-headers',
-                          '.connection-reset', '.connection-delay', '.content-mtu')
+                          '.connection-reset', '.connection-delay', '.content-mtu',
+                          '.revision.1', '.revision.2')
         special_file = ('README', 'robots.txt', 'default-status-code', 'default-content-type', 'default-charset',
                         'default-content-encoding', 'default-extra-headers', 'default-connection-delay',
                         'default-content-mtu')
@@ -316,6 +327,7 @@ class TestWebServer:
         self.http_server_thread = None
         self.https_server_thread = None
         self.served_urls = []
+        self.served_paths = []
 
         if keyfile is not None and certfile is not None:
             def servername_callback(ssl_sock, server_name, initial_context):

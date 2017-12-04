@@ -39,13 +39,17 @@ verify_spider_request {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html|{'isAddUrl': Fal
 verify_spider_response {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html|{'errCode': 0, 'httpStatus': 200, 'isIndexed': True}
 verify_indexed uniqt51s1word1
 
+# setup titlerec version
+custom_config config_master trvn 126
+
 # docreindexurl existing document
 doc_reindex_url {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html
 save_gb
-verify_title_record {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html|{'titleRecVersion': 127, 'httpStatus': 200, 'contentType': 'html'}
+verify_title_record {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html|{'titleRecVersion': 126, 'httpStatus': 200, 'contentType': 'html'}
 verify_spider_request {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html|{'isAddUrl': False, 'isPageReindex': False, 'urlIsDocId': False, 'forceDelete': False}
 verify_spider_response {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html|{'errCode': 0, 'httpStatus': 200, 'isIndexed': True}
 verify_indexed uniqt51s1word1
+verify_indexed uniqt51s1word1revision1
 
 # docdeleteurl existing document
 doc_delete_url {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html
