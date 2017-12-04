@@ -711,7 +711,7 @@ class TestRunner:
                         r_title = response['results'][index]['title']
                         r_summary = response['results'][index]['sum']
 
-                        if title != r_title or summary != r_summary:
+                        if self.format_url(title) != r_title or summary != r_summary:
                             failed = True
                             break
 
