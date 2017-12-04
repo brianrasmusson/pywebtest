@@ -36,13 +36,28 @@ t1/testcase/instructions00
 	keyword:
 		seed ${url}
 		wait_spider_done
+		save_gb
 		dump
+		custom_config ${config_func} ${parameter} ${value}
+		doc_delete_url ${url}
+		doc_rebuild_url ${url}
+		doc_reindex_url ${url}
 		just_search ${term}
 		verify_indexed ${term}
 		verify_not_indexed ${term}
-		verify_search_result ${term}|${num_results}|${url_result}|${url_result}|...
+		verify_query_language ${query}|${query_param}|${expected_language}
+		verify_query_terms ${query}|{$query_param}|${num_terms}|${expected_term}|${expected_term}|...
+		verify_search_result_url ${query}|${query_param}|${num_results}|${expected_url}|${expected_url}|...
+		verify_search_result_titlesummary ${query}|${query_param}|${num_results}|${expected_title}|${expected_summary}|...
 		verify_spidered ${url}
+		verify_only_spidered ${url}
 		verify_not_spidered ${url}
+		verify_spider_request ${url}|${dict_str}
+		verify_no_spider_request ${url}
+		verify_spider_response ${url}|${dict_str}
+		verify_no_spider_response ${url}
+		verify_title_record ${url}|${dict_str}
+		verify_no_title_record ${url}
 
 t1/testcase/*.txt
 	config files that will be copied to gb path
