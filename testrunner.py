@@ -208,6 +208,11 @@ class TestRunner:
         it = iter(tokens)
         return dict(zip(it, it))
 
+    @staticmethod
+    def convert_config_master(tokens):
+        it = iter(tokens)
+        return dict(zip(it, it))
+
     def custom_config(self, *args):
         print('Applying custom config')
         file_name = 'custom_config'
@@ -358,6 +363,81 @@ class TestRunner:
 
     def update_processuptime(self):
         self.gb_starttime = self.api.status_processstarttime()
+
+    def doc_delete_url(self, *args):
+        action_type = 'doc_delete_url'
+        print('Running action -', action_type)
+
+        items = []
+        if len(args):
+            items.append(' '.join(args))
+        else:
+            filename = os.path.join(self.testcaseconfigdir, test_type)
+            items = self.read_file(filename)
+
+        for item in items:
+            start_time = time.perf_counter()
+            key = self.format_url(item)
+
+            try:
+                response = self.api.doc_delete(key)
+                self.add_testcase(action_type, key, start_time)
+            except Exception as e:
+                print(e)
+                self.add_testcase(action_type, key, start_time, True)
+
+        # wait for msg4 to be processed
+        time.sleep(0.5)
+
+    def doc_rebuild_url(self, *args):
+        action_type = 'doc_rebuild_url'
+        print('Running action -', action_type)
+
+        items = []
+        if len(args):
+            items.append(' '.join(args))
+        else:
+            filename = os.path.join(self.testcaseconfigdir, test_type)
+            items = self.read_file(filename)
+
+        for item in items:
+            start_time = time.perf_counter()
+            key = self.format_url(item)
+
+            try:
+                response = self.api.doc_rebuild(key)
+                self.add_testcase(action_type, key, start_time)
+            except Exception as e:
+                print(e)
+                self.add_testcase(action_type, key, start_time, True)
+
+        # wait for msg4 to be processed
+        time.sleep(0.5)
+
+    def doc_reindex_url(self, *args):
+        action_type = 'doc_reindex_url'
+        print('Running action -', action_type)
+
+        items = []
+        if len(args):
+            items.append(' '.join(args))
+        else:
+            filename = os.path.join(self.testcaseconfigdir, test_type)
+            items = self.read_file(filename)
+
+        for item in items:
+            start_time = time.perf_counter()
+            key = self.format_url(item)
+
+            try:
+                response = self.api.doc_reindex(key)
+                self.add_testcase(action_type, key, start_time)
+            except Exception as e:
+                print(e)
+                self.add_testcase(action_type, key, start_time, True)
+
+        # wait for msg4 to be processed
+        time.sleep(0.5)
 
     def dump(self, *args):
         start_time = time.perf_counter()
@@ -721,6 +801,82 @@ class TestRunner:
             except:
                 self.add_testcase(test_type, item, start_time, True)
 
+    def verify_spider_request(self, *args):
+        test_type = 'verify_spider_request'
+        print('Running test -', test_type)
+
+        items = []
+        if len(args):
+            items.append(' '.join(args))
+        else:
+            filename = os.path.join(self.testcaseconfigdir, test_type)
+            items = self.read_file(filename)
+
+        for item in items:
+            start_time = time.perf_counter()
+
+            tokens = item.split('|')
+            if len(tokens) != 2:
+                print('Invalid format ', item)
+                self.add_testcase(test_type, item, start_time, True)
+                return
+
+            url = self.format_url(tokens.pop(0))
+
+            result = ast.literal_eval(tokens.pop(0))
+            if type(result) is not dict:
+                print('Invalid format ', item)
+                self.add_testcase(test_type, item, start_time, True)
+                return
+
+            try:
+                response = self.api.lookup_spiderdb(url)
+
+                failed = ('spiderRequest' not in response)
+                if not failed:
+                    for key, value in result.items():
+                        if response['spiderRequest'][key] != value:
+                            failed = True
+                            break
+
+                if failed:
+                    print(test_type + ' - ' + url + ' - ' + str(result))
+                    print(response)
+
+                self.add_testcase(test_type, url + ' - ' + str(result), start_time, failed)
+            except Exception as e:
+                print(e)
+                self.add_testcase(test_type, url + ' - ' + str(result), start_time, True)
+
+    def verify_no_spider_request(self, *args):
+        test_type = 'verify_no_spider_request'
+        print('Running test -', test_type)
+
+        items = []
+        if len(args):
+            items.append(' '.join(args))
+        else:
+            filename = os.path.join(self.testcaseconfigdir, test_type)
+            items = self.read_file(filename)
+
+        for item in items:
+            start_time = time.perf_counter()
+
+            url = self.format_url(item)
+
+            try:
+                response = self.api.lookup_spiderdb(url)
+
+                failed = ('spiderRequest' in response)
+                if failed:
+                    print(test_type + ' - ' + url)
+                    print(response)
+
+                self.add_testcase(test_type, url, start_time, failed)
+            except Exception as e:
+                print(e)
+                self.add_testcase(test_type, url, start_time, True)
+
     def verify_spider_response(self, *args):
         test_type = 'verify_spider_response'
         print('Running test -', test_type)
@@ -767,6 +923,111 @@ class TestRunner:
             except Exception as e:
                 print(e)
                 self.add_testcase(test_type, url + ' - ' + str(result), start_time, True)
+
+    def verify_no_spider_response(self, *args):
+        test_type = 'verify_no_spider_response'
+        print('Running test -', test_type)
+
+        items = []
+        if len(args):
+            items.append(' '.join(args))
+        else:
+            filename = os.path.join(self.testcaseconfigdir, test_type)
+            items = self.read_file(filename)
+
+        for item in items:
+            start_time = time.perf_counter()
+
+            url = self.format_url(item)
+
+            try:
+                response = self.api.lookup_spiderdb(url)
+
+                failed = ('spiderReply' in response)
+                if failed:
+                    print(test_type + ' - ' + url)
+                    print(response)
+
+                self.add_testcase(test_type, url, start_time, failed)
+            except Exception as e:
+                print(e)
+                self.add_testcase(test_type, url, start_time, True)
+
+    def verify_title_record(self, *args):
+        test_type = 'verify_title_record'
+        print('Running test -', test_type)
+
+        items = []
+        if len(args):
+            items.append(' '.join(args))
+        else:
+            filename = os.path.join(self.testcaseconfigdir, test_type)
+            items = self.read_file(filename)
+
+        for item in items:
+            start_time = time.perf_counter()
+
+            tokens = item.split('|')
+            if len(tokens) != 2:
+                print('Invalid format ', item)
+                self.add_testcase(test_type, item, start_time, True)
+                return
+
+            url = self.format_url(tokens.pop(0))
+
+            result = ast.literal_eval(tokens.pop(0))
+            if type(result) is not dict:
+                print('Invalid format ', item)
+                self.add_testcase(test_type, item, start_time, True)
+                return
+
+            try:
+                response = self.api.lookup_titledb(url)['response']
+
+                failed = ('statusCode' in response)
+                if not failed:
+                    for key, value in result.items():
+                        if response[key] != value:
+                            failed = True
+                            break
+
+                if failed:
+                    print(test_type + ' - ' + url + ' - ' + str(result))
+                    print(response)
+
+                self.add_testcase(test_type, url + ' - ' + str(result), start_time, failed)
+            except Exception as e:
+                print(e)
+                self.add_testcase(test_type, url + ' - ' + str(result), start_time, True)
+
+    def verify_no_title_record(self, *args):
+        test_type = 'verify_no_title_record'
+        print('Running test -', test_type)
+
+        items = []
+        if len(args):
+            items.append(' '.join(args))
+        else:
+            filename = os.path.join(self.testcaseconfigdir, test_type)
+            items = self.read_file(filename)
+
+        for item in items:
+            start_time = time.perf_counter()
+
+            url = self.format_url(item)
+
+            try:
+                response = self.api.lookup_titledb(url)['response']
+
+                failed = ('statusCode' not in response)
+                if failed:
+                    print(test_type + ' - ' + url)
+                    print(response)
+
+                self.add_testcase(test_type, url, start_time, failed)
+            except Exception as e:
+                print(e)
+                self.add_testcase(test_type, url, start_time, True)
 
 
 def main(testdir, testcase, gb_instances, gb_host, webserver, ws_scheme, ws_domain, ws_port):

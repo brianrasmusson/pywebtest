@@ -59,11 +59,6 @@ class GigablastAPI:
 
         return response.json()
 
-    def _config_master(self, payload):
-        self._apply_default_payload(payload)
-
-        requests.get(self._get_url('admin/master'), params=payload)
-
     def _config_search(self, payload):
         self._apply_default_payload(payload)
 
@@ -100,6 +95,11 @@ class GigablastAPI:
 
         return self._add_url(url)['response']['statusCode'] == 0
 
+    def config_master(self, payload):
+        self._apply_default_payload(payload)
+
+        requests.get(self._get_url('admin/master'), params=payload)
+
     def config_sitelist(self, sitelist):
         payload = {'sitelist': sitelist}
 
@@ -113,7 +113,7 @@ class GigablastAPI:
     def config_dns(self, primary, secondary=''):
         payload = {'pdns': primary, 'sdns': secondary}
 
-        self._config_master(payload)
+        self.config_master(payload)
 
     def config_log(self, payload):
         self._apply_default_payload(payload)
@@ -134,10 +134,28 @@ class GigablastAPI:
 
         return False
 
+    def doc_process(self, type, key):
+        payload = {}
+        self._apply_default_payload(payload)
+
+        payload.update({'type': type, 'key': key})
+
+        response = requests.get(self._get_url('admin/docprocess'), params=payload)
+        return response.json()
+
+    def doc_delete(self, key):
+        return self.doc_process('docdelete', key)
+
+    def doc_rebuild(self, key):
+        return self.doc_process('docrebuild', key)
+
+    def doc_reindex(self, key):
+        return self.doc_process('docreindex', key)
+
     def dump(self):
         payload = {'dump': '1'}
 
-        self._config_master(payload)
+        self.config_master(payload)
 
     def get(self, doc_id, payload=None):
         if not payload:
@@ -174,9 +192,23 @@ class GigablastAPI:
         response = requests.get(self._get_url('admin/spiderdblookup'), params=payload)
         return response.json()
 
+    def lookup_titledb(self, url):
+        payload = {'page': 1}
+        self._apply_default_payload(payload)
+
+        payload.update({'u': url})
+
+        try:
+            response = requests.get(self._get_url('get'), params=payload)
+            return response.json()
+        except requests.exceptions.ConnectionError as e:
+            if self._check_http_status(e, self._HTTPStatus.record_not_found()):
+                import json
+                return json.loads('{"response":{"statusCode":32771,"statusMsg":"Record not found"}}')
+
     def save(self):
         payload = {'js': '1'}
-        self._config_master(payload)
+        self.config_master(payload)
 
     def search(self, query, payload=None):
         if not payload:
