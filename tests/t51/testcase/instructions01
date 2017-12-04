@@ -38,6 +38,7 @@ verify_title_record {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html|{'titleRecVersion'
 verify_spider_request {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html|{'isAddUrl': False, 'isPageReindex': False, 'urlIsDocId': False, 'forceDelete': False}
 verify_spider_response {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html|{'errCode': 0, 'httpStatus': 200, 'isIndexed': True}
 verify_indexed uniqt51s1word1
+verify_not_indexed uniqt51s1word1revision1
 
 # setup titlerec version
 custom_config config_master trvn 126
