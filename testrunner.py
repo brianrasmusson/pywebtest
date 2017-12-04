@@ -983,7 +983,7 @@ class TestRunner:
 
             try:
                 response = self.api.lookup_titledb(url)['response']
-                print('response', response)
+
                 failed = ('statusCode' in response)
                 if not failed:
                     for key, value in result.items():
