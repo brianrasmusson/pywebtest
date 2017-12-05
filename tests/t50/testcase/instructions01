@@ -20,3 +20,5 @@ verify_search_result_url site:{DOMAIN}:{PORT}||3|{SCHEME}://s1.t50.{DOMAIN}:{POR
 
 # make sure sitenoindex prefix only returns pages we're not allowed to index
 verify_search_result_url sitenoindex:{DOMAIN}:{PORT}||3|{SCHEME}://s3.t50.{DOMAIN}:{PORT}/f1.html|{SCHEME}://s3.t50.{DOMAIN}:{PORT}/f3.html|{SCHEME}://s3.t50.{DOMAIN}:{PORT}/f2.html
+
+stop_gb

@@ -1,0 +1,37 @@
+start_gb
+
+# setup titlerec version
+custom_config config_master trvn 126
+
+seed {SCHEME}://s3.t50.{DOMAIN}:{PORT}/f1.html
+wait_spider_done
+
+# old version (we didn't check for robots meta tag)
+verify_indexed uniquestringintest50s3forverification1
+verify_indexed uniquestringintest50s3forverification2
+verify_indexed uniquestringintest50s3forverification3
+
+verify_indexed uniquestringintest50s3forverification4
+
+# make sure site prefix only all pages (old version)
+verify_search_result_url site:{DOMAIN}:{PORT}||4|{SCHEME}://s3.t50.{DOMAIN}:{PORT}/f1.html|{SCHEME}://s3.t50.{DOMAIN}:{PORT}/f4.html|{SCHEME}://s3.t50.{DOMAIN}:{PORT}/f3.html|{SCHEME}://s3.t50.{DOMAIN}:{PORT}/f2.html
+
+dump
+
+# setup titlerec version
+custom_config config_master trvn 127
+
+# rebuild documents
+doc_rebuild {SCHEME}://s3.t50.{DOMAIN}:{PORT}/f1.html
+doc_rebuild {SCHEME}://s3.t50.{DOMAIN}:{PORT}/f2.html
+doc_rebuild {SCHEME}://s3.t50.{DOMAIN}:{PORT}/f3.html
+doc_rebuild {SCHEME}://s3.t50.{DOMAIN}:{PORT}/f4.html
+
+save_gb
+
+# verify meta robots tag is respected
+verify_not_indexed uniquestringintest50s3forverification1
+verify_not_indexed uniquestringintest50s3forverification2
+verify_not_indexed uniquestringintest50s3forverification3
+
+verify_indexed uniquestringintest50s3forverification4

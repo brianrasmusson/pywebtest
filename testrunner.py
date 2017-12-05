@@ -77,6 +77,7 @@ class TestRunner:
     def start_gb(self):
         print('Cleaning old data')
         subprocess.call(['./gb', 'dsh2', 'make cleantest'], cwd=self.gb_path, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        self.webserver.clear_served_urls()
 
         print('Copy config files')
         for filename in glob.glob(os.path.join(self.testcaseconfigdir, '*.txt')):
