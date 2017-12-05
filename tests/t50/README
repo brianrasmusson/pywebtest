@@ -1,4 +1,5 @@
 Test for robots meta tag
 
-s1: meta robots noindex
+s1: meta robots noindex, nofollow
 s2: meta robots none
+s3: meta robots noindex, follow

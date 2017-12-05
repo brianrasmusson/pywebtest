@@ -244,8 +244,9 @@ class TestRunner:
         print('Adding seed for spidering')
 
         if len(args):
-            if len(args[0]):
-                seedstr = self.format_url(args[0]) + '\n'
+            seedstr = '\n'.join(args)
+            if len(seedstr):
+                seedstr = self.format_url(seedstr) + '\n'
         else:
             filename = os.path.join(self.testcaseconfigdir, 'seeds')
             items = self.read_file(filename)
