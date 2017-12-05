@@ -9,7 +9,7 @@ import sys
 import glob
 import shutil
 import ast
-from gigablast import GigablastAPI, GigablastInstances
+from gigablast import GigablastAPI, GigablastInstances, GigablastUtils
 from junit_xml import TestSuite, TestCase
 from urllib.parse import parse_qs
 
@@ -40,6 +40,8 @@ class TestRunner:
             self.spider_apis.append(GigablastAPI(gb_host, self.gb_instances.get_instance_port(host_offset + i)))
 
         self.api = self.spider_apis[0]
+
+        self.gb_util = GigablastUtils()
 
         self.webserver = webserver
         self.ws_scheme = ws_scheme
@@ -364,6 +366,32 @@ class TestRunner:
     def update_processuptime(self):
         self.gb_starttime = self.api.status_processstarttime()
 
+    def doc_delete(self, *args):
+        action_type = 'doc_delete'
+        print('Running action -', action_type)
+
+        items = []
+        if len(args):
+            items.append(' '.join(args))
+        else:
+            filename = os.path.join(self.testcaseconfigdir, test_type)
+            items = self.read_file(filename)
+
+        for item in items:
+            start_time = time.perf_counter()
+            key = self.format_url(item)
+            docid = str(self.gb_util.calculate_probable_docid(key))
+
+            try:
+                response = self.api.doc_delete(docid)
+                self.add_testcase(action_type, key + ' - ' + docid, start_time)
+            except Exception as e:
+                print(e)
+                self.add_testcase(action_type, key + ' - ' + docid, start_time, True)
+
+        # wait for msg4 to be processed
+        time.sleep(0.5)
+
     def doc_delete_url(self, *args):
         action_type = 'doc_delete_url'
         print('Running action -', action_type)
@@ -389,6 +417,32 @@ class TestRunner:
         # wait for msg4 to be processed
         time.sleep(0.5)
 
+    def doc_rebuild(self, *args):
+        action_type = 'doc_rebuild'
+        print('Running action -', action_type)
+
+        items = []
+        if len(args):
+            items.append(' '.join(args))
+        else:
+            filename = os.path.join(self.testcaseconfigdir, test_type)
+            items = self.read_file(filename)
+
+        for item in items:
+            start_time = time.perf_counter()
+            key = self.format_url(item)
+            docid = str(self.gb_util.calculate_probable_docid(key))
+
+            try:
+                response = self.api.doc_rebuild(docid)
+                self.add_testcase(action_type, key + ' - ' + docid, start_time)
+            except Exception as e:
+                print(e)
+                self.add_testcase(action_type, key + ' - ' + docid, start_time, True)
+
+        # wait for msg4 to be processed
+        time.sleep(0.5)
+
     def doc_rebuild_url(self, *args):
         action_type = 'doc_rebuild_url'
         print('Running action -', action_type)
@@ -410,6 +464,32 @@ class TestRunner:
             except Exception as e:
                 print(e)
                 self.add_testcase(action_type, key, start_time, True)
+
+        # wait for msg4 to be processed
+        time.sleep(0.5)
+
+    def doc_reindex(self, *args):
+        action_type = 'doc_reindex'
+        print('Running action -', action_type)
+
+        items = []
+        if len(args):
+            items.append(' '.join(args))
+        else:
+            filename = os.path.join(self.testcaseconfigdir, test_type)
+            items = self.read_file(filename)
+
+        for item in items:
+            start_time = time.perf_counter()
+            key = self.format_url(item)
+            docid = str(self.gb_util.calculate_probable_docid(key))
+
+            try:
+                response = self.api.doc_reindex(docid)
+                self.add_testcase(action_type, key + ' - ' + docid, start_time)
+            except Exception as e:
+                print(e)
+                self.add_testcase(action_type, key + ' - ' + docid, start_time, True)
 
         # wait for msg4 to be processed
         time.sleep(0.5)

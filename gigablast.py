@@ -1,6 +1,8 @@
 import requests
 import os
 import subprocess
+from gigablast_hash import GigablastHash
+from urllib.parse import urlparse
 
 
 class GigablastAPI:
@@ -288,3 +290,27 @@ class GigablastInstances:
 
         subprocess.call(['./gb', 'install'], cwd=self._path, stdout=subprocess.DEVNULL)
         subprocess.call(['./gb', 'installfile', 'Makefile'], cwd=self._path, stdout=subprocess.DEVNULL)
+
+
+class GigablastUtils:
+    def __init__(self):
+        self.gb_hash = GigablastHash()
+
+    def calculate_probable_docid(self, url):
+        probable_docid = self.gb_hash.hash64(url) & 0x0000003fffffffff
+
+        # clear bits 6-13 because we want to put the domain hash there
+        # dddddddd dddddddd ddhhhhhh hhdddddd
+        probable_docid &= 0xffffffffffffc03f
+
+        # this is a hack as it doesn't cater for tlds like co.uk, but it's only for testing, so ...
+        url_parts = urlparse(url).hostname.split('.')
+        domain = '.'.join(url_parts[2:])
+
+        domain_hash = self.gb_hash.hash8(domain)
+        # shift the hash by 6
+        domain_hash <<= 6
+
+        # OR in the hash
+        probable_docid |= domain_hash
+        return probable_docid
