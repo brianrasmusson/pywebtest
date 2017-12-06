@@ -136,6 +136,15 @@ Test for gzipped content
 ./t48 (manual test)
 Test og spidering priorities between two domains.
 
+./t49 (manual test)
+Test of word variations (synonyms, categories, transliteration, ...)
+
 ./t50
 Test for robots meta tag
+
+./t51
+Test for docdelete, docreindex, docrebuild
+
+./t52 (manual test)
+Test for boolean expressions.
 
