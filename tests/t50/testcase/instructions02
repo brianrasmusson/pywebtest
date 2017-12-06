@@ -16,8 +16,6 @@ verify_indexed uniquestringintest50s3forverification4
 # make sure site prefix only all pages (old version)
 verify_search_result_url site:{DOMAIN}:{PORT}||4|{SCHEME}://s3.t50.{DOMAIN}:{PORT}/f1.html|{SCHEME}://s3.t50.{DOMAIN}:{PORT}/f4.html|{SCHEME}://s3.t50.{DOMAIN}:{PORT}/f3.html|{SCHEME}://s3.t50.{DOMAIN}:{PORT}/f2.html
 
-dump
-
 # setup titlerec version
 custom_config config_master trvn 127
 
