@@ -728,14 +728,14 @@ class TestRunner:
 
                 failed = (not len(response['results']) == num_results)
                 if not failed:
-                    for index, result in enumerate(results):
+                    for index in range(num_results):
                         url = response['results'][index]['url']
 
                         # gb doesn't return url with scheme when it's http
                         if self.ws_scheme == 'http':
                             url = 'http://' + url
 
-                        if result != url:
+                        if url not in results:
                             failed = True
                             break
 
