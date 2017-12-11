@@ -1,3 +1,4 @@
+custom_config config_search qe 1
 verify_query_terms the one||4|the one|the|one|1
 verify_query_terms html||2|html|Hypertext Markup Language
 
