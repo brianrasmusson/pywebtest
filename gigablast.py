@@ -122,6 +122,11 @@ class GigablastAPI:
 
         requests.get(self._get_url('admin/log'), params=payload)
 
+    def config_search(self, payload):
+        self._apply_default_payload(payload)
+
+        requests.get(self._get_url('admin/search'), params=payload)
+
     def delete_url(self, url, finalizer=False):
         if not finalizer:
             self._add_urls.discard(url)
@@ -192,6 +197,7 @@ class GigablastAPI:
         self._apply_default_payload(payload)
 
         response = requests.get(self._get_url('admin/spiderdblookup'), params=payload)
+        
         return response.json()
 
     def lookup_titledb(self, url):
