@@ -197,7 +197,7 @@ class GigablastAPI:
         self._apply_default_payload(payload)
 
         response = requests.get(self._get_url('admin/spiderdblookup'), params=payload)
-        
+
         return response.json()
 
     def lookup_titledb(self, url):

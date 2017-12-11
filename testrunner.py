@@ -216,6 +216,11 @@ class TestRunner:
         it = iter(tokens)
         return dict(zip(it, it))
 
+    @staticmethod
+    def convert_config_search(tokens):
+        it = iter(tokens)
+        return dict(zip(it, it))
+
     def custom_config(self, *args):
         print('Applying custom config')
         file_name = 'custom_config'
