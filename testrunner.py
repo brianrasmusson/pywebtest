@@ -206,6 +206,12 @@ class TestRunner:
             # verify spider response
             self.verify_spider_response()
 
+            # verify title record
+            self.verify_title_record()
+
+            # verify no title record
+            self.verify_no_title_record()
+
     @staticmethod
     def convert_config_log(tokens):
         it = iter(tokens)
