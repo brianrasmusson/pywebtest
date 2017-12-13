@@ -72,8 +72,8 @@ class Handler(BaseHTTPRequestHandler):
                 content = f.read()
                 if content_type.startswith('text/') and content_encoding is None:
                     content = content.decode(charset).format(DOMAIN=self.domain,
-                                                             PORT=self.server.webserver.http_server_thread.server.server_port,
-                                                             SSLPORT=self.server.webserver.https_server_thread.server.server_port).encode(charset)
+                                                             PORT=self.server.webserver.port,
+                                                             SSLPORT=self.server.webserver.sslport).encode(charset)
 
         except IOError:
             pass
@@ -326,12 +326,15 @@ class TestWebServer:
 
         init_mimetypes()
 
+        self.port = port
+        self.sslport = sslport
         self.http_server_thread = None
         self.https_server_thread = None
         self.served_urls = []
         self.served_paths = []
 
         if keyfile is not None and certfile is not None:
+            logger.info("webserver (https) initializing")
             def servername_callback(ssl_sock, server_name, initial_context):
                 if server_name is None:
                     return ssl.ALERT_DESCRIPTION_HANDSHAKE_FAILURE

@@ -1,4 +1,5 @@
 Test for redirection
 
 s1 permanent redirect to s2
-s3 temporary redirect to s4 with s4 as canonical
+s3 (http) temporary redirect to s3 (https)
+s4 temporary redirect to s5 with s5 as canonical

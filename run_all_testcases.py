@@ -39,7 +39,7 @@ def main(testdir, gb_offset, gb_path, gb_num_instances, gb_num_shards, gb_host, 
     for testcase in testcases:
         print('Running testcase -', testcase)
         test_webserver.clear_served_urls()
-        test_runner = TestRunner(testdir, testcase, gb_instances, gb_host, test_webserver, ws_domain, ws_port)
+        test_runner = TestRunner(testdir, testcase, gb_instances, gb_host, test_webserver, ws_domain, ws_port, ws_sslport)
         results.append(test_runner.run_test())
 
     # stop webserver

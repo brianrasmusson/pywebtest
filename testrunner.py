@@ -15,7 +15,7 @@ from urllib.parse import parse_qs
 
 
 class TestRunner:
-    def __init__(self, testdir, testcase, gb_instances, gb_host, webserver, ws_domain, ws_port):
+    def __init__(self, testdir, testcase, gb_instances, gb_host, webserver, ws_domain, ws_port, ws_sslport):
         self.testcase = testcase
         self.testcasedir = os.path.join(testdir, testcase)
         self.testcaseconfigdir = os.path.join(self.testcasedir, 'testcase')
@@ -46,6 +46,7 @@ class TestRunner:
         self.webserver = webserver
         self.ws_domain = ws_domain
         self.ws_port = ws_port
+        self.ws_sslport = ws_sslport
 
         self.testcases = []
 
@@ -71,7 +72,7 @@ class TestRunner:
         return []
 
     def format_url(self, url):
-        return url.format(DOMAIN=self.ws_domain, PORT=self.ws_port)
+        return url.format(DOMAIN=self.ws_domain, PORT=self.ws_port, SSLPORT=self.ws_sslport)
 
     def start_gb(self):
         print('Cleaning old data')
@@ -1121,8 +1122,8 @@ class TestRunner:
                 self.add_testcase(test_type, url, start_time, True)
 
 
-def main(testdir, testcase, gb_instances, gb_host, webserver, ws_domain, ws_port):
-    test_runner = TestRunner(testdir, testcase, gb_instances, gb_host, webserver, ws_domain, ws_port)
+def main(testdir, testcase, gb_instances, gb_host, webserver, ws_domain, ws_port, ws_sslport):
+    test_runner = TestRunner(testdir, testcase, gb_instances, gb_host, webserver, ws_domain, ws_port, ws_sslport)
     result = test_runner.run_test()
     print(TestSuite.to_xml_string([result]))
 
@@ -1154,16 +1155,22 @@ if __name__ == '__main__':
                         help='Destination host domain (default: privacore.test)')
     parser.add_argument('--dest-port', dest='ws_port', type=int, default=28080, action='store',
                         help='Destination host port (default: 28080')
+    parser.add_argument('--dest-sslport', dest='ws_sslport', type=int, default=28443, action='store',
+                        help='Destination host ssl port (default: 28443')
+    parser.add_argument('--dest-sslkey', dest='ws_sslkey', default='privacore.test.key', action='store',
+                        help='Destination host domain (default: privacore.test.key)')
+    parser.add_argument('--dest-sslcert', dest='ws_sslcert', default='privacore.test.cert', action='store',
+                        help='Destination host domain (default: privacore.test.cert)')
 
     pargs = parser.parse_args()
 
     from webserver import TestWebServer
 
     # start webserver
-    test_webserver = TestWebServer(pargs.ws_port)
+    test_webserver = TestWebServer(pargs.ws_port, pargs.ws_sslport, pargs.ws_sslkey, pargs.ws_sslcert)
 
     gb_instances = GigablastInstances(pargs.gb_offset, pargs.gb_path, pargs.gb_num_instances, pargs.gb_num_shards, pargs.gb_port)
-    main(pargs.testdir, pargs.testcase, gb_instances, pargs.gb_host, test_webserver, pargs.ws_domain, pargs.ws_port)
+    main(pargs.testdir, pargs.testcase, gb_instances, pargs.gb_host, test_webserver, pargs.ws_domain, pargs.ws_port, pargs.ws_sslport)
 
     # stop webserver
     test_webserver.stop()
