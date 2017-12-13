@@ -15,7 +15,7 @@ from urllib.parse import parse_qs
 
 
 class TestRunner:
-    def __init__(self, testdir, testcase, gb_instances, gb_host, webserver, ws_scheme, ws_domain, ws_port):
+    def __init__(self, testdir, testcase, gb_instances, gb_host, webserver, ws_domain, ws_port):
         self.testcase = testcase
         self.testcasedir = os.path.join(testdir, testcase)
         self.testcaseconfigdir = os.path.join(self.testcasedir, 'testcase')
@@ -44,7 +44,6 @@ class TestRunner:
         self.gb_util = GigablastUtils()
 
         self.webserver = webserver
-        self.ws_scheme = ws_scheme
         self.ws_domain = ws_domain
         self.ws_port = ws_port
 
@@ -72,7 +71,7 @@ class TestRunner:
         return []
 
     def format_url(self, url):
-        return url.format(SCHEME=self.ws_scheme, DOMAIN=self.ws_domain, PORT=self.ws_port)
+        return url.format(DOMAIN=self.ws_domain, PORT=self.ws_port)
 
     def start_gb(self):
         print('Cleaning old data')
@@ -271,8 +270,7 @@ class TestRunner:
             # default seed
             for entry in os.scandir(self.testcasedir):
                 if entry.is_dir() and entry.name != 'testcase':
-                    seedstr += "{}://{}.{}.{}:{}/\n".format(self.ws_scheme, entry.name, self.testcase,
-                                                            self.ws_domain, self.ws_port)
+                    seedstr += "http://{}.{}.{}:{}/\n".format(entry.name, self.testcase, self.ws_domain, self.ws_port)
 
         seedstr = seedstr.rstrip('\n')
         print(seedstr)
@@ -743,7 +741,7 @@ class TestRunner:
                         url = response['results'][index]['url']
 
                         # gb doesn't return url with scheme when it's http
-                        if self.ws_scheme == 'http':
+                        if not url.startswith('https://'):
                             url = 'http://' + url
 
                         if url not in results:
@@ -1123,8 +1121,8 @@ class TestRunner:
                 self.add_testcase(test_type, url, start_time, True)
 
 
-def main(testdir, testcase, gb_instances, gb_host, webserver, ws_scheme, ws_domain, ws_port):
-    test_runner = TestRunner(testdir, testcase, gb_instances, gb_host, webserver, ws_scheme, ws_domain, ws_port)
+def main(testdir, testcase, gb_instances, gb_host, webserver, ws_domain, ws_port):
+    test_runner = TestRunner(testdir, testcase, gb_instances, gb_host, webserver, ws_domain, ws_port)
     result = test_runner.run_test()
     print(TestSuite.to_xml_string([result]))
 
@@ -1152,8 +1150,6 @@ if __name__ == '__main__':
     parser.add_argument('--port', dest='gb_port', type=int, default=28000, action='store',
                         help='Gigablast port (default: 28000')
 
-    parser.add_argument('--dest-scheme', dest='ws_scheme', default='http', action='store',
-                        help='Destination host scheme (default: 127.0.0.1)')
     parser.add_argument('--dest-domain', dest='ws_domain', default='privacore.test', action='store',
                         help='Destination host domain (default: privacore.test)')
     parser.add_argument('--dest-port', dest='ws_port', type=int, default=28080, action='store',
@@ -1167,7 +1163,7 @@ if __name__ == '__main__':
     test_webserver = TestWebServer(pargs.ws_port)
 
     gb_instances = GigablastInstances(pargs.gb_offset, pargs.gb_path, pargs.gb_num_instances, pargs.gb_num_shards, pargs.gb_port)
-    main(pargs.testdir, pargs.testcase, gb_instances, pargs.gb_host, test_webserver, pargs.ws_scheme, pargs.ws_domain, pargs.ws_port)
+    main(pargs.testdir, pargs.testcase, gb_instances, pargs.gb_host, test_webserver, pargs.ws_domain, pargs.ws_port)
 
     # stop webserver
     test_webserver.stop()

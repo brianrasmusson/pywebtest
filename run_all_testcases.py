@@ -16,7 +16,7 @@ def natural_sort(l):
     return sorted(l, key=alphanum_key)
 
 
-def main(testdir, gb_offset, gb_path, gb_num_instances, gb_num_shards, gb_host, gb_port, ws_scheme, ws_domain, ws_port):
+def main(testdir, gb_offset, gb_path, gb_num_instances, gb_num_shards, gb_host, gb_port, ws_domain, ws_port):
     # prepare gigablast
     gb_instances = GigablastInstances(gb_offset, gb_path, gb_num_instances, gb_num_shards, gb_port)
 
@@ -30,7 +30,7 @@ def main(testdir, gb_offset, gb_path, gb_num_instances, gb_num_shards, gb_host, 
     for testcase in testcases:
         print('Running testcase -', testcase)
         test_webserver.clear_served_urls()
-        test_runner = TestRunner(testdir, testcase, gb_instances, gb_host, test_webserver, ws_scheme, ws_domain, ws_port)
+        test_runner = TestRunner(testdir, testcase, gb_instances, gb_host, test_webserver, ws_domain, ws_port)
         results.append(test_runner.run_test())
 
     # stop webserver
@@ -62,12 +62,10 @@ if __name__ == '__main__':
                         help='Gigablast host (default: 127.0.0.1)')
     parser.add_argument('--port', dest='gb_port', type=int, default=28000, action='store',
                         help='Gigablast port (default: 28000')
-    parser.add_argument('--dest-scheme', dest='ws_scheme', default='http', action='store',
-                        help='Destination host scheme (default: http)')
     parser.add_argument('--dest-domain', dest='ws_domain', default='privacore.test', action='store',
                         help='Destination host domain (default: privacore.test)')
     parser.add_argument('--dest-port', dest='ws_port', type=int, default=28080, action='store',
                         help='Destination host port (default: 28080')
 
     args = parser.parse_args()
-    main(args.testdir, args.gb_offset, args.gb_path, args.gb_num_instances, args.gb_num_shards, args.gb_host, args.gb_port, args.ws_scheme, args.ws_domain, args.ws_port)
+    main(args.testdir, args.gb_offset, args.gb_path, args.gb_num_instances, args.gb_num_shards, args.gb_host, args.gb_port, args.ws_domain, args.ws_port)
