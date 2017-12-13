@@ -71,7 +71,9 @@ class Handler(BaseHTTPRequestHandler):
 
                 content = f.read()
                 if content_type.startswith('text/') and content_encoding is None:
-                    content = content.decode(charset).format(SCHEME=scheme, DOMAIN=self.domain, PORT=self.server.server_port).encode(charset)
+                    content = content.decode(charset).format(DOMAIN=self.domain,
+                                                             PORT=self.server.webserver.http_server_thread.server.server_port,
+                                                             SSLPORT=self.server.webserver.https_server_thread.server.server_port).encode(charset)
 
         except IOError:
             pass
