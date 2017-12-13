@@ -16,13 +16,22 @@ def natural_sort(l):
     return sorted(l, key=alphanum_key)
 
 
-def main(testdir, gb_offset, gb_path, gb_num_instances, gb_num_shards, gb_host, gb_port, ws_domain, ws_port):
+def main(testdir, gb_offset, gb_path, gb_num_instances, gb_num_shards, gb_host, gb_port, ws_domain, ws_port, ws_sslport, ws_sslkey, ws_sslcert):
     # prepare gigablast
     gb_instances = GigablastInstances(gb_offset, gb_path, gb_num_instances, gb_num_shards, gb_port)
 
-    # start webserver
+    # prepare webserver
     ws_port += gb_offset
-    test_webserver = TestWebServer(ws_port)
+    ws_sslport += gb_offset
+
+    if not os.path.exists(ws_sslkey):
+        subprocess.call(['./create_ssl_key.sh', ws_domain], stdout=subprocess.DEVNULL)
+
+    if not os.path.exists(ws_sslcert):
+        subprocess.call(['./create_ssl_cert.sh', ws_domain], stdout=subprocess.DEVNULL)
+
+    # start webserver
+    test_webserver = TestWebServer(ws_port, ws_sslport, ws_sslkey, ws_sslcert)
 
     # run testcases
     testcases = natural_sort(next(os.walk(args.testdir))[1])
@@ -66,6 +75,12 @@ if __name__ == '__main__':
                         help='Destination host domain (default: privacore.test)')
     parser.add_argument('--dest-port', dest='ws_port', type=int, default=28080, action='store',
                         help='Destination host port (default: 28080')
+    parser.add_argument('--dest-sslport', dest='ws_sslport', type=int, default=28443, action='store',
+                        help='Destination host ssl port (default: 28443')
+    parser.add_argument('--dest-sslkey', dest='ws_sslkey', default='privacore.test.key', action='store',
+                        help='Destination host domain (default: privacore.test.key)')
+    parser.add_argument('--dest-sslcert', dest='ws_sslcert', default='privacore.test.cert', action='store',
+                        help='Destination host domain (default: privacore.test.cert)')
 
     args = parser.parse_args()
-    main(args.testdir, args.gb_offset, args.gb_path, args.gb_num_instances, args.gb_num_shards, args.gb_host, args.gb_port, args.ws_domain, args.ws_port)
+    main(args.testdir, args.gb_offset, args.gb_path, args.gb_num_instances, args.gb_num_shards, args.gb_host, args.gb_port, args.ws_domain, args.ws_port, args.ws_sslport, args.ws_sslkey, args.ws_sslcert)
