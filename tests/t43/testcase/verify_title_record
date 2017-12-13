@@ -1,0 +1,4 @@
+http://s1.t43.{DOMAIN}:{PORT}/|{'httpStatus': 301, 'contentType': 'html', 'contentLenInBytes': 0}
+http://s1.t43.{DOMAIN}:{PORT}/f1.html|{'httpStatus': 301, 'contentType': 'html', 'contentLenInBytes': 0}
+http://s2.t43.{DOMAIN}:{PORT}/|{'httpStatus': 200, 'contentType': 'html'}
+http://s2.t43.{DOMAIN}:{PORT}/f1.html|{'httpStatus': 200, 'contentType': 'html'}

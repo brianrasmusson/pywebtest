@@ -121,6 +121,9 @@ Test indexing of pdf
 ./t42
 Extended unicode test
 
+./t43
+Test for redirection
+
 ./t44
 Test for query language
 
