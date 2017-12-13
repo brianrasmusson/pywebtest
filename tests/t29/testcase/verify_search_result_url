@@ -1,1 +1,1 @@
-banana -cucumber||1|{SCHEME}://s1.t29.{DOMAIN}:{PORT}/f1.txt
+banana -cucumber||1|http://s1.t29.{DOMAIN}:{PORT}/f1.txt

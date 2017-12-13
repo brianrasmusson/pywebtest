@@ -1,6 +1,6 @@
-seed {SCHEME}://s1.t28.{DOMAIN}:{PORT}/
+seed http://s1.t28.{DOMAIN}:{PORT}/
 wait_spider_done
 dump
-seed {SCHEME}://s2.t28.{DOMAIN}:{PORT}/
+seed http://s2.t28.{DOMAIN}:{PORT}/
 wait_spider_done
 just_search banana

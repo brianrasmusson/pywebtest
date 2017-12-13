@@ -1,2 +1,2 @@
-{SCHEME}://s3.t46.{DOMAIN}:{PORT}/|en|Example title|Example summary
-{SCHEME}://s3.t46.{DOMAIN}:{PORT}/|da|Eksempel titel|Eksempeloversigt
+http://s3.t46.{DOMAIN}:{PORT}/|en|Example title|Example summary
+http://s3.t46.{DOMAIN}:{PORT}/|da|Eksempel titel|Eksempeloversigt

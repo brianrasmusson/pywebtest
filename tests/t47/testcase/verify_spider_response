@@ -1,1 +1,1 @@
-{SCHEME}://s2.t47.{DOMAIN}:{PORT}/f1.html|{'errCode': 32813, 'httpStatus': 404, 'isIndexed': False}
+http://s2.t47.{DOMAIN}:{PORT}/f1.html|{'errCode': 32813, 'httpStatus': 404, 'isIndexed': False}

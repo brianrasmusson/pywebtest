@@ -1,4 +1,4 @@
-seed {SCHEME}://s1.t50.{DOMAIN}:{PORT}/ {SCHEME}://s2.t50.{DOMAIN}:{PORT}/ {SCHEME}://s3.t50.{DOMAIN}:{PORT}/f1.html
+seed http://s1.t50.{DOMAIN}:{PORT}/ http://s2.t50.{DOMAIN}:{PORT}/ http://s3.t50.{DOMAIN}:{PORT}/f1.html
 wait_spider_done
 
 # verify robots meta tag noindex, none is respected
@@ -16,9 +16,9 @@ verify_not_indexed uniquestringintest50s3forverification3
 verify_indexed uniquestringintest50s3forverification4
 
 # make sure site prefix only returns pages we're allowed to index
-verify_search_result_url site:{DOMAIN}:{PORT}||3|{SCHEME}://s1.t50.{DOMAIN}:{PORT}|{SCHEME}://s3.t50.{DOMAIN}:{PORT}/f4.html|{SCHEME}://s2.t50.{DOMAIN}:{PORT}
+verify_search_result_url site:{DOMAIN}:{PORT}||3|http://s1.t50.{DOMAIN}:{PORT}|http://s3.t50.{DOMAIN}:{PORT}/f4.html|http://s2.t50.{DOMAIN}:{PORT}
 
 # make sure sitenoindex prefix only returns pages we're not allowed to index
-verify_search_result_url sitenoindex:{DOMAIN}:{PORT}||3|{SCHEME}://s3.t50.{DOMAIN}:{PORT}/f1.html|{SCHEME}://s3.t50.{DOMAIN}:{PORT}/f3.html|{SCHEME}://s3.t50.{DOMAIN}:{PORT}/f2.html
+verify_search_result_url sitenoindex:{DOMAIN}:{PORT}||3|http://s3.t50.{DOMAIN}:{PORT}/f1.html|http://s3.t50.{DOMAIN}:{PORT}/f3.html|http://s3.t50.{DOMAIN}:{PORT}/f2.html
 
 stop_gb

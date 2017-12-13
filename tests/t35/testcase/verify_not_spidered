@@ -1,1 +1,1 @@
-{SCHEME}://s1.t35.{DOMAIN}:{PORT}/f1.txt
+http://s1.t35.{DOMAIN}:{PORT}/f1.txt

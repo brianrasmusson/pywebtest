@@ -5,63 +5,63 @@ custom_config config_master trvn 126
 verify_not_indexed uniqt51s1word1
 
 # docdelete non-existing document
-doc_delete {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html
+doc_delete http://s1.t51.{DOMAIN}:{PORT}/f1.html
 save_gb
-verify_no_title_record {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html
-verify_no_spider_request {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html
-verify_no_spider_response {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html
+verify_no_title_record http://s1.t51.{DOMAIN}:{PORT}/f1.html
+verify_no_spider_request http://s1.t51.{DOMAIN}:{PORT}/f1.html
+verify_no_spider_response http://s1.t51.{DOMAIN}:{PORT}/f1.html
 verify_not_indexed uniqt51s1word1
 
 # docdeleteurl non-existing document
-doc_delete_url {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html
+doc_delete_url http://s1.t51.{DOMAIN}:{PORT}/f1.html
 save_gb
-verify_no_title_record {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html
-verify_no_spider_request {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html
-verify_no_spider_response {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html
+verify_no_title_record http://s1.t51.{DOMAIN}:{PORT}/f1.html
+verify_no_spider_request http://s1.t51.{DOMAIN}:{PORT}/f1.html
+verify_no_spider_response http://s1.t51.{DOMAIN}:{PORT}/f1.html
 verify_not_indexed uniqt51s1word1
 
 # docrebuild non-existing document
-doc_rebuild {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html
+doc_rebuild http://s1.t51.{DOMAIN}:{PORT}/f1.html
 save_gb
-verify_no_title_record {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html
-verify_no_spider_request {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html
-verify_no_spider_response {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html
+verify_no_title_record http://s1.t51.{DOMAIN}:{PORT}/f1.html
+verify_no_spider_request http://s1.t51.{DOMAIN}:{PORT}/f1.html
+verify_no_spider_response http://s1.t51.{DOMAIN}:{PORT}/f1.html
 verify_not_indexed uniqt51s1word1
 
 # docrebuildurl non-existing document
-doc_rebuild_url {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html
+doc_rebuild_url http://s1.t51.{DOMAIN}:{PORT}/f1.html
 save_gb
-verify_no_title_record {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html
-verify_no_spider_request {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html
-verify_no_spider_response {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html
+verify_no_title_record http://s1.t51.{DOMAIN}:{PORT}/f1.html
+verify_no_spider_request http://s1.t51.{DOMAIN}:{PORT}/f1.html
+verify_no_spider_response http://s1.t51.{DOMAIN}:{PORT}/f1.html
 verify_not_indexed uniqt51s1word1
 
 # docreindex non-existing document
-doc_reindex {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html
+doc_reindex http://s1.t51.{DOMAIN}:{PORT}/f1.html
 save_gb
-verify_no_title_record {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html
-verify_no_spider_request {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html
-verify_no_spider_response {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html
+verify_no_title_record http://s1.t51.{DOMAIN}:{PORT}/f1.html
+verify_no_spider_request http://s1.t51.{DOMAIN}:{PORT}/f1.html
+verify_no_spider_response http://s1.t51.{DOMAIN}:{PORT}/f1.html
 verify_not_indexed uniqt51s1word1
 
 # docreindexurl non-existing document
-doc_reindex_url {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html
+doc_reindex_url http://s1.t51.{DOMAIN}:{PORT}/f1.html
 save_gb
-verify_title_record {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html|{'titleRecVersion': 126, 'httpStatus': 200, 'contentType': 'html'}
-verify_spider_request {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html|{'isAddUrl': False, 'isPageReindex': False, 'urlIsDocId': False, 'forceDelete': False}
-verify_spider_response {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html|{'errCode': 0, 'httpStatus': 200, 'isIndexed': True}
-verify_spider_request {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f2.html|{'isAddUrl': False, 'isPageReindex': False, 'urlIsDocId': False, 'forceDelete': False}
+verify_title_record http://s1.t51.{DOMAIN}:{PORT}/f1.html|{'titleRecVersion': 126, 'httpStatus': 200, 'contentType': 'html'}
+verify_spider_request http://s1.t51.{DOMAIN}:{PORT}/f1.html|{'isAddUrl': False, 'isPageReindex': False, 'urlIsDocId': False, 'forceDelete': False}
+verify_spider_response http://s1.t51.{DOMAIN}:{PORT}/f1.html|{'errCode': 0, 'httpStatus': 200, 'isIndexed': True}
+verify_spider_request http://s1.t51.{DOMAIN}:{PORT}/f2.html|{'isAddUrl': False, 'isPageReindex': False, 'urlIsDocId': False, 'forceDelete': False}
 verify_indexed uniqt51s1word1
 
 # setup titlerec version
 custom_config config_master trvn 127
 
 # docrebuildurl existing document
-doc_rebuild_url {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html
+doc_rebuild_url http://s1.t51.{DOMAIN}:{PORT}/f1.html
 save_gb
-verify_title_record {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html|{'titleRecVersion': 127, 'httpStatus': 200, 'contentType': 'html'}
-verify_spider_request {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html|{'isAddUrl': False, 'isPageReindex': False, 'urlIsDocId': False, 'forceDelete': False}
-verify_spider_response {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html|{'errCode': 0, 'httpStatus': 200, 'isIndexed': True}
+verify_title_record http://s1.t51.{DOMAIN}:{PORT}/f1.html|{'titleRecVersion': 127, 'httpStatus': 200, 'contentType': 'html'}
+verify_spider_request http://s1.t51.{DOMAIN}:{PORT}/f1.html|{'isAddUrl': False, 'isPageReindex': False, 'urlIsDocId': False, 'forceDelete': False}
+verify_spider_response http://s1.t51.{DOMAIN}:{PORT}/f1.html|{'errCode': 0, 'httpStatus': 200, 'isIndexed': True}
 verify_indexed uniqt51s1word1
 verify_not_indexed uniqt51s1word1revision1
 
@@ -69,11 +69,11 @@ verify_not_indexed uniqt51s1word1revision1
 custom_config config_master trvn 126
 
 # docrebuild existing document
-doc_rebuild {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html
+doc_rebuild http://s1.t51.{DOMAIN}:{PORT}/f1.html
 save_gb
-verify_title_record {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html|{'titleRecVersion': 126, 'httpStatus': 200, 'contentType': 'html'}
-verify_spider_request {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html|{'isAddUrl': False, 'isPageReindex': False, 'urlIsDocId': False, 'forceDelete': False}
-verify_spider_response {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html|{'errCode': 0, 'httpStatus': 200, 'isIndexed': True}
+verify_title_record http://s1.t51.{DOMAIN}:{PORT}/f1.html|{'titleRecVersion': 126, 'httpStatus': 200, 'contentType': 'html'}
+verify_spider_request http://s1.t51.{DOMAIN}:{PORT}/f1.html|{'isAddUrl': False, 'isPageReindex': False, 'urlIsDocId': False, 'forceDelete': False}
+verify_spider_response http://s1.t51.{DOMAIN}:{PORT}/f1.html|{'errCode': 0, 'httpStatus': 200, 'isIndexed': True}
 verify_indexed uniqt51s1word1
 verify_not_indexed uniqt51s1word1revision1
 
@@ -81,11 +81,11 @@ verify_not_indexed uniqt51s1word1revision1
 custom_config config_master trvn 127
 
 # docreindex existing document
-doc_reindex {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html
+doc_reindex http://s1.t51.{DOMAIN}:{PORT}/f1.html
 save_gb
-verify_title_record {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html|{'titleRecVersion': 127, 'httpStatus': 200, 'contentType': 'html'}
-verify_spider_request {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html|{'isAddUrl': False, 'isPageReindex': False, 'urlIsDocId': False, 'forceDelete': False}
-verify_spider_response {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html|{'errCode': 0, 'httpStatus': 200, 'isIndexed': True}
+verify_title_record http://s1.t51.{DOMAIN}:{PORT}/f1.html|{'titleRecVersion': 127, 'httpStatus': 200, 'contentType': 'html'}
+verify_spider_request http://s1.t51.{DOMAIN}:{PORT}/f1.html|{'isAddUrl': False, 'isPageReindex': False, 'urlIsDocId': False, 'forceDelete': False}
+verify_spider_response http://s1.t51.{DOMAIN}:{PORT}/f1.html|{'errCode': 0, 'httpStatus': 200, 'isIndexed': True}
 verify_indexed uniqt51s1word1
 verify_indexed uniqt51s1word1revision1
 
@@ -93,38 +93,38 @@ verify_indexed uniqt51s1word1revision1
 custom_config config_master trvn 126
 
 # docreindexurl existing document
-doc_reindex_url {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html
+doc_reindex_url http://s1.t51.{DOMAIN}:{PORT}/f1.html
 save_gb
-verify_title_record {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html|{'titleRecVersion': 126, 'httpStatus': 200, 'contentType': 'html'}
-verify_spider_request {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html|{'isAddUrl': False, 'isPageReindex': False, 'urlIsDocId': False, 'forceDelete': False}
-verify_spider_response {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html|{'errCode': 0, 'httpStatus': 200, 'isIndexed': True}
+verify_title_record http://s1.t51.{DOMAIN}:{PORT}/f1.html|{'titleRecVersion': 126, 'httpStatus': 200, 'contentType': 'html'}
+verify_spider_request http://s1.t51.{DOMAIN}:{PORT}/f1.html|{'isAddUrl': False, 'isPageReindex': False, 'urlIsDocId': False, 'forceDelete': False}
+verify_spider_response http://s1.t51.{DOMAIN}:{PORT}/f1.html|{'errCode': 0, 'httpStatus': 200, 'isIndexed': True}
 verify_indexed uniqt51s1word1
 verify_not_indexed uniqt51s1word1revision1
 
 # docdelete existing document
-doc_delete {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html
+doc_delete http://s1.t51.{DOMAIN}:{PORT}/f1.html
 save_gb
-verify_no_title_record {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html
-verify_spider_request {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html|{'isAddUrl': False, 'isPageReindex': False, 'urlIsDocId': False, 'forceDelete': False}
-verify_spider_response {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html|{'errCode': 32805, 'httpStatus': 200, 'isIndexed': False}
+verify_no_title_record http://s1.t51.{DOMAIN}:{PORT}/f1.html
+verify_spider_request http://s1.t51.{DOMAIN}:{PORT}/f1.html|{'isAddUrl': False, 'isPageReindex': False, 'urlIsDocId': False, 'forceDelete': False}
+verify_spider_response http://s1.t51.{DOMAIN}:{PORT}/f1.html|{'errCode': 32805, 'httpStatus': 200, 'isIndexed': False}
 verify_not_indexed uniqt51s1word1
 
 # setup titlerec version
 custom_config config_master trvn 127
 
 # docreindexurl non-existing document
-doc_reindex_url {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html
+doc_reindex_url http://s1.t51.{DOMAIN}:{PORT}/f1.html
 save_gb
-verify_title_record {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html|{'titleRecVersion': 127, 'httpStatus': 200, 'contentType': 'html'}
-verify_spider_request {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html|{'isAddUrl': False, 'isPageReindex': False, 'urlIsDocId': False, 'forceDelete': False}
-verify_spider_response {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html|{'errCode': 0, 'httpStatus': 200, 'isIndexed': True}
-verify_spider_request {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f2.html|{'isAddUrl': False, 'isPageReindex': False, 'urlIsDocId': False, 'forceDelete': False}
+verify_title_record http://s1.t51.{DOMAIN}:{PORT}/f1.html|{'titleRecVersion': 127, 'httpStatus': 200, 'contentType': 'html'}
+verify_spider_request http://s1.t51.{DOMAIN}:{PORT}/f1.html|{'isAddUrl': False, 'isPageReindex': False, 'urlIsDocId': False, 'forceDelete': False}
+verify_spider_response http://s1.t51.{DOMAIN}:{PORT}/f1.html|{'errCode': 0, 'httpStatus': 200, 'isIndexed': True}
+verify_spider_request http://s1.t51.{DOMAIN}:{PORT}/f2.html|{'isAddUrl': False, 'isPageReindex': False, 'urlIsDocId': False, 'forceDelete': False}
 verify_indexed uniqt51s1word1
 
 # docdeleteurl existing document
-doc_delete_url {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html
+doc_delete_url http://s1.t51.{DOMAIN}:{PORT}/f1.html
 save_gb
-verify_no_title_record {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html
-verify_spider_request {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html|{'isAddUrl': False, 'isPageReindex': False, 'urlIsDocId': False, 'forceDelete': False}
-verify_spider_response {SCHEME}://s1.t51.{DOMAIN}:{PORT}/f1.html|{'errCode': 32805, 'httpStatus': 200, 'isIndexed': False}
+verify_no_title_record http://s1.t51.{DOMAIN}:{PORT}/f1.html
+verify_spider_request http://s1.t51.{DOMAIN}:{PORT}/f1.html|{'isAddUrl': False, 'isPageReindex': False, 'urlIsDocId': False, 'forceDelete': False}
+verify_spider_response http://s1.t51.{DOMAIN}:{PORT}/f1.html|{'errCode': 32805, 'httpStatus': 200, 'isIndexed': False}
 verify_not_indexed uniqt51s1word1
