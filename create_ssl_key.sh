@@ -1,3 +1,9 @@
 #!/usr/bin/env bash
 
-openssl genrsa -out ${1}.key 2048
+if [ "$#" -eq 0 ]; then
+	host=privacore.test
+else
+	host=${1}
+fi
+
+openssl genrsa -out ${host}.key 2048

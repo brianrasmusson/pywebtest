@@ -1166,6 +1166,12 @@ if __name__ == '__main__':
 
     from webserver import TestWebServer
 
+    if not os.path.exists(pargs.ws_sslkey):
+        subprocess.call(['./create_ssl_key.sh', pargs.ws_domain], stdout=subprocess.DEVNULL)
+
+    if not os.path.exists(pargs.ws_sslcert):
+        subprocess.call(['./create_ssl_cert.sh', pargs.ws_domain], stdout=subprocess.DEVNULL)
+
     # start webserver
     test_webserver = TestWebServer(pargs.ws_port, pargs.ws_sslport, pargs.ws_sslkey, pargs.ws_sslcert)
 
