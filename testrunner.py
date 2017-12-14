@@ -531,10 +531,13 @@ class TestRunner:
         # wait for msg4 to be processed
         time.sleep(0.5)
 
-    def dump(self, *args):
+    def dump(self):
+        action_type = 'dump'
+        print('Running action -', action_type)
+
         start_time = time.perf_counter()
         self.api.dump()
-        self.add_testcase('dump', '', start_time)
+        self.add_testcase(action_type, '', start_time)
 
     def just_search(self, *args):
         test_type = 'just_search'
@@ -554,6 +557,36 @@ class TestRunner:
                 self.add_testcase(test_type, item, start_time)
             except:
                 self.add_testcase(test_type, item, start_time, True)
+
+    def insert_tagdb(self, *args):
+        action_type = 'insert_tagdb'
+        print('Running action -', action_type)
+
+        items = []
+        if len(args):
+            items.append(' '.join(args))
+        else:
+            filename = os.path.join(self.testcaseconfigdir, action_type)
+            items = self.read_file(filename)
+
+        for item in items:
+            start_time = time.perf_counter()
+
+            tokens = item.split('|')
+            if len(tokens) != 3:
+                print('Invalid format ', item)
+                self.add_testcase(action_type, item, start_time, True)
+                return
+
+            url = self.format_url(tokens[0])
+            name = tokens[1]
+            value = tokens[2]
+
+            try:
+                response = self.api.insert_tagdb(url, name, value)
+                self.add_testcase(action_type, item, start_time)
+            except:
+                self.add_testcase(action_type, item, start_time, True)
 
     def verify_indexed(self, *args):
         test_type = 'verify_indexed'

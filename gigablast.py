@@ -214,6 +214,26 @@ class GigablastAPI:
                 import json
                 return json.loads('{"response":{"statusCode":32771,"statusMsg":"Record not found"}}')
 
+    def insert_tagdb(self, url, tag_type, tag_data):
+        payload = {'u': url,
+                   'username': 'admin',
+                   'tagtype0': tag_type,
+                   'tagdata0': tag_data}
+        self._apply_default_payload(payload)
+
+        response = requests.get(self._get_url('admin/tagdb'), params=payload)
+
+        return response.json()
+
+    def lookup_tagdb(self, url):
+        payload = {'u': url,
+                   'get': 1}
+        self._apply_default_payload(payload)
+
+        response = requests.get(self._get_url('admin/tagdb'), params=payload)
+
+        return response.json()
+
     def save(self):
         payload = {'js': '1'}
         self.config_master(payload)
