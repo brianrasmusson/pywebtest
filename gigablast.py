@@ -3,7 +3,7 @@ import os
 import subprocess
 from gigablast_hash import GigablastHash
 from urllib.parse import urlparse
-
+import json
 
 class GigablastAPI:
     class _HTTPStatus:
@@ -92,6 +92,14 @@ class GigablastAPI:
 
         return response.json()
 
+    @staticmethod
+    def _response_doc_forced_deleted(self):
+        return json.loads('{"response":{"statusCode":32771,"statusMsg":"Record not found"}}')
+
+    @staticmethod
+    def _response_record_not_found(self):
+        return json.loads('{"response":{"statusCode":32805,"statusMsg":"Doc force deleted"}}')
+
     def add_url(self, url):
         self._add_urls.add(url)
 
@@ -177,8 +185,9 @@ class GigablastAPI:
             return response.json()
         except requests.exceptions.ConnectionError as e:
             if self._check_http_status(e, self._HTTPStatus.record_not_found()):
-                import json
-                return json.loads('{"response":{"statusCode":32771,"statusMsg":"Record not found"}}')
+                return self._response_doc_forced_deleted()
+
+            raise
 
     def get_spiderqueue(self):
         payload = {}
@@ -211,8 +220,9 @@ class GigablastAPI:
             return response.json()
         except requests.exceptions.ConnectionError as e:
             if self._check_http_status(e, self._HTTPStatus.record_not_found()):
-                import json
-                return json.loads('{"response":{"statusCode":32771,"statusMsg":"Record not found"}}')
+                return self._response_doc_forced_deleted()
+
+            raise
 
     def insert_tagdb(self, url, tag_type, tag_data):
         payload = {'u': url,
