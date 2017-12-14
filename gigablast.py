@@ -22,12 +22,6 @@ class GigablastAPI:
     def __init__(self, host, port):
         self._host = host
         self._port = port
-        self._add_urls = set()
-
-    def finalize(self):
-        # cleanup urls
-        for url in self._add_urls:
-            self.delete_url(url, True)
 
     def _get_url(self, path):
         return 'http://' + self._host + ':' + str(self._port) + '/' + path
@@ -101,8 +95,6 @@ class GigablastAPI:
         return json.loads('{"response":{"statusCode":32805,"statusMsg":"Doc force deleted"}}')
 
     def add_url(self, url):
-        self._add_urls.add(url)
-
         return self._add_url(url)['response']['statusCode'] == 0
 
     def config_master(self, payload):
@@ -135,10 +127,7 @@ class GigablastAPI:
 
         requests.get(self._get_url('admin/search'), params=payload)
 
-    def delete_url(self, url, finalizer=False):
-        if not finalizer:
-            self._add_urls.discard(url)
-
+    def delete_url(self, url):
         payload = {'deleteurl': '1'}
 
         try:
@@ -185,7 +174,7 @@ class GigablastAPI:
             return response.json()
         except requests.exceptions.ConnectionError as e:
             if self._check_http_status(e, self._HTTPStatus.record_not_found()):
-                return self._response_doc_forced_deleted()
+                return self._response_record_not_found()
 
             raise
 
@@ -197,8 +186,6 @@ class GigablastAPI:
         return response.json()
 
     def inject_url(self, url):
-        self._add_urls.add(url)
-
         return self._inject(url)['response']['statusCode'] == 0
 
     def lookup_spiderdb(self, url):
@@ -220,7 +207,7 @@ class GigablastAPI:
             return response.json()
         except requests.exceptions.ConnectionError as e:
             if self._check_http_status(e, self._HTTPStatus.record_not_found()):
-                return self._response_doc_forced_deleted()
+                return self._response_record_not_found()
 
             raise
 
