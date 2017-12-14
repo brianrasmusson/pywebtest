@@ -4,3 +4,5 @@ http://s2.t43.{DOMAIN}:{PORT}/|{'httpStatus': 200, 'contentType': 'html'}
 http://s2.t43.{DOMAIN}:{PORT}/f1.html|{'httpStatus': 200, 'contentType': 'html'}
 http://s3.t43.{DOMAIN}:{PORT}/f1.html|{'httpStatus': 302, 'contentType': 'html', 'contentLenInBytes': 0}
 https://s3.t43.{DOMAIN}:{SSLPORT}/f2.html|{'httpStatus': 200, 'contentType': 'html'}
+http://s4.t43.{DOMAIN}:{PORT}/f1.html|{'httpStatus': 200, 'contentType': 'html', 'contentLenInBytes': 0}
+http://s5.t43.{DOMAIN}:{PORT}/f1.html|{'httpStatus': 200, 'contentType': 'html'}
