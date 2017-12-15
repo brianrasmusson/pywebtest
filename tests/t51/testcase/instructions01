@@ -128,3 +128,45 @@ verify_no_title_record http://s1.t51.{DOMAIN}:{PORT}/f1.html
 verify_spider_request http://s1.t51.{DOMAIN}:{PORT}/f1.html|{'isAddUrl': False, 'isPageReindex': False, 'urlIsDocId': False, 'forceDelete': False}
 verify_spider_response http://s1.t51.{DOMAIN}:{PORT}/f1.html|{'errCode': 32805, 'httpStatus': 200, 'isIndexed': False}
 verify_not_indexed uniqt51s1word1
+
+# setup titlerec version
+custom_config config_master trvn 126
+inject_document http://s2.t51.{DOMAIN}:{PORT}/f1.html|<html><head><title>inject page</title></head><body>uniqt51s2word1</body></html>
+save_gb
+
+verify_no_spider_request http://s2.t51.{DOMAIN}:{PORT}/f1.html
+verify_title_record http://s2.t51.{DOMAIN}:{PORT}/f1.html|{'titleRecVersion': 126, 'httpStatus': 200, 'contentType': 'html'}
+verify_indexed uniqt51s2word1
+
+# setup titlerec version
+custom_config config_master trvn 127
+
+# docrebuildurl existing document (no spiderreq)
+doc_rebuild_url http://s2.t51.{DOMAIN}:{PORT}/f1.html
+save_gb
+verify_title_record http://s2.t51.{DOMAIN}:{PORT}/f1.html|{'titleRecVersion': 127, 'httpStatus': 200, 'contentType': 'html'}
+verify_spider_request http://s2.t51.{DOMAIN}:{PORT}/f1.html|{'isAddUrl': False, 'isPageReindex': False, 'urlIsDocId': False, 'forceDelete': False}
+verify_spider_response http://s2.t51.{DOMAIN}:{PORT}/f1.html|{'errCode': 0, 'httpStatus': 200, 'isIndexed': True}
+verify_indexed uniqt51s2word1
+
+# setup titlerec version
+custom_config config_master trvn 126
+
+inject_document http://s2.t51.{DOMAIN}:{PORT}/f2.html|<html><head><title>inject page</title></head><body>uniqt51s2word2</body></html>
+save_gb
+
+verify_no_spider_request http://s2.t51.{DOMAIN}:{PORT}/f2.html
+verify_title_record http://s2.t51.{DOMAIN}:{PORT}/f2.html|{'titleRecVersion': 126, 'httpStatus': 200, 'contentType': 'html'}
+verify_indexed uniqt51s2word1
+
+# setup titlerec version
+custom_config config_master trvn 127
+
+# docrebuild existing document (no spiderreq)
+doc_rebuild http://s2.t51.{DOMAIN}:{PORT}/f1.html
+save_gb
+verify_title_record http://s2.t51.{DOMAIN}:{PORT}/f1.html|{'titleRecVersion': 127, 'httpStatus': 200, 'contentType': 'html'}
+verify_spider_request http://s2.t51.{DOMAIN}:{PORT}/f1.html|{'isAddUrl': False, 'isPageReindex': False, 'urlIsDocId': False, 'forceDelete': False}
+verify_spider_response http://s2.t51.{DOMAIN}:{PORT}/f1.html|{'errCode': 0, 'httpStatus': 200, 'isIndexed': True}
+verify_indexed uniqt51s2word2
+

@@ -43,32 +43,26 @@ class GigablastAPI:
                     return True
         return False
 
-    def _add_url(self, url, payload=None):
-        if not payload:
-            payload = {}
-
-        self._apply_default_payload(payload)
-
-        payload.update({'urls': url})
-
-        response = requests.get(self._get_url('admin/addurl'), params=payload)
-
-        return response.json()
-
     def _config_search(self, payload):
         self._apply_default_payload(payload)
 
-        requests.get(self._get_url('admin/search'), params=payload)
+        response = requests.get(self._get_url('admin/search'), params=payload)
+
+        return response.json()
 
     def _config_settings(self, payload):
         self._apply_default_payload(payload)
 
-        requests.get(self._get_url('admin/settings'), params=payload)
+        response = requests.get(self._get_url('admin/settings'), params=payload)
+
+        return response.json()
 
     def _config_spider(self, payload):
         self._apply_default_payload(payload)
 
-        requests.get(self._get_url('admin/spider'), params=payload)
+        response = requests.get(self._get_url('admin/spider'), params=payload)
+
+        return response.json()
 
     def _inject(self, url, payload=None):
         if not payload:
@@ -80,63 +74,72 @@ class GigablastAPI:
 
         response = requests.get(self._get_url('admin/inject'), params=payload)
 
-        # inject doesn't seem to wait until document is completely indexed
-        from time import sleep
-        sleep(0.1)
-
         return response.json()
 
     @staticmethod
-    def _response_doc_forced_deleted(self):
-        return json.loads('{"response":{"statusCode":32771,"statusMsg":"Record not found"}}')
-
-    @staticmethod
-    def _response_record_not_found(self):
+    def _response_doc_forced_deleted():
         return json.loads('{"response":{"statusCode":32805,"statusMsg":"Doc force deleted"}}')
 
+    @staticmethod
+    def _response_record_not_found():
+        return json.loads('{"response":{"statusCode":32771,"statusMsg":"Record not found"}}')
+
     def add_url(self, url):
-        return self._add_url(url)['response']['statusCode'] == 0
+        payload = {}
+        self._apply_default_payload(payload)
+
+        payload.update({'urls': url})
+
+        response = requests.get(self._get_url('admin/addurl'), params=payload)
+
+        return response.json()
 
     def config_master(self, payload):
         self._apply_default_payload(payload)
 
-        requests.get(self._get_url('admin/master'), params=payload)
+        response = requests.get(self._get_url('admin/master'), params=payload)
+
+        return response.json()
 
     def config_sitelist(self, sitelist):
         payload = {'sitelist': sitelist}
 
-        self._config_settings(payload)
+        return self._config_settings(payload)
 
     def config_crawldelay(self, norobotscrawldelay, robotsnocrawldelay):
         payload = {'crwldlnorobot': norobotscrawldelay, 'crwldlrobotnodelay': robotsnocrawldelay}
 
-        self._config_spider(payload)
+        return self._config_spider(payload)
 
     def config_dns(self, primary, secondary=''):
         payload = {'pdns': primary, 'sdns': secondary}
 
-        self.config_master(payload)
+        return self.config_master(payload)
 
     def config_log(self, payload):
         self._apply_default_payload(payload)
 
-        requests.get(self._get_url('admin/log'), params=payload)
+        request = requests.get(self._get_url('admin/log'), params=payload)
+
+        return request.json()
 
     def config_search(self, payload):
         self._apply_default_payload(payload)
 
-        requests.get(self._get_url('admin/search'), params=payload)
+        request = requests.get(self._get_url('admin/search'), params=payload)
+
+        return request.json()
 
     def delete_url(self, url):
         payload = {'deleteurl': '1'}
 
         try:
-            self._inject(url, payload)
+            return self._inject(url, payload)
         except requests.exceptions.ConnectionError as e:
-            # delete url returns invalid HTTP status line
-            return self._check_http_status(e, self._HTTPStatus.doc_force_delete())
+            if self._check_http_status(e, self._HTTPStatus.doc_force_delete()):
+                return self._response_doc_forced_deleted()
 
-        return False
+            raise
 
     def doc_process(self, type, key):
         payload = {}
@@ -186,7 +189,12 @@ class GigablastAPI:
         return response.json()
 
     def inject_url(self, url):
-        return self._inject(url)['response']['statusCode'] == 0
+        return self._inject(url)
+
+    def inject_document(self, url, content):
+        payload = {'content': content}
+
+        return self._inject(url, payload)
 
     def lookup_spiderdb(self, url):
         payload = {'url': url}

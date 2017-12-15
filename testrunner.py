@@ -558,6 +558,38 @@ class TestRunner:
             except:
                 self.add_testcase(test_type, item, start_time, True)
 
+    def inject_document(self, *args):
+        action_type = 'inject_document'
+        print('Running action -', action_type)
+
+        items = []
+        if len(args):
+            items.append(' '.join(args))
+        else:
+            filename = os.path.join(self.testcaseconfigdir, action_type)
+            items = self.read_file(filename)
+
+        for item in items:
+            start_time = time.perf_counter()
+
+            tokens = item.split('|')
+            if len(tokens) != 2:
+                print('Invalid format ', item)
+                self.add_testcase(action_type, item, start_time, True)
+                return
+
+            url = self.format_url(tokens[0])
+            content = tokens[1]
+
+            try:
+                response = self.api.inject_document(url, content)
+                self.add_testcase(action_type, item, start_time)
+            except:
+                self.add_testcase(action_type, item, start_time, True)
+
+        # put some delay after injection
+        time.sleep(1)
+
     def insert_tagdb(self, *args):
         action_type = 'insert_tagdb'
         print('Running action -', action_type)
