@@ -196,6 +196,14 @@ class GigablastAPI:
 
         return self._inject(url, payload)
 
+    def lookup_linkdb(self, url):
+        payload = {'url': url}
+        self._apply_default_payload(payload)
+
+        response = requests.get(self._get_url('admin/linkdblookup'), params=payload)
+
+        return response.json()
+
     def lookup_spiderdb(self, url):
         payload = {'url': url}
         self._apply_default_payload(payload)
