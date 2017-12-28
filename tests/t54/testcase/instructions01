@@ -1,0 +1,7 @@
+custom_config config_log ltrc_msgfour 1
+seed http://s1.t54.{DOMAIN}:{PORT}/f1.html
+wait_spider_done
+
+doc_reindex http://s1.t54.{DOMAIN}:{PORT}/f1.html
+save_gb
+
