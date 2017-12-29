@@ -65544,6 +65544,12 @@ class GigablastHash:
             h ^= (self._hashtab[i][ord(c)] & 0xffffffffffffffff)
         return h
 
+    def hash32(self, string):
+        h = 0
+        for i, c in enumerate(string):
+            h ^= (self._hashtab[i][ord(c)] & 0xffffffff)
+        return h
+
     def hash8(self, string):
         h = 0
         for i, c in enumerate(string):

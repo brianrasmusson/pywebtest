@@ -353,3 +353,8 @@ class GigablastUtils:
         # OR in the hash
         probable_docid |= domain_hash
         return probable_docid
+
+    def calculate_sitehash32(self, url):
+        site = urlparse(url).netloc
+        site_hash = self.gb_hash.hash32(site)
+        return site_hash

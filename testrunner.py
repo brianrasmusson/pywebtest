@@ -1110,6 +1110,89 @@ class TestRunner:
                 print(e)
                 self.add_testcase(test_type, url, start_time, True)
 
+    def verify_linkdb_record(self, *args):
+        test_type = 'verify_linkdb_record'
+        print('Running test -', test_type)
+
+        items = []
+        if len(args):
+            items.append(' '.join(args))
+        else:
+            filename = os.path.join(self.testcaseconfigdir, test_type)
+            items = self.read_file(filename)
+
+        for item in items:
+            start_time = time.perf_counter()
+
+            tokens = item.split('|')
+            if len(tokens) != 2:
+                print('Invalid format ', item)
+                self.add_testcase(test_type, item, start_time, True)
+                return
+
+            url = self.format_url(tokens.pop(0))
+
+            try:
+                response = self.api.lookup_linkdb(url)
+                # print(response)
+
+                failed = (len(response['results']) == 0)
+                if failed:
+                    print(test_type + ' - ' + url)
+                    print(response)
+                    self.add_testcase(test_type, url, start_time, failed)
+                else:
+                    for idx, token in enumerate(tokens):
+                        linker_url = self.format_url(token)
+                        docid = self.gb_util.calculate_probable_docid(linker_url)
+                        sitehash32 = self.gb_util.calculate_sitehash32(linker_url)
+
+                        if response['results'][idx]['docid'] != docid:
+                            print('docid', response['results'][idx]['docid'], docid)
+                            failed = True
+
+                        if response['results'][idx]['sitehash32'] != sitehash32:
+                            print('sitehash32', response['results'][idx]['sitehash32'],sitehash32)
+                            failed = True
+
+                        if failed:
+                            print(test_type + ' - ' + url + ' - ' + linker_url)
+                            print(response)
+
+                        self.add_testcase(test_type, url + ' - ' + linker_url, start_time, failed)
+            except Exception as e:
+                print(e)
+                self.add_testcase(test_type, url, start_time, True)
+
+    def verify_no_linkdb_record(self, *args):
+        test_type = 'verify_no_linkdb_record'
+        print('Running test -', test_type)
+
+        items = []
+        if len(args):
+            items.append(' '.join(args))
+        else:
+            filename = os.path.join(self.testcaseconfigdir, test_type)
+            items = self.read_file(filename)
+
+        for item in items:
+            start_time = time.perf_counter()
+
+            url = self.format_url(item)
+
+            try:
+                response = self.api.lookup_linkdb(url)
+
+                failed = (len(response['records']) != 0)
+                if failed:
+                    print(test_type + ' - ' + url)
+                    print(response)
+
+                self.add_testcase(test_type, url, start_time, failed)
+            except Exception as e:
+                print(e)
+                self.add_testcase(test_type, url, start_time, True)
+
     def verify_title_record(self, *args):
         test_type = 'verify_title_record'
         print('Running test -', test_type)
