@@ -1,0 +1,1 @@
+banana papaya	http://s1.t56.{DOMAIN}:{PORT}/f1.html

@@ -1,0 +1,9 @@
+seed http://s1.t56.{DOMAIN}:{PORT}/f1.html
+wait_spider_done
+
+verify_indexed uniqt56s1word01
+verify_indexed banana
+verify_indexed papaya
+verify_indexed banana papaya
+
+verify_title_record http://s1.t56.{DOMAIN}:{PORT}/f1.html|{'httpStatus': 200, 'contentType': 'html', 'explicitKeywords': 'banana papaya'}
