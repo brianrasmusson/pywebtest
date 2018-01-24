@@ -1,0 +1,11 @@
+insert_tagdb http://s1.t55.{DOMAIN}:{PORT}/f1.html|firstip|127.0.0.3
+insert_tagdb http://s2.t55.{DOMAIN}:{PORT}/f1.html|firstip|127.0.0.4
+seed http://s1.t55.{DOMAIN}:{PORT}/f1.html
+wait_spider_done
+
+verify_not_indexed uniqt55s1word01
+verify_indexed uniqt55s2word01
+verify_indexed uniqt55s2word02
+
+verify_spider_request http://s1.t55.{DOMAIN}:{PORT}/f1.html|{'firstIp': '127.0.0.3', 'isAddUrl': True, 'isPageReindex': False, 'urlIsDocId': False, 'forceDelete': False}
+verify_spider_request http://s2.t55.{DOMAIN}:{PORT}/f2.html|{'firstIp': '127.0.0.4', 'isAddUrl': False, 'isPageReindex': False, 'urlIsDocId': False, 'forceDelete': False}
