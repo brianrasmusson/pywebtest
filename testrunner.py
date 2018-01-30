@@ -12,7 +12,16 @@ import ast
 from gigablast import GigablastAPI, GigablastInstances, GigablastUtils
 from junit_xml import TestSuite, TestCase
 from urllib.parse import parse_qs
+import datetime
 
+# overload print to add timestamp
+def print_with_timestamp(func):
+    def add_timestamp(*args, **kwargs):
+        return func(datetime.datetime.now().replace(microsecond=0).isoformat(' '), ':', *args, **kwargs)
+
+    return add_timestamp
+
+print = print_with_timestamp(print)
 
 class TestRunner:
     def __init__(self, testdir, testcase, gb_instances, gb_host, webserver, ws_domain, ws_port, ws_sslport):
