@@ -139,7 +139,7 @@ class TestRunner:
         self.api.config_log({'ltd': '1'})
         self.api.config_log({'ldspid': '1'})
         self.api.config_log({'ltrc_sp': '1'})
-        self.api.config_log({'ltrc_msgfour': '1'})
+        self.api.config_log({'ltrc_msgfourdat': '1'})
         self.api.config_log({'ltrc_xmldoc': '1'})
 
         # apply custom config
@@ -202,6 +202,9 @@ class TestRunner:
 
             # verify not spidered
             self.verify_not_spidered()
+
+            # verify spider request
+            self.verify_spider_request()
 
             # verify spider response
             self.verify_spider_response()
