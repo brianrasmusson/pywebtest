@@ -11,7 +11,7 @@ def main(gb_offset, gb_path, gb_num_instances, gb_num_shards, gb_port):
     instance_path = gb_instances.get_instance_path(0)
 
     try:
-        subprocess.call(['./gb', 'stop'], cwd=instance_path, stderr=subprocess.DEVNULL, timeout=5)
+        subprocess.call(['./gb', 'stop'], cwd=instance_path, stderr=subprocess.DEVNULL)
     except subprocess.TimeoutExpired:
         pass
 
