@@ -251,6 +251,10 @@ class GigablastAPI:
         payload = {'js': '1'}
         self.config_master(payload)
 
+    def save_and_exit(self):
+        payload = {'save': '1'}
+        self.config_master(payload)
+
     def search(self, query, payload=None):
         if not payload:
             payload = {}
