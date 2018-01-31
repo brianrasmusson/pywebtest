@@ -632,6 +632,9 @@ class TestRunner:
             except:
                 self.add_testcase(action_type, item, start_time, True)
 
+    def print_comment(self, *args):
+        print('***** ', ' '.join(args), ' *****')
+
     def verify_indexed(self, *args):
         test_type = 'verify_indexed'
         print('Running test -', test_type)

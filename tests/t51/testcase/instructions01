@@ -5,6 +5,7 @@ custom_config config_master trvn 126
 verify_not_indexed uniqt51s1word1
 
 # docdelete non-existing document
+print_comment docdelete non-existing document
 doc_delete http://s1.t51.{DOMAIN}:{PORT}/f1.html
 save_gb
 verify_no_title_record http://s1.t51.{DOMAIN}:{PORT}/f1.html
@@ -13,6 +14,7 @@ verify_no_spider_response http://s1.t51.{DOMAIN}:{PORT}/f1.html
 verify_not_indexed uniqt51s1word1
 
 # docdeleteurl non-existing document
+print_comment docdeleteurl non-existing document
 doc_delete_url http://s1.t51.{DOMAIN}:{PORT}/f1.html
 save_gb
 verify_no_title_record http://s1.t51.{DOMAIN}:{PORT}/f1.html
@@ -21,6 +23,7 @@ verify_no_spider_response http://s1.t51.{DOMAIN}:{PORT}/f1.html
 verify_not_indexed uniqt51s1word1
 
 # docrebuild non-existing document
+print_comment docrebuild non-existing document
 doc_rebuild http://s1.t51.{DOMAIN}:{PORT}/f1.html
 save_gb
 verify_no_title_record http://s1.t51.{DOMAIN}:{PORT}/f1.html
@@ -29,6 +32,7 @@ verify_no_spider_response http://s1.t51.{DOMAIN}:{PORT}/f1.html
 verify_not_indexed uniqt51s1word1
 
 # docrebuildurl non-existing document
+print_comment docrebuildurl non-existing document
 doc_rebuild_url http://s1.t51.{DOMAIN}:{PORT}/f1.html
 save_gb
 verify_no_title_record http://s1.t51.{DOMAIN}:{PORT}/f1.html
@@ -37,6 +41,7 @@ verify_no_spider_response http://s1.t51.{DOMAIN}:{PORT}/f1.html
 verify_not_indexed uniqt51s1word1
 
 # docreindex non-existing document
+print_comment docreindex non-existing document
 doc_reindex http://s1.t51.{DOMAIN}:{PORT}/f1.html
 save_gb
 verify_no_title_record http://s1.t51.{DOMAIN}:{PORT}/f1.html
@@ -45,6 +50,7 @@ verify_no_spider_response http://s1.t51.{DOMAIN}:{PORT}/f1.html
 verify_not_indexed uniqt51s1word1
 
 # docreindexurl non-existing document
+print_comment docreindexurl non-existing document
 doc_reindex_url http://s1.t51.{DOMAIN}:{PORT}/f1.html
 save_gb
 verify_title_record http://s1.t51.{DOMAIN}:{PORT}/f1.html|{'titleRecVersion': 126, 'httpStatus': 200, 'contentType': 'html'}
@@ -57,6 +63,7 @@ verify_indexed uniqt51s1word1
 custom_config config_master trvn 127
 
 # docrebuildurl existing document
+print_comment docrebuildurl existing document
 doc_rebuild_url http://s1.t51.{DOMAIN}:{PORT}/f1.html
 save_gb
 verify_title_record http://s1.t51.{DOMAIN}:{PORT}/f1.html|{'titleRecVersion': 127, 'httpStatus': 200, 'contentType': 'html'}
@@ -69,6 +76,7 @@ verify_not_indexed uniqt51s1word1revision1
 custom_config config_master trvn 126
 
 # docrebuild existing document
+print_comment docrebuild existing document
 doc_rebuild http://s1.t51.{DOMAIN}:{PORT}/f1.html
 save_gb
 verify_title_record http://s1.t51.{DOMAIN}:{PORT}/f1.html|{'titleRecVersion': 126, 'httpStatus': 200, 'contentType': 'html'}
@@ -81,6 +89,7 @@ verify_not_indexed uniqt51s1word1revision1
 custom_config config_master trvn 127
 
 # docreindex existing document
+print_comment docreindex existing document
 doc_reindex http://s1.t51.{DOMAIN}:{PORT}/f1.html
 save_gb
 verify_title_record http://s1.t51.{DOMAIN}:{PORT}/f1.html|{'titleRecVersion': 127, 'httpStatus': 200, 'contentType': 'html'}
@@ -93,6 +102,7 @@ verify_indexed uniqt51s1word1revision1
 custom_config config_master trvn 126
 
 # docreindexurl existing document
+print_comment docreindexurl existing document
 doc_reindex_url http://s1.t51.{DOMAIN}:{PORT}/f1.html
 save_gb
 verify_title_record http://s1.t51.{DOMAIN}:{PORT}/f1.html|{'titleRecVersion': 126, 'httpStatus': 200, 'contentType': 'html'}
@@ -102,6 +112,7 @@ verify_indexed uniqt51s1word1
 verify_not_indexed uniqt51s1word1revision1
 
 # docdelete existing document
+print_comment docdelete existing document
 doc_delete http://s1.t51.{DOMAIN}:{PORT}/f1.html
 save_gb
 verify_no_title_record http://s1.t51.{DOMAIN}:{PORT}/f1.html
@@ -113,6 +124,7 @@ verify_not_indexed uniqt51s1word1
 custom_config config_master trvn 127
 
 # docreindexurl non-existing document
+print_comment docreindexurl non-existing document
 doc_reindex_url http://s1.t51.{DOMAIN}:{PORT}/f1.html
 save_gb
 verify_title_record http://s1.t51.{DOMAIN}:{PORT}/f1.html|{'titleRecVersion': 127, 'httpStatus': 200, 'contentType': 'html'}
@@ -122,6 +134,7 @@ verify_spider_request http://s1.t51.{DOMAIN}:{PORT}/f2.html|{'isAddUrl': False, 
 verify_indexed uniqt51s1word1
 
 # docdeleteurl existing document
+print_comment docdeleteurl existing document
 doc_delete_url http://s1.t51.{DOMAIN}:{PORT}/f1.html
 save_gb
 verify_no_title_record http://s1.t51.{DOMAIN}:{PORT}/f1.html
@@ -142,6 +155,7 @@ verify_indexed uniqt51s2word1
 custom_config config_master trvn 127
 
 # docrebuildurl existing document (no spiderreq)
+print_comment docrebuildurl existing document (no spiderreq)
 doc_rebuild_url http://s2.t51.{DOMAIN}:{PORT}/f1.html
 save_gb
 verify_title_record http://s2.t51.{DOMAIN}:{PORT}/f1.html|{'titleRecVersion': 127, 'httpStatus': 200, 'contentType': 'html'}
@@ -163,6 +177,7 @@ verify_indexed uniqt51s2word1
 custom_config config_master trvn 127
 
 # docrebuild existing document (no spiderreq)
+print_comment docrebuild existing document (no spiderreq)
 doc_rebuild http://s2.t51.{DOMAIN}:{PORT}/f1.html
 save_gb
 verify_title_record http://s2.t51.{DOMAIN}:{PORT}/f1.html|{'titleRecVersion': 127, 'httpStatus': 200, 'contentType': 'html'}
