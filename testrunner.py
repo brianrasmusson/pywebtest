@@ -85,7 +85,11 @@ class TestRunner:
 
     def start_gb(self):
         print('Cleaning old data')
-        subprocess.call(['./gb', 'dsh2', 'make cleantest'], cwd=self.gb_path, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+        # for each instances
+        for i in range(0, self.gb_instances.num_instances):
+            subprocess.call(['make', 'cleantest'], cwd=self.gb_instances.get_instance_path(i), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
         self.webserver.clear_served_urls()
 
         print('Copy config files')
