@@ -253,7 +253,12 @@ class GigablastAPI:
 
     def save_and_exit(self):
         payload = {'save': '1'}
-        self.config_master(payload)
+
+        try:
+            self.config_master(payload)
+        except requests.exceptions.ConnectionError:
+            # ignore error as we will always get connection aborted
+            pass
 
     def search(self, query, payload=None):
         if not payload:
