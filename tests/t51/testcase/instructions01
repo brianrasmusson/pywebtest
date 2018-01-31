@@ -116,8 +116,8 @@ print_comment docdelete existing document
 doc_delete http://s1.t51.{DOMAIN}:{PORT}/f1.html
 save_gb
 verify_no_title_record http://s1.t51.{DOMAIN}:{PORT}/f1.html
-verify_spider_request http://s1.t51.{DOMAIN}:{PORT}/f1.html|{'isAddUrl': False, 'isPageReindex': False, 'urlIsDocId': False, 'forceDelete': False}
-verify_spider_response http://s1.t51.{DOMAIN}:{PORT}/f1.html|{'errCode': 32805, 'httpStatus': 200, 'isIndexed': False}
+verify_no_spider_request http://s1.t51.{DOMAIN}:{PORT}/f1.html
+verify_no_spider_response http://s1.t51.{DOMAIN}:{PORT}/f1.html
 verify_not_indexed uniqt51s1word1
 
 # setup titlerec version
@@ -138,8 +138,8 @@ print_comment docdeleteurl existing document
 doc_delete_url http://s1.t51.{DOMAIN}:{PORT}/f1.html
 save_gb
 verify_no_title_record http://s1.t51.{DOMAIN}:{PORT}/f1.html
-verify_spider_request http://s1.t51.{DOMAIN}:{PORT}/f1.html|{'isAddUrl': False, 'isPageReindex': False, 'urlIsDocId': False, 'forceDelete': False}
-verify_spider_response http://s1.t51.{DOMAIN}:{PORT}/f1.html|{'errCode': 32805, 'httpStatus': 200, 'isIndexed': False}
+verify_no_spider_request http://s1.t51.{DOMAIN}:{PORT}/f1.html
+verify_no_spider_response http://s1.t51.{DOMAIN}:{PORT}/f1.html
 verify_not_indexed uniqt51s1word1
 
 # setup titlerec version
