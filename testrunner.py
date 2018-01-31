@@ -130,14 +130,17 @@ class TestRunner:
 
     def save_gb(self):
         print('Saving gigablast')
-        subprocess.call(['./gb', 'save'], cwd=self.gb_path, stderr=subprocess.DEVNULL)
+        self.api.save()
 
         # wait for gb mode to be updated
         time.sleep(0.5)
 
     def stop_gb(self):
         print('Stopping gigablast')
-        subprocess.call(['./gb', 'stop'], cwd=self.gb_path, stderr=subprocess.DEVNULL)
+        self.api.save_and_exit()
+
+        # wait for gb mode to be updated
+        time.sleep(0.5)
 
     def config_gb(self):
         self.api.config_crawldelay(0, 0)
