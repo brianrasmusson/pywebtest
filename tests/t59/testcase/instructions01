@@ -1,0 +1,7 @@
+insert_tagdb http://s1.t59.{DOMAIN}:{PORT}/f1.pdf|firstip|127.0.0.2
+
+seed http://s1.t59.{DOMAIN}:{PORT}/f1.pdf
+wait_spider_done
+
+verify_not_indexed uniqt59s1word01
+verify_spider_response http://s1.t59.{DOMAIN}:{PORT}/f1.pdf|{'errCode': 32811, 'errCount': 1, 'isIndexed': False}
