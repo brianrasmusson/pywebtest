@@ -158,6 +158,13 @@ class TestRunner:
         self.api.config_log({'ltrc_msgfourdat': '1'})
         self.api.config_log({'ltrc_xmldoc': '1'})
 
+        # url filters
+        payload = {'ufp': 'custom'}
+        for i in range(0, 96):
+            payload.update({'xg' + str(i) : '0'})
+
+        self.api.config_urlfilters(payload)
+
         # apply custom config
         self.custom_config()
 

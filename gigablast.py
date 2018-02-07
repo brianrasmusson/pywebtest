@@ -116,6 +116,13 @@ class GigablastAPI:
 
         return self.config_master(payload)
 
+    def config_urlfilters(self, payload):
+        self._apply_default_payload(payload)
+
+        request = requests.get(self._get_url('admin/filters'), params=payload)
+
+        return request.json()
+
     def config_log(self, payload):
         self._apply_default_payload(payload)
 
