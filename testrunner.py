@@ -1022,12 +1022,15 @@ class TestRunner:
                 if not failed:
                     for key, value in result.items():
                         if response['spiderRequest'][key] != value:
+                            print('Wrong', key, 'value. Got', response['spiderRequest'][key], 'instead of', value)
                             failed = True
-                            break
 
                 if failed:
                     print(test_type + ' - ' + url + ' - ' + str(result))
-                    print(response)
+                    if 'spiderRequest' in response:
+                        print(response['spiderRequest'])
+                    else:
+                        print(response)
 
                 self.add_testcase(test_type, url + ' - ' + str(result), start_time, failed)
             except Exception as e:
@@ -1098,12 +1101,15 @@ class TestRunner:
                 if not failed:
                     for key, value in result.items():
                         if response['spiderReply'][key] != value:
+                            print('Wrong', key, 'value. Got', response['spiderReply'][key], 'instead of', value)
                             failed = True
-                            break
 
                 if failed:
                     print(test_type + ' - ' + url + ' - ' + str(result))
-                    print(response)
+                    if 'spiderReply' in response:
+                        print(response['spiderReply'])
+                    else:
+                        print(response)
 
                 self.add_testcase(test_type, url + ' - ' + str(result), start_time, failed)
             except Exception as e:
