@@ -64,11 +64,6 @@ class Handler(BaseHTTPRequestHandler):
         content = bytes()
         try:
             with open(path, "rb") as f:
-                if self.server == self.server.webserver.http_server_thread.server:
-                    scheme = "http"
-                else:
-                    scheme = "https"
-
                 content = f.read()
                 if content_type.startswith('text/') and content_encoding is None:
                     content = content.decode(charset).format(DOMAIN=self.domain,
@@ -335,6 +330,7 @@ class TestWebServer:
 
         if keyfile is not None and certfile is not None:
             logger.info("webserver (https) initializing")
+
             def servername_callback(ssl_sock, server_name, initial_context):
                 if server_name is None:
                     return ssl.ALERT_DESCRIPTION_HANDSHAKE_FAILURE

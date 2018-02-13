@@ -229,8 +229,14 @@ class TestRunner:
             # verify spider request
             self.verify_spider_request()
 
+            # verify no spider request
+            self.verify_no_spider_request()
+
             # verify spider response
             self.verify_spider_response()
+
+            # verify no spider response
+            self.verify_no_spider_response()
 
             # verify title record
             self.verify_title_record()
