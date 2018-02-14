@@ -2,10 +2,13 @@ insert_tagdb http://s1.t61.{DOMAIN}:{PORT}/f1.html|firstip|127.0.0.2
 
 seed http://s1.t61.{DOMAIN}:{PORT}/f1.html
 wait_spider_done
+verify_spider_request http://s1.t61.{DOMAIN}:{PORT}/f1.html|{'isAddUrl': True}
 verify_spider_response http://s1.t61.{DOMAIN}:{PORT}/f1.html|{'errCode': 32813, 'httpStatus': 404, 'errCount': 1, 'sameErrCount': 0, 'isIndexed': False}
 
 doc_reindex_url http://s1.t61.{DOMAIN}:{PORT}/f1.html
+verify_spider_request http://s1.t61.{DOMAIN}:{PORT}/f1.html|{'isAddUrl': True}
 verify_spider_response http://s1.t61.{DOMAIN}:{PORT}/f1.html|{'errCode': 32813, 'httpStatus': 404, 'errCount': 2, 'sameErrCount': 1, 'isIndexed': False}
 
 doc_reindex_url http://s1.t61.{DOMAIN}:{PORT}/f1.html
+verify_spider_request http://s1.t61.{DOMAIN}:{PORT}/f1.html|{'isAddUrl': False}
 verify_spider_response http://s1.t61.{DOMAIN}:{PORT}/f1.html|{'errCode': 0, 'httpStatus': 200, 'errCount': 0, 'sameErrCount': 0, 'isIndexed': True}
