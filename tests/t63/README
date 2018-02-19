@@ -1,0 +1,6 @@
+Test of indexing and searching for trigrams, with cases for soft hypen and hyphenation point.
+Compound word: æble kage spiser
+
+f1.html:	title:banana;	uses soft hyphen
+f2.html.	title:citrus;	uses no separation at all
+f3.html:	title:durian;	uses hyphenationj points (like in dictionaries)
