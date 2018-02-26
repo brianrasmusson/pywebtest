@@ -1,0 +1,11 @@
+Test og superscript/supscripe tokenization and searching
+
+f1.html, title apple:		H₂O with unicode codepoint U+2082
+f2.html, title banana:		H₂O with <sub> tag
+f3.html, title citrus:		H₂O with <sub> and <span> tag
+
+f4.html, title donkey:		E=mc² with unicode codepoint U+00B2
+f5.html, title elephant:	E=mc² with <sub> tag
+f6.html, title firefly:		E=mc² with <sub> and <span> tag
+
+Our search engine currently fails on 4 of those tests, so no automated test - yet.
