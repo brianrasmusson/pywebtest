@@ -1,3 +1,5 @@
 Test for gzipped content
 
 s1: robots.txt disallow all
+s2: send content with mtu
+s3: gzipped content
