@@ -3,4 +3,6 @@ Compound word: æble kage spiser
 
 f1.html:	title:banana;	uses soft hyphen
 f2.html.	title:citrus;	uses no separation at all
-f3.html:	title:durian;	uses hyphenationj points (like in dictionaries)
+f3.html:	title:durian;	uses hyphenation points (like in dictionaries)
+f4.html:	title:elephant;	uses hyphen U+2010
+f5.html:	title:fruity;	uses non-breaking hyphen U+2011
