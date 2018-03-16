@@ -1,11 +1,11 @@
 Test of selective diacritic removal
 
-f01.html:	citroën with diaeresis, lang=fr
-f02.html:	citroën with diaeresis, lang=da
-f03.html:	citroën without diaeresis, lang=fr
-f04.html:	citroën without diaeresis, lang=da
+f01.html:	citroÃ«n with diaeresis, lang=fr
+f02.html:	citroÃ«n with diaeresis, lang=da
+f03.html:	citroÃ«n without diaeresis, lang=fr
+f04.html:	citroÃ«n without diaeresis, lang=da
 
-f11.html:	rösti with umlaut, lang=en
-f12.html:	rösti with umlaut, lang=da
+f11.html:	rÃ¶sti with umlaut, lang=en
+f12.html:	rÃ¶sti with umlaut, lang=da
 f13.html:	rosti without umlaut, lang=en
 f14.html:	rosti without umlaut, lang=fr
