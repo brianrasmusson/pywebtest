@@ -66,9 +66,13 @@ class Handler(BaseHTTPRequestHandler):
             with open(path, "rb") as f:
                 content = f.read()
                 if content_type.startswith('text/') and content_encoding is None:
-                    content = content.decode(charset).format(DOMAIN=self.domain,
-                                                             PORT=self.server.webserver.port,
-                                                             SSLPORT=self.server.webserver.sslport).encode(charset)
+                    try:
+                        content = content.decode(charset).format(DOMAIN=self.domain,
+                                                                 PORT=self.server.webserver.port,
+                                                                 SSLPORT=self.server.webserver.sslport).encode(charset)
+                    except KeyError:
+                        pass #while testing weird errors served files may not conform to our text replacement syntax
+                    #content = bytes(content)
 
         except IOError:
             pass
