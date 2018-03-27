@@ -65,7 +65,8 @@ class Handler(BaseHTTPRequestHandler):
         try:
             with open(path, "rb") as f:
                 content = f.read()
-                if content_type.startswith('text/') and content_encoding is None:
+		#substitute {stuff} in content
+                if content_type.startswith('text/') and content_encoding is None and ord('{') in content:
                     try:
                         content = content.decode(charset).format(DOMAIN=self.domain,
                                                                  PORT=self.server.webserver.port,
