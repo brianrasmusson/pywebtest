@@ -1,0 +1,26 @@
+Test of character set encoding
+Including missing, unknown, contradictionary and plain wrong.
+
+s1:
+
+filename	content-charset		Mime charset	meta-charset	keyword
+f01-01.html	Plain ASCII		-		-		boring
+f01-02.html	cp1252/iso-8859-1	-		-		pølsemad
+f01-03.html	utf-8			-		-		æbleflæsk
+f01-04.html	utf-8			-		-		επιβεβαιώνουν
+f01-05.html	utf-8			-		-		française
+f01-06.html	cp1253/iso-8859-7	-		-		αποφασιστικά
+
+f02-01.html	Plain ASCII		ASCII		-		boring
+f02-02.html	cp1252/iso-8859-1	iso-8859-1	-		kværulant
+f02-03.html	utf-8			UTF-8		-		ålegilde
+f02-04.html	utf-8			UTF-8		-		επιβεβαιώνουν
+f02-05.html	utf-8			UTF-8		-		Bœuf
+f02-06.html	cp1253/iso-8859-7	iso-8859-1	-		ψήφισμά
+
+f03-01.html	Plain ASCII		-		ASCII		insipid
+f03-02.html	cp1252/iso-8859-1	-		iso-8859-1	pæleorm
+f03-03.html	utf-8			-		UTF-8		svømmepøl
+f03-04.html	utf-8			-		UTF-8		ονομαστικής
+f03-05.html	utf-8			-		UTF-8		Noël
+f02-06.html	cp1253/iso-8859-7	-		iso-8859-1	Κακλαμάνη
