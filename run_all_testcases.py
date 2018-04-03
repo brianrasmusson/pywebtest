@@ -24,11 +24,13 @@ def main(testdir, gb_offset, gb_path, gb_num_instances, gb_num_shards, gb_host, 
     ws_port += gb_offset
     ws_sslport += gb_offset
 
-    if not os.path.exists(ws_sslkey):
-        subprocess.call(['./create_ssl_key.sh', ws_domain], stdout=subprocess.DEVNULL)
+    script_dir = os.path.dirname(os.path.realpath(__file__))
 
-    if not os.path.exists(ws_sslcert):
-        subprocess.call(['./create_ssl_cert.sh', ws_domain], stdout=subprocess.DEVNULL)
+    if not os.path.exists(os.path.join(script_dir, ws_sslkey)):
+        subprocess.call(['./create_ssl_key.sh', ws_domain], stdout=subprocess.DEVNULL, cwd=script_dir)
+
+    if not os.path.exists(os.path.join(script_dir, ws_sslcert)):
+        subprocess.call(['./create_ssl_cert.sh', ws_domain], stdout=subprocess.DEVNULL, cwd=script_dir)
 
     # start webserver
     test_webserver = TestWebServer(testdir, ws_port, ws_sslport, ws_sslkey, ws_sslcert)

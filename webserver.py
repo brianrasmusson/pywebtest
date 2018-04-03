@@ -317,7 +317,11 @@ class ServerThread(threading.Thread):
 
 class TestWebServer:
     def __init__(self, root_dir="tests", port=8080, sslport=4443, keyfile=None, certfile=None, loggingconf='logging.conf'):
-        logging.config.fileConfig(loggingconf)
+        # try from working dir, else from script dir
+        if os.path.exists(loggingconf):
+            logging.config.fileConfig(loggingconf)
+        else:
+            logging.config.fileConfig(os.path.join(script_dir, loggingconf))
 
         global logger
         logger = logging.getLogger(__name__)
@@ -335,6 +339,13 @@ class TestWebServer:
 
         if keyfile is not None and certfile is not None:
             logger.info("webserver (https) initializing")
+
+            # get from script dir if not exist
+            if not os.path.exists(certfile):
+                certfile = os.path.join(script_dir, certfile)
+
+            if not os.path.exists(keyfile):
+                keyfile = os.path.join(script_dir, keyfile)
 
             def servername_callback(ssl_sock, server_name, initial_context):
                 if server_name is None:
