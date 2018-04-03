@@ -20,8 +20,7 @@ import math
 
 global logger
 
-root_dir = "tests"
-
+script_dir = os.path.dirname(os.path.realpath(__file__))
 
 def unescape_path(s):
     return urllib.unquote(s)
@@ -168,14 +167,14 @@ class Handler(BaseHTTPRequestHandler):
     def serve_page(self, testset, server, path):
         path = unescape_path(path)
 
-        if not os.path.exists(root_dir + "/" + testset):
+        if not os.path.exists(os.path.join(self.server.webserver.root_dir, testset)):
             return self.respond_unknown_testset(testset)
 
-        if not os.path.exists(root_dir + "/" + testset + "/" + server):
+        if not os.path.exists(os.path.join(self.server.webserver.root_dir, testset, server)):
             return self.respond_unknown_server(server)
 
         # ok, directory exist so testet and server is known
-        base_path = root_dir + "/" + testset + "/" + server + path
+        base_path = os.path.join(self.server.webserver.root_dir, testset, server, path)
         if os.path.isdir(base_path):
             if os.path.exists(base_path + '/index.html'):
                 base_path = os.path.join(base_path, 'index.html')
@@ -317,7 +316,7 @@ class ServerThread(threading.Thread):
 
 
 class TestWebServer:
-    def __init__(self, port=8080, sslport=4443, keyfile=None, certfile=None, loggingconf='logging.conf'):
+    def __init__(self, root_dir="tests", port=8080, sslport=4443, keyfile=None, certfile=None, loggingconf='logging.conf'):
         logging.config.fileConfig(loggingconf)
 
         global logger
@@ -326,6 +325,7 @@ class TestWebServer:
 
         init_mimetypes()
 
+        self.root_dir = root_dir
         self.port = port
         self.sslport = sslport
         self.http_server_thread = None
@@ -380,6 +380,7 @@ class TestWebServer:
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
+    parser.add_argument("--rootdir", type=str, help="Webserver root directory", default="tests")
     parser.add_argument("-p", "--port", type=int, help="HTTP server port number", default=8080)
     parser.add_argument("--sslport", type=int, help="HTTPS server port number", default=4443)
     parser.add_argument("--keyfile", type=str, help="SSL key file (.key)")
@@ -387,7 +388,7 @@ if __name__ == '__main__':
     parser.add_argument("--loggingconf", type=str, default="logging.conf")
     args = parser.parse_args()
 
-    test_webserver = TestWebServer(args.port, args.sslport, args.keyfile, args.certfile, args.loggingconf)
+    test_webserver = TestWebServer(args.rootdir, args.port, args.sslport, args.keyfile, args.certfile, args.loggingconf)
 
     time.sleep(10 * 356 * 84100)
 

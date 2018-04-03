@@ -31,10 +31,10 @@ def main(testdir, gb_offset, gb_path, gb_num_instances, gb_num_shards, gb_host, 
         subprocess.call(['./create_ssl_cert.sh', ws_domain], stdout=subprocess.DEVNULL)
 
     # start webserver
-    test_webserver = TestWebServer(ws_port, ws_sslport, ws_sslkey, ws_sslcert)
+    test_webserver = TestWebServer(testdir, ws_port, ws_sslport, ws_sslkey, ws_sslcert)
 
     # run testcases
-    testcases = natural_sort(next(os.walk(args.testdir))[1])
+    testcases = natural_sort(next(os.walk(testdir))[1])
     results = []
     for testcase in testcases:
         print('Running testcase -', testcase)
