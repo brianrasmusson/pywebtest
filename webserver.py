@@ -174,7 +174,7 @@ class Handler(BaseHTTPRequestHandler):
             return self.respond_unknown_server(server)
 
         # ok, directory exist so testet and server is known
-        base_path = os.path.join(self.server.webserver.root_dir, testset, server, path)
+        base_path = os.path.join(self.server.webserver.root_dir, testset, server) + path
         if os.path.isdir(base_path):
             if os.path.exists(base_path + '/index.html'):
                 base_path = os.path.join(base_path, 'index.html')
