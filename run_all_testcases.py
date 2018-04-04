@@ -47,9 +47,7 @@ def main(testdir, gb_offset, gb_path, gb_num_instances, gb_num_shards, gb_host, 
     # stop webserver
     test_webserver.stop()
 
-    # write output
-    with open('output%02d.xml' % gb_offset, 'w') as f:
-        TestSuite.to_file(f, results)
+    return results
 
 
 if __name__ == '__main__':
@@ -85,4 +83,8 @@ if __name__ == '__main__':
                         help='Destination host domain (default: privacore.test.cert)')
 
     args = parser.parse_args()
-    main(args.testdir, args.gb_offset, args.gb_path, args.gb_num_instances, args.gb_num_shards, args.gb_host, args.gb_port, args.ws_domain, args.ws_port, args.ws_sslport, args.ws_sslkey, args.ws_sslcert)
+    results = main(args.testdir, args.gb_offset, args.gb_path, args.gb_num_instances, args.gb_num_shards, args.gb_host, args.gb_port, args.ws_domain, args.ws_port, args.ws_sslport, args.ws_sslkey, args.ws_sslcert)
+
+    # write output
+    with open('output-%02d.xml' % gb_offset, 'w') as f:
+        TestSuite.to_file(f, results)
