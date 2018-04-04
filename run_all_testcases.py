@@ -85,6 +85,6 @@ if __name__ == '__main__':
                         help='Destination host domain (default: privacore.test.cert)')
 
     args = parser.parse_args()
-    output_file = 'output-%02d.xml' % gb_offset
+    output_file = 'output-%02d.xml' % args.gb_offset
     results = main(args.testdir, args.gb_offset, args.gb_path, args.gb_num_instances, args.gb_num_shards, args.gb_host, args.gb_port, args.ws_domain, args.ws_port, args.ws_sslport, args.ws_sslkey, args.ws_sslcert, output_file)
 
