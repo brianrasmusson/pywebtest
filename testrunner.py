@@ -88,7 +88,7 @@ class TestRunner:
 
         # for each instances
         for i in range(0, self.gb_instances.num_instances):
-            subprocess.call(['make', 'cleantest'], cwd=self.gb_instances.get_instance_path(i), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            subprocess.call(['./gbclean.sh'], cwd=self.gb_instances.get_instance_path(i), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
         self.webserver.clear_served_urls()
 
