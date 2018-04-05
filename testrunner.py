@@ -261,28 +261,31 @@ class TestRunner:
 
     def custom_config(self, *args):
         print('Applying custom config')
-        file_name = 'custom_config'
 
-        items = []
-        if len(args):
-            items.append(' '.join(args))
-        else:
-            filename = os.path.join(self.testcaseconfigdir, file_name)
-            items = self.read_file(filename)
-
-        for item in items:
-            tokens = item.split()
-            token = tokens.pop(0)
-
-            convert_func = getattr(self, 'convert_' + token, None)
-            func = getattr(self.api, token, None)
-            if func is not None:
-                if convert_func is not None:
-                    func(convert_func(tokens))
-                else:
-                    func(*tokens)
+        for file_name in ['custom_config', 'custom_config_auto']:
+            items = []
+            if len(args):
+                items.append(' '.join(args))
             else:
-                print('Unknown instruction -', token)
+                filename = os.path.join(self.testcaseconfigdir, file_name)
+                items = self.read_file(filename)
+
+            for item in items:
+                tokens = item.split()
+                if (len(tokens) == 0):
+                    continue
+
+                token = tokens.pop(0)
+
+                convert_func = getattr(self, 'convert_' + token, None)
+                func = getattr(self.api, token, None)
+                if func is not None:
+                    if convert_func is not None:
+                        func(convert_func(tokens))
+                    else:
+                        func(*tokens)
+                else:
+                    print('Unknown instruction -', token)
 
     def seed(self, *args):
         print('Adding seed for spidering')
