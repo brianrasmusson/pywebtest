@@ -165,6 +165,9 @@ class TestRunner:
 
         self.api.config_urlfilters(payload)
 
+        # disable query language
+        self.api.config_master({'query_lang_server_port': '0'})
+
         # apply custom config
         self.custom_config()
 
