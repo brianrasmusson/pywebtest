@@ -325,7 +325,7 @@ class TestWebServer:
 
         global logger
         logger = logging.getLogger(__name__)
-        logger.info("webserver initializing")
+        logger.info("webserver initializing with port=%d sslport=%d" % (port, sslport))
 
         init_mimetypes()
 
@@ -392,8 +392,8 @@ class TestWebServer:
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--rootdir", type=str, help="Webserver root directory", default="tests")
-    parser.add_argument("-p", "--port", type=int, help="HTTP server port number", default=8080)
-    parser.add_argument("--sslport", type=int, help="HTTPS server port number", default=4443)
+    parser.add_argument("-p", "--port", type=int, help="HTTP server port number (default: 8080)", default=8080)
+    parser.add_argument("--sslport", type=int, help="HTTPS server port number (default: 4443)", default=4443)
     parser.add_argument("--keyfile", type=str, help="SSL key file (.key)")
     parser.add_argument("--certfile", type=str, help="SSL certificate file (.cert)")
     parser.add_argument("--loggingconf", type=str, default="logging.conf")
