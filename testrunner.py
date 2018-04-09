@@ -1368,7 +1368,7 @@ if __name__ == '__main__':
         subprocess.call(['./create_ssl_cert.sh', pargs.ws_domain], stdout=subprocess.DEVNULL)
 
     # start webserver
-    test_webserver = TestWebServer(pargs.ws_port, pargs.ws_sslport, pargs.ws_sslkey, pargs.ws_sslcert)
+    test_webserver = TestWebServer(pargs.testdir, pargs.ws_port, pargs.ws_sslport, pargs.ws_sslkey, pargs.ws_sslcert)
 
     gb_instances = GigablastInstances(pargs.gb_offset, pargs.gb_path, pargs.gb_num_instances, pargs.gb_num_shards, pargs.gb_port)
     main(pargs.testdir, pargs.testcase, gb_instances, pargs.gb_host, test_webserver, pargs.ws_domain, pargs.ws_port, pargs.ws_sslport)
