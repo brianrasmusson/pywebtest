@@ -1344,14 +1344,14 @@ if __name__ == '__main__':
     parser.add_argument('--host', dest='gb_host', default='127.0.0.1', action='store',
                         help='Gigablast host (default: 127.0.0.1)')
     parser.add_argument('--port', dest='gb_port', type=int, default=28000, action='store',
-                        help='Gigablast port (default: 28000')
+                        help='Gigablast port (default: 28000)')
 
     parser.add_argument('--dest-domain', dest='ws_domain', default='privacore.test', action='store',
                         help='Destination host domain (default: privacore.test)')
     parser.add_argument('--dest-port', dest='ws_port', type=int, default=28080, action='store',
-                        help='Destination host port (default: 28080')
+                        help='Destination host port (default: 28080)')
     parser.add_argument('--dest-sslport', dest='ws_sslport', type=int, default=28443, action='store',
-                        help='Destination host ssl port (default: 28443')
+                        help='Destination host ssl port (default: 28443)')
     parser.add_argument('--dest-sslkey', dest='ws_sslkey', default='privacore.test.key', action='store',
                         help='Destination host domain (default: privacore.test.key)')
     parser.add_argument('--dest-sslcert', dest='ws_sslcert', default='privacore.test.cert', action='store',
