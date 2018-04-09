@@ -195,7 +195,8 @@ class TestRunner:
 
     def run_testcase(self):
         # seed gb
-        self.seed()
+        if not self.add_url():
+            self.seed()
 
         # verify gb has done spidering (only run other test if spidering is successful)
         if self.wait_spider_done():
@@ -289,6 +290,21 @@ class TestRunner:
                         func(*tokens)
                 else:
                     print('Unknown instruction -', token)
+
+    def add_url(self, *args):
+        print('Adding url for spidering')
+
+        if len(args):
+            items = args
+        else:
+            filename = os.path.join(self.testcaseconfigdir, 'add_url')
+            items = self.read_file(filename)
+
+        if len(items):
+            for item in items:
+                self.api.add_url(self.format_url(item))
+
+        return len(items)
 
     def seed(self, *args):
         print('Adding seed for spidering')
