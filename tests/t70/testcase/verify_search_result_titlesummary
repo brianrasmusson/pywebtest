@@ -5,3 +5,4 @@ url:s1.t70.{DOMAIN}:{PORT}/f4.html||1|test for tag with property description|thi
 
 url:s2.t70.{DOMAIN}:{PORT}/f1.html||1|test for tag with name Description|this is the summary we really want to show for name Description
 url:s2.t70.{DOMAIN}:{PORT}/f2.html||1|test for tag with name description uppercase CONTENT|this is the summary we really want to show for name description uppercase CONTENT
+url:s2.t70.{DOMAIN}:{PORT}/f3.html||1|test for tag with NAME description|this is the summary we really want to show for NAME description

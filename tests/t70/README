@@ -7,3 +7,4 @@ s1/f4.html: meta tag with property=description
 
 s2/f1.html: meta tag with name=Description
 s2/f2.html: meta tag with name=description uppercase CONTENT
+s2/f3.html: meta tag with NAME=description
