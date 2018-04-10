@@ -891,6 +891,10 @@ class TestRunner:
             items = self.read_file(filename)
 
         for item in items:
+            # ignore empty lines
+            if (len(item) == 0):
+                continue
+
             start_time = time.perf_counter()
 
             tokens = item.split('|')
