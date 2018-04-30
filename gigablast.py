@@ -344,7 +344,7 @@ class GigablastInstances:
         self.create_hostfile()
 
         subprocess.call(['./gb', 'install'], cwd=self._path, stdout=subprocess.DEVNULL)
-        subprocess.call(['./gb', 'installfile', 'Makefile'], cwd=self._path, stdout=subprocess.DEVNULL)
+        subprocess.call(['./gb', 'installfile', 'gbclean.sh'], cwd=self._path, stdout=subprocess.DEVNULL)
 
 
 class GigablastUtils:

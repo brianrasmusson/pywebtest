@@ -16,7 +16,7 @@ def natural_sort(l):
     return sorted(l, key=alphanum_key)
 
 
-def main(testdir, gb_offset, gb_path, gb_num_instances, gb_num_shards, gb_host, gb_port, ws_domain, ws_port, ws_sslport, ws_sslkey, ws_sslcert):
+def main(testdir, gb_offset, gb_path, gb_num_instances, gb_num_shards, gb_host, gb_port, ws_domain, ws_port, ws_sslport, ws_sslkey, ws_sslcert, output_file):
     # prepare gigablast
     gb_instances = GigablastInstances(gb_offset, gb_path, gb_num_instances, gb_num_shards, gb_port)
 
@@ -24,17 +24,19 @@ def main(testdir, gb_offset, gb_path, gb_num_instances, gb_num_shards, gb_host, 
     ws_port += gb_offset
     ws_sslport += gb_offset
 
-    if not os.path.exists(ws_sslkey):
-        subprocess.call(['./create_ssl_key.sh', ws_domain], stdout=subprocess.DEVNULL)
+    script_dir = os.path.dirname(os.path.realpath(__file__))
 
-    if not os.path.exists(ws_sslcert):
-        subprocess.call(['./create_ssl_cert.sh', ws_domain], stdout=subprocess.DEVNULL)
+    if not os.path.exists(os.path.join(script_dir, ws_sslkey)):
+        subprocess.call(['./create_ssl_key.sh', ws_domain], stdout=subprocess.DEVNULL, cwd=script_dir)
+
+    if not os.path.exists(os.path.join(script_dir, ws_sslcert)):
+        subprocess.call(['./create_ssl_cert.sh', ws_domain], stdout=subprocess.DEVNULL, cwd=script_dir)
 
     # start webserver
-    test_webserver = TestWebServer(ws_port, ws_sslport, ws_sslkey, ws_sslcert)
+    test_webserver = TestWebServer(testdir, ws_port, ws_sslport, ws_sslkey, ws_sslcert)
 
     # run testcases
-    testcases = natural_sort(next(os.walk(args.testdir))[1])
+    testcases = natural_sort(next(os.walk(testdir))[1])
     results = []
     for testcase in testcases:
         print('Running testcase -', testcase)
@@ -46,7 +48,7 @@ def main(testdir, gb_offset, gb_path, gb_num_instances, gb_num_shards, gb_host, 
     test_webserver.stop()
 
     # write output
-    with open('output%02d.xml' % gb_offset, 'w') as f:
+    with open(output_file, 'w') as f:
         TestSuite.to_file(f, results)
 
 
@@ -83,4 +85,6 @@ if __name__ == '__main__':
                         help='Destination host domain (default: privacore.test.cert)')
 
     args = parser.parse_args()
-    main(args.testdir, args.gb_offset, args.gb_path, args.gb_num_instances, args.gb_num_shards, args.gb_host, args.gb_port, args.ws_domain, args.ws_port, args.ws_sslport, args.ws_sslkey, args.ws_sslcert)
+    output_file = 'output-%02d.xml' % args.gb_offset
+    results = main(args.testdir, args.gb_offset, args.gb_path, args.gb_num_instances, args.gb_num_shards, args.gb_host, args.gb_port, args.ws_domain, args.ws_port, args.ws_sslport, args.ws_sslkey, args.ws_sslcert, output_file)
+

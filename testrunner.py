@@ -88,7 +88,7 @@ class TestRunner:
 
         # for each instances
         for i in range(0, self.gb_instances.num_instances):
-            subprocess.call(['make', 'cleantest'], cwd=self.gb_instances.get_instance_path(i), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            subprocess.call(['./gbclean.sh'], cwd=self.gb_instances.get_instance_path(i), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
         self.webserver.clear_served_urls()
 
@@ -165,6 +165,9 @@ class TestRunner:
 
         self.api.config_urlfilters(payload)
 
+        # disable query language
+        self.api.config_master({'query_lang_server_port': '0'})
+
         # apply custom config
         self.custom_config()
 
@@ -192,7 +195,8 @@ class TestRunner:
 
     def run_testcase(self):
         # seed gb
-        self.seed()
+        if not self.add_url():
+            self.seed()
 
         # verify gb has done spidering (only run other test if spidering is successful)
         if self.wait_spider_done():
@@ -261,28 +265,46 @@ class TestRunner:
 
     def custom_config(self, *args):
         print('Applying custom config')
-        file_name = 'custom_config'
 
-        items = []
+        for file_name in ['custom_config', 'custom_config_auto']:
+            items = []
+            if len(args):
+                items.append(' '.join(args))
+            else:
+                filename = os.path.join(self.testcaseconfigdir, file_name)
+                items = self.read_file(filename)
+
+            for item in items:
+                tokens = item.split()
+                if (len(tokens) == 0):
+                    continue
+
+                token = tokens.pop(0)
+
+                convert_func = getattr(self, 'convert_' + token, None)
+                func = getattr(self.api, token, None)
+                if func is not None:
+                    if convert_func is not None:
+                        func(convert_func(tokens))
+                    else:
+                        func(*tokens)
+                else:
+                    print('Unknown instruction -', token)
+
+    def add_url(self, *args):
+        print('Adding url for spidering')
+
         if len(args):
-            items.append(' '.join(args))
+            items = args
         else:
-            filename = os.path.join(self.testcaseconfigdir, file_name)
+            filename = os.path.join(self.testcaseconfigdir, 'add_url')
             items = self.read_file(filename)
 
-        for item in items:
-            tokens = item.split()
-            token = tokens.pop(0)
+        if len(items):
+            for item in items:
+                self.api.add_url(self.format_url(item))
 
-            convert_func = getattr(self, 'convert_' + token, None)
-            func = getattr(self.api, token, None)
-            if func is not None:
-                if convert_func is not None:
-                    func(convert_func(tokens))
-                else:
-                    func(*tokens)
-            else:
-                print('Unknown instruction -', token)
+        return len(items)
 
     def seed(self, *args):
         print('Adding seed for spidering')
@@ -869,6 +891,10 @@ class TestRunner:
             items = self.read_file(filename)
 
         for item in items:
+            # ignore empty lines
+            if (len(item) == 0):
+                continue
+
             start_time = time.perf_counter()
 
             tokens = item.split('|')
@@ -1338,14 +1364,14 @@ if __name__ == '__main__':
     parser.add_argument('--host', dest='gb_host', default='127.0.0.1', action='store',
                         help='Gigablast host (default: 127.0.0.1)')
     parser.add_argument('--port', dest='gb_port', type=int, default=28000, action='store',
-                        help='Gigablast port (default: 28000')
+                        help='Gigablast port (default: 28000)')
 
     parser.add_argument('--dest-domain', dest='ws_domain', default='privacore.test', action='store',
                         help='Destination host domain (default: privacore.test)')
     parser.add_argument('--dest-port', dest='ws_port', type=int, default=28080, action='store',
-                        help='Destination host port (default: 28080')
+                        help='Destination host port (default: 28080)')
     parser.add_argument('--dest-sslport', dest='ws_sslport', type=int, default=28443, action='store',
-                        help='Destination host ssl port (default: 28443')
+                        help='Destination host ssl port (default: 28443)')
     parser.add_argument('--dest-sslkey', dest='ws_sslkey', default='privacore.test.key', action='store',
                         help='Destination host domain (default: privacore.test.key)')
     parser.add_argument('--dest-sslcert', dest='ws_sslcert', default='privacore.test.cert', action='store',
@@ -1362,7 +1388,7 @@ if __name__ == '__main__':
         subprocess.call(['./create_ssl_cert.sh', pargs.ws_domain], stdout=subprocess.DEVNULL)
 
     # start webserver
-    test_webserver = TestWebServer(pargs.ws_port, pargs.ws_sslport, pargs.ws_sslkey, pargs.ws_sslcert)
+    test_webserver = TestWebServer(pargs.testdir, pargs.ws_port, pargs.ws_sslport, pargs.ws_sslkey, pargs.ws_sslcert)
 
     gb_instances = GigablastInstances(pargs.gb_offset, pargs.gb_path, pargs.gb_num_instances, pargs.gb_num_shards, pargs.gb_port)
     main(pargs.testdir, pargs.testcase, gb_instances, pargs.gb_host, test_webserver, pargs.ws_domain, pargs.ws_port, pargs.ws_sslport)

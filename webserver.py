@@ -20,8 +20,7 @@ import math
 
 global logger
 
-root_dir = "tests"
-
+script_dir = os.path.dirname(os.path.realpath(__file__))
 
 def unescape_path(s):
     return urllib.unquote(s)
@@ -168,14 +167,14 @@ class Handler(BaseHTTPRequestHandler):
     def serve_page(self, testset, server, path):
         path = unescape_path(path)
 
-        if not os.path.exists(root_dir + "/" + testset):
+        if not os.path.exists(os.path.join(self.server.webserver.root_dir, testset)):
             return self.respond_unknown_testset(testset)
 
-        if not os.path.exists(root_dir + "/" + testset + "/" + server):
+        if not os.path.exists(os.path.join(self.server.webserver.root_dir, testset, server)):
             return self.respond_unknown_server(server)
 
         # ok, directory exist so testet and server is known
-        base_path = root_dir + "/" + testset + "/" + server + path
+        base_path = os.path.join(self.server.webserver.root_dir, testset, server) + path
         if os.path.isdir(base_path):
             if os.path.exists(base_path + '/index.html'):
                 base_path = os.path.join(base_path, 'index.html')
@@ -317,15 +316,20 @@ class ServerThread(threading.Thread):
 
 
 class TestWebServer:
-    def __init__(self, port=8080, sslport=4443, keyfile=None, certfile=None, loggingconf='logging.conf'):
-        logging.config.fileConfig(loggingconf)
+    def __init__(self, root_dir="tests", port=8080, sslport=4443, keyfile=None, certfile=None, loggingconf='logging.conf'):
+        # try from working dir, else from script dir
+        if os.path.exists(loggingconf):
+            logging.config.fileConfig(loggingconf)
+        else:
+            logging.config.fileConfig(os.path.join(script_dir, loggingconf))
 
         global logger
         logger = logging.getLogger(__name__)
-        logger.info("webserver initializing")
+        logger.info("webserver initializing with port=%d sslport=%d" % (port, sslport))
 
         init_mimetypes()
 
+        self.root_dir = root_dir
         self.port = port
         self.sslport = sslport
         self.http_server_thread = None
@@ -335,6 +339,13 @@ class TestWebServer:
 
         if keyfile is not None and certfile is not None:
             logger.info("webserver (https) initializing")
+
+            # get from script dir if not exist
+            if not os.path.exists(certfile):
+                certfile = os.path.join(script_dir, certfile)
+
+            if not os.path.exists(keyfile):
+                keyfile = os.path.join(script_dir, keyfile)
 
             def servername_callback(ssl_sock, server_name, initial_context):
                 if server_name is None:
@@ -380,14 +391,15 @@ class TestWebServer:
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("-p", "--port", type=int, help="HTTP server port number", default=8080)
-    parser.add_argument("--sslport", type=int, help="HTTPS server port number", default=4443)
+    parser.add_argument("--rootdir", type=str, help="Webserver root directory", default="tests")
+    parser.add_argument("-p", "--port", type=int, help="HTTP server port number (default: 8080)", default=8080)
+    parser.add_argument("--sslport", type=int, help="HTTPS server port number (default: 4443)", default=4443)
     parser.add_argument("--keyfile", type=str, help="SSL key file (.key)")
     parser.add_argument("--certfile", type=str, help="SSL certificate file (.cert)")
     parser.add_argument("--loggingconf", type=str, default="logging.conf")
     args = parser.parse_args()
 
-    test_webserver = TestWebServer(args.port, args.sslport, args.keyfile, args.certfile, args.loggingconf)
+    test_webserver = TestWebServer(args.rootdir, args.port, args.sslport, args.keyfile, args.certfile, args.loggingconf)
 
     time.sleep(10 * 356 * 84100)
 
