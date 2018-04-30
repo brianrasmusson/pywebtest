@@ -231,7 +231,7 @@ class Handler(BaseHTTPRequestHandler):
         self.send_response(status_code)
 
         if content_type is not None:
-            if charset is None:
+            if charset is None or charset=="":
                 self.send_header("Content-type", content_type)
             else:
                 self.send_header("Content-type", content_type + "; charset=" + charset)
