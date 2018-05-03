@@ -1,0 +1,11 @@
+Test of language match priority/ranking
+
+s1/foo.html: danish
+s1/boo.html: english
+s1/goo.html: unknown
+s1/zoo.html: italian
+s1/doo.html: french
+s1/loo.html: norwegian
+
+
+No automated test yet.
