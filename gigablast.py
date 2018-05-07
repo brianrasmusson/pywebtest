@@ -273,7 +273,8 @@ class GigablastAPI:
 
         self._apply_default_payload(payload)
 
-        payload.update({'q': query})
+        if len(query):
+            payload.update({'q': query})
 
         response = requests.get(self._get_url('search'), params=payload)
 
