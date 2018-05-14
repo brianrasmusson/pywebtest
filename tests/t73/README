@@ -5,3 +5,4 @@ f2: (incorrect) elephant in description, lion on title+body
 f3: (incorrect) boa in og:description, beaver in body
 f4: (correct) ampersand in title, pascal in body
 f5: (correct) aardvark in title, fraggle in body
+f6: (correct) dude in title, doozer in body
