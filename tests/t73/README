@@ -1,0 +1,7 @@
+Test of double-encoded HTML in titles and meta tags.
+
+f1: (incorrect) giraffe in title, penguin in body
+f2: (incorrect) elephant in description, lion on title+body
+f3: (incorrect) boa in og:description, beaver in body
+f4: (correct) ampersand in title, pascal in body
+f5: (correct) aardvark in title, fraggle in body
