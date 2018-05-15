@@ -9,3 +9,8 @@ s1/loo.html: norwegian
 
 
 No automated test yet.
+
+Expected results: depends on configuration query language detection server.
+Also depends on accept-language header.
+
+With da,en,de,it you would expect Danish to be the first result and unknown or French to be the last.
