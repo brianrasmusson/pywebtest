@@ -1,0 +1,3 @@
+Test of lemma indexing
+
+f1.html: contains "elefanter" and "elefanten". Search for "elefant" (lemmatization in index) and "elefanterne" (lemmatization in query).
