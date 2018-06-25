@@ -1,0 +1,5 @@
+Test of indexing <img> attributes
+
+f1.html: "alt" attribute with value "avocado"
+f2.html: "title" attribute with value "banana"
+f3.html: "stc" attribute containing "citrus"
