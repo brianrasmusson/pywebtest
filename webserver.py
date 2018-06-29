@@ -72,6 +72,8 @@ class Handler(BaseHTTPRequestHandler):
                                                                  SSLPORT=self.server.webserver.sslport).encode(charset)
                     except KeyError:
                         pass #while testing weird errors served files may not conform to our text replacement syntax
+                    except ValueError:
+                        pass #while testing weird errors served files may not conform to our text replacement syntax
                     #content = bytes(content)
 
         except IOError:
