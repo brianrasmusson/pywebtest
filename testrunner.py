@@ -800,7 +800,7 @@ class TestRunner:
             try:
                 response = self.api.search(query, parse_qs(query_param))
 
-                failed = (not response['queryInfo']['queryNumTermsTotal'] == num_terms)
+                failed = (not response['queryInfo']['queryNumTermsUsed'] == num_terms)
                 if not failed:
                     for index, token in enumerate(tokens):
                         term = response['queryInfo']['terms'][index]['termStr']
