@@ -342,6 +342,7 @@ class TestRunner:
         #   - nothing is being spidered
         for spider_api in self.spider_apis:
             start_time = time.perf_counter()
+            check_time = start_time
 
             result = True
             while result:
@@ -354,6 +355,7 @@ class TestRunner:
 
                 if response['statusCode'] == 7 and response['doleIPCount'] == 0 and response['spiderCount'] == 0:
                     if response['waitingTreeCount'] > 0:
+                        check_time = time.perf_counter()
                         has_pending_spider = False
                         for waiting_tree in response['waitingTrees']:
                             if waiting_tree['spiderTime'] < ((time.time() + 3600) * 1000):
@@ -364,7 +366,7 @@ class TestRunner:
                             break
                     else:
                         # wait for 5 seconds
-                        if time.perf_counter() - start_time > 5:
+                        if time.perf_counter() - check_time > 5:
                             print('waitingTreeCount=0 more than 5 seconds')
                             break
 
