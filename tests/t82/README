@@ -1,0 +1,5 @@
+Test of avoiding cookie-warnigns text in summary generation
+
+no automation yet.
+
+search for "apple" "banana" or "coriander". No results should contain the ocokie warning.
