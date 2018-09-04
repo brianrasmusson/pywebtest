@@ -1,0 +1,2 @@
+Test of bigram matching across fullstop ('.')
+When we have <alfanum> <fullstop-and-some-spaces> <alfanum> then in case ithe fullstop is clear a sentence-end marker a bigram match across fullstop should not be made.
