@@ -1,0 +1,3 @@
+Test for not blindly using "og:title"
+
+The title for the root page (index.html) should not be "Home"
